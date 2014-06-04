@@ -18,16 +18,50 @@ public class BetClient
         set;
     }
 
+    private List<string> Teams = new List<string> {"Brazil",
+        "Cameroon",
+        "Croatia",
+        "Mexico",
+        "Australia",
+        "Chile",
+        "Netherlands",
+        "Spain",
+        "Colombia",
+        "Greece",
+        "Ivory Coast",
+        "Japan",
+        "Costa Rica",
+        "England",
+        "Italy",
+        "Uruguay",
+        "Ecuador",
+        "Cameroon",
+        "France",
+        "Honduras",
+        "Switzerland",
+        "Argentina",
+        "Bosnia And Herzgovina",
+        "Iran",
+        "Nigeria",
+        "Germany",
+        "Ghana",
+        "Portugal",
+        "United States",
+        "Algeria",
+        "Belgium",
+        "Russia",
+        "South Korea"
+    };
     public void GetTeam()
     {
         var random = new Random();
         var orders = new List<OrderR>();
 
-        for (int i = 0; i < 32; i++)
+        foreach(var team in Teams)
         {
             var order = new OrderR();
             order.Id = random.Next(32);
-            order.Team = "Team" + order.Id;
+            order.Team = team;
             order.Quantity = random.Next(50);
             order.User = "Moi";
             order.Price = random.Next(100);
