@@ -11,9 +11,8 @@
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/bundles/modernizr") %>
     </asp:PlaceHolder>
-    <webopt:bundlereference runat="server" path="~/Content/css" />
+    <webopt:BundleReference runat="server" Path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-
 </head>
 <body>
     <form runat="server">
@@ -74,8 +73,10 @@
             </div>
         </div>
         <div class="container body-content">
+            <div style=" width: 1000px;height: 1000px;">
             <asp:ContentPlaceHolder ID="MainContent" runat="server">
             </asp:ContentPlaceHolder>
+                </div>
             <hr />
             <footer>
                 <p>&copy; <%: DateTime.Now.Year %> - My ASP.NET Application</p>
