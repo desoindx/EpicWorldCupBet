@@ -20,7 +20,8 @@ public partial class EpicBetEntities : DbContext
 
     protected override void OnModelCreating(DbModelBuilder modelBuilder)
     {
-        throw new UnintentionalCodeFirstException();
+        Database.SetInitializer<EpicBetEntities>(new CreateDatabaseIfNotExists<EpicBetEntities>());
+        base.OnModelCreating(modelBuilder);
     }
 
     public DbSet<Order> Orders { get; set; }
