@@ -17,7 +17,12 @@ namespace Microsoft.AspNet.SignalR.StockTicker
 
         public void GetTeam()
         {
-            _betClient.GetTeam();
+            _betClient.GetTeam("Xavier");
+        }
+
+        public void SendOrder(string user, string team, int quantity, int price, string side)
+        {
+            _betClient.NewOrder(user, team, quantity, price, side);
         }
     }
 }

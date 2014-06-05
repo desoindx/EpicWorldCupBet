@@ -10,6 +10,11 @@
 
     $.connection.hub.start()
         .done(function (state) {
+            alert('GetTeam');
             betHub.server.getTeam();
+
+            $("#SendOrder").click(function () {
+                betHub.server.sendOrder("Xavier", $("#TeamOrder").text(), $("#QuantityOrder").val(), $("#PriceOrder").val(), $("#SideOrder").text());
+            });
         });
 });

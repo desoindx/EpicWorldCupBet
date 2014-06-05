@@ -8,12 +8,10 @@ namespace Microsoft.AspNet.SignalR.StockTicker
 {
     public class OrderR
     {
-        public int Id { get; set; }
-        public int Price { get; set; }
-        public string User { get; set; }
-        public byte[] Date { get; set; }
         public string Team { get; set; }
-        public int Quantity { get; set; }
-        public int Status { get; set; }
+        public int BestBid { get; set; }
+        public int BestAsk { get; set; }
+        public int MyBid { get; set; }
+        public int MyAsk { get; set; }
     }
 }
