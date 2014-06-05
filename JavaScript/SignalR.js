@@ -10,7 +10,6 @@
 
     $.connection.hub.start()
         .done(function (state) {
-            alert('GetTeam');
             betHub.server.getTeam();
 
             $("#SendOrder").click(function () {
