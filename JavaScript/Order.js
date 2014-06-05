@@ -72,7 +72,7 @@
                 $("#QuantityOrder").val('5');
             }
             else if (cell.cell == 2) {
-                $("#SideOrder").text('Sell');
+                $("#SideOrder").text('SELL');
                 $("#PriceOrder").val(item.BestAsk);
                 $("#QuantityOrder").val('5');
             }
@@ -82,7 +82,7 @@
                 $("#QuantityOrder").val('5');
             }
             else if (cell.cell == 4) {
-                $("#SideOrder").text('Sell');
+                $("#SideOrder").text('SELL');
                 $("#PriceOrder").val(item.MyAsk);
                 $("#QuantityOrder").val('5');
             }

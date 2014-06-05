@@ -83,10 +83,13 @@ public class BetClient
         Clients.All.newOrders(orders);
     }
 
-    public void NewOrder(string user, string team, int quantity, int price, string side)
+    public void NewOrder(string user, string team, int quantity, int price, string side, string connectionId)
     {
-        if (!(Teams.Contains(team)) && quantity < 1 && price < 1 && price > 100 && (side == "BUY" || side == "SELL"))
-            return;
+        if (!(Teams.Contains(team) && quantity > 0 && price > 0 && price < 100 && (side == "BUY" || side == "SELL")))
+        {
+            Clients.Client(connectionId).newMessage("Fail To add order");
+            return; 
+        }
 
         lock (this)
         {
@@ -111,5 +114,8 @@ public class BetClient
                 context.SaveChanges();
             }
         }
+
+        Clients.Client(connectionId).newMessage("Successfuly added order");
+        GetTeam(user);
     }
 }

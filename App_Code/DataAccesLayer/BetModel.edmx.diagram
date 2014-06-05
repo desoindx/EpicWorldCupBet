@@ -4,9 +4,17 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="7ce8041dd7b342fb95fbbd183720e3b8" Name="Diagram1">
-        <EntityTypeShape EntityType="EpicBetModel.Order" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EpicBetModel.Trade" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+      <Diagram DiagramId="fc2ce1e611ef482492350eef9b188c30" Name="Diagram1">
+        <EntityTypeShape EntityType="dbd533926a738d422481bda34000eb626cModel.C__MigrationHistory" Width="1.5" PointX="0.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbd533926a738d422481bda34000eb626cModel.AspNetRole" Width="1.5" PointX="0.75" PointY="2.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbd533926a738d422481bda34000eb626cModel.AspNetUserClaim" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbd533926a738d422481bda34000eb626cModel.AspNetUserLogin" Width="1.5" PointX="5.25" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbd533926a738d422481bda34000eb626cModel.AspNetUser" Width="1.5" PointX="3" PointY="2" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbd533926a738d422481bda34000eb626cModel.Order" Width="1.5" PointX="2.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbd533926a738d422481bda34000eb626cModel.Trade" Width="1.5" PointX="4.75" PointY="6.75" IsExpanded="true" />
+        <AssociationConnector Association="dbd533926a738d422481bda34000eb626cModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_User_Id" ManuallyRouted="false" />
+        <AssociationConnector Association="dbd533926a738d422481bda34000eb626cModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" ManuallyRouted="false" />
+        <AssociationConnector Association="dbd533926a738d422481bda34000eb626cModel.AspNetUserRoles" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

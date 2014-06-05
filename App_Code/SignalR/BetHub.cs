@@ -15,14 +15,14 @@ namespace Microsoft.AspNet.SignalR.StockTicker
             _betClient = new BetClient(GlobalHost.ConnectionManager.GetHubContext<BetHub>().Clients);
         }
 
-        public void GetTeam()
+        public void GetTeam(string user)
         {
-            _betClient.GetTeam("Xavier");
+            _betClient.GetTeam(user);
         }
 
         public void SendOrder(string user, string team, int quantity, int price, string side)
         {
-            _betClient.NewOrder(user, team, quantity, price, side);
+            _betClient.NewOrder(user, team, quantity, price, side.ToUpper(), Context.ConnectionId);
         }
     }
 }

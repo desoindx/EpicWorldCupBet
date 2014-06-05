@@ -61,6 +61,7 @@
                             </ul>
                         </AnonymousTemplate>
                         <LoggedInTemplate>
+                            <label id="UserId" style ="display: none;"><%: Context.User.Identity.GetUserName()  %></label>
                             <ul class="nav navbar-nav navbar-right">
                                 <li><a runat="server" href="~/Account/Manage" title="Manage your account">Hello, <%: Context.User.Identity.GetUserName()  %>!</a></li>
                                 <li>
