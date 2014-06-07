@@ -20,7 +20,7 @@ namespace DataAccesLayer
     public partial class Entities : DbContext
     {
         public Entities()
-            : base(GetConnectionString())
+            : base("name=Entities")
         {
             var ensureDLLIsCopied =
                     System.Data.Entity.SqlServer.SqlProviderServices.Instance;   
