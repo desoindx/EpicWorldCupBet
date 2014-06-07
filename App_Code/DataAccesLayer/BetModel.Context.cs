@@ -22,12 +22,16 @@ namespace DataAccesLayer
         public Entities()
             : base(GetConnectionString())
         {
+            var ensureDLLIsCopied =
+                    System.Data.Entity.SqlServer.SqlProviderServices.Instance;   
         }
     
         private static string GetConnectionString()
         {
             var uriString = ConfigurationManager.AppSettings["SQLSERVER_URI"];
-             var uri = new Uri(uriString);
+            if (uriString == null)
+                uriString = "sqlserver://nkffzcwhcdtslhqf:BQWXgX4RBNdKrVshFRhpFLxtaAW7bmuBNTUFK2EPCDSpcrbsWNkSkwPXrBWNb6Qq@d533926a-738d-4224-81bd-a34000eb626c.sqlserver.sequelizer.com/dbd533926a738d422481bda34000eb626c";
+            var uri = new Uri(uriString);
 
             // Initialize the connection string builder for the
             // underlying provider.

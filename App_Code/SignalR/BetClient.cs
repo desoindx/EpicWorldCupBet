@@ -85,7 +85,7 @@ public class BetClient
 
     public void NewOrder(string user, string team, int quantity, int price, string side, string connectionId)
     {
-        if (!(Teams.Contains(team) && quantity > 0 && price > 0 && price < 100 && (side == "BUY" || side == "SELL")))
+        if (!(string.IsNullOrEmpty(user) && Teams.Contains(team) && quantity > 0 && price > 0 && price < 100 && (side == "BUY" || side == "SELL")))
         {
             Clients.Client(connectionId).newMessage("Fail To add order");
             return; 
