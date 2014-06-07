@@ -1,7 +1,7 @@
 ﻿$(function () {
     drawOrdersGrid = function (orders) {
         var grid,
-         data = [],
+         bidasks = [],
          columns = [
            { id: "Team", name: "Team", field: "Team", width: 200, sortable: true },
            { id: "BestBid", name: "Best Bid", field: "BestBid", width: 100, sortable: true },
@@ -20,27 +20,35 @@
         // Assign values to the data.
         for (i = numberOfItems; i-- > 0;) {
             order = orders[i];
-            data[i] = {};
-            data[i].Team = order.Team;
-            data[i].BestBid = order.BestBid;
-            data[i].BestAsk = order.BestAsk;
-            data[i].MyBid = order.MyBid;
-            data[i].MyAsk = order.MyAsk;
+            bidasks[i] = {};
+            bidasks[i].Team = order.Team;
+            if (order.BestBid != 0)
+                bidasks[i].BestBid = order.BestBid;
+            else
+                bidasks[i].BestBid = '';
+            if (order.BestAsk != 0)
+                bidasks[i].BestAsk = order.BestAsk;
+            else
+                bidasks[i].BeBestAskstBid = '';
+            if (order.MyBid != 0)
+                bidasks[i].MyBid = order.MyBid;
+            else
+                bidasks[i].MyBid = '';
+            if (order.MyAsk != 0)
+                bidasks[i].MyAsk = order.MyAsk;
+            else
+                bidasks[i].MyAsk = '';
+            bidasks[i].BestBidQuantity = order.BestBidQuantity;
+            bidasks[i].BestAskQuantity = order.BestAskQuantity;
+            bidasks[i].MyBidQuantity = order.MyBidQuantity;
+            bidasks[i].MyAskQuantity = order.MyAskQuantity;
         }
 
-        // Define function used to get the data and sort it.
-        function getItem(index) {
-            return isAsc ? data[orders[index].Team] : data[orders[(data.length - 1) - index].Team];
-        }
-        function getLength() {
-            return numberOfItems;
-        }
-
-        grid = new Slick.Grid("#BidAskDiv", data, columns, options);
+        grid = new Slick.Grid("#BidAskDiv", bidasks, columns, options);
 
         grid.onSort.subscribe(function (e, args) {
             var cols = args.sortCols;
-            data.sort(function (dataRow1, dataRow2) {
+            bidasks.sort(function (dataRow1, dataRow2) {
                 for (var i = 0, l = cols.length; i < l; i++) {
                     var field = cols[i].sortCol.field;
                     var sign = cols[i].sortAsc ? 1 : -1;
@@ -62,29 +70,36 @@
                 return;
             }
             var item = args.grid.getData()[args.row];
+            if (cell.cell == 0)
+                return;
 
             $("#TeamOrder").text(item.Team);
 
-            if (cell.cell == 1)
-            {
-                $("#SideOrder").text('BUY');
+            if (cell.cell == 1) {
+                $("#CancelOrder").hide();
+                $("#SideOrder").text('SELL');
                 $("#PriceOrder").val(item.BestBid);
-                $("#QuantityOrder").val('5');
+                $("#QuantityOrder").val(item.BestBidQuantity);
             }
             else if (cell.cell == 2) {
-                $("#SideOrder").text('SELL');
+                $("#CancelOrder").hide();
+                $("#SideOrder").text('BUY');
                 $("#PriceOrder").val(item.BestAsk);
-                $("#QuantityOrder").val('5');
+                $("#QuantityOrder").val(item.BestAskQuantity);
             }
             else if (cell.cell == 3) {
+                $("#CancelOrder").show();
+                $("#CancelOrder").html('Cancel Buy Order');
                 $("#SideOrder").text('BUY');
                 $("#PriceOrder").val(item.MyBid);
-                $("#QuantityOrder").val('5');
+                $("#QuantityOrder").val(item.MyBidQuantity);
             }
             else if (cell.cell == 4) {
+                $("#CancelOrder").show();
+                $("#CancelOrder").html('Cancel Sell Order');
                 $("#SideOrder").text('SELL');
                 $("#PriceOrder").val(item.MyAsk);
-                $("#QuantityOrder").val('5');
+                $("#QuantityOrder").val(item.MyAskQuantity);
             }
         });
     }

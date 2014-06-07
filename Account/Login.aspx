@@ -45,17 +45,10 @@
                         </div>
                     </div>
                 </div>
-                <p>
-                    <asp:HyperLink runat="server" ID="RegisterHyperLink" ViewStateMode="Disabled">Register</asp:HyperLink>
-                    if you don't have a local account.
-                </p>
             </section>
         </div>
 
         <div class="col-md-4">
-            <section id="socialLoginForm">
-                <uc:openauthproviders runat="server" id="OpenAuthLogin" />
-            </section>
         </div>
     </div>
 </asp:Content>
