@@ -29,6 +29,7 @@
             $.connection.Bet.server.getMoney($("#UserId").text());
             $.connection.Bet.server.getTeam($("#UserId").text());
             $.connection.Bet.server.getLastTrades();
+            $.connection.Bet.server.getMessages();
 
             $("#SendOrder").click(function () {
                 betHub.server.sendOrder($("#UserId").text(), $("#TeamOrder").text(), $("#QuantityOrder").val(), $("#PriceOrder").val(), $("#SideOrder").text());
