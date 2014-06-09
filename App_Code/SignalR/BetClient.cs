@@ -280,7 +280,7 @@ public class BetClient
                 {
                     if ((side == "BUY" && otherOrder.Price <= price) || (side == "SELL" && otherOrder.Price > price))
                     {
-                        Clients.Client(connectionId).newMessage("Cannot place order on this team anymore");
+                        Clients.Client(connectionId).newMessage("please check your price !!!");
                         return;
                     }
                 }
