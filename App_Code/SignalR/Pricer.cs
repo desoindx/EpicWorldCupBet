@@ -8,7 +8,7 @@ using System.Web;
 /// </summary>
 public class Pricer
 {
-    private const int mc = 100000;
+    private const int mc = 10000;
     private Random r = new Random();
     private List<string> Teams = new List<string> {"Brazil",
         "Croatia",
