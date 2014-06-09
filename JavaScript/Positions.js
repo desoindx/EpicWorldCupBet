@@ -13,7 +13,7 @@
         
         columns[0] = { id: "Team", name: "Team", field: "Team", width: 200, sortable: false };
         for (i = 0; i < users.length; i++) {
-            columns[i + 1] = { id: users[i], name: users[i], field: users[i], width: 50, sortable: false };
+            columns[i + 1] = { id: users[i], name: users[i], field: users[i], width: 150, sortable: false };
          }
 
         for (i = 0; i < teams.length; i++) {
