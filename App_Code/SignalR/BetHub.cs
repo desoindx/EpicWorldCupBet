@@ -44,6 +44,22 @@ namespace Microsoft.AspNet.SignalR.StockTicker
         {
             _betClient.GetMoney(user, Context.ConnectionId);
         }
+
+        public void SendMessage(string user, string message)
+        {
+            _betClient.SendMessage(user, message);
+        }
+
+        public void GetMessages()
+        {
+            _betClient.GetMessages();
+        }
+
+        public void GetLastTrades()
+        {
+            _betClient.GetLastTrades(Context.ConnectionId);
+        }
+
         public void Price(string password,
         int Brazil,
         int Croatia,

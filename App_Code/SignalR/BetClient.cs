@@ -275,6 +275,16 @@ public class BetClient
                     return;
                 }
 
+                var otherOrder = context.Orders.Where(x => x.User == user && x.Status == 0 && x.Team == team && x.Side != side).FirstOrDefault();
+                if (otherOrder != null)
+                {
+                    if ((side == "BUY" && otherOrder.Price <= price) || (side == "SELL" && otherOrder.Price > price))
+                    {
+                        Clients.Client(connectionId).newMessage("Cannot place order on this team anymore");
+                        return;
+                    }
+                }
+
                 if (UserHasEnough(context, user, quantity, price, side))
                 {
                     var remainingQuantity = InsertTrade(context, user, team, quantity, price, side, connectionId);
@@ -487,5 +497,52 @@ public class BetClient
             price.Add(value.Value);
         }
         Clients.Client(connectionId).pricingFinished(teams, price);
+    }
+
+    public void GetLastTrades(string connectionId)
+    {
+        using (var context = new Entities())
+        {
+            var tradeList = new List<string>();
+            var trades = context.Trades.OrderByDescending(x => x.Date);
+            var enumerator = trades.GetEnumerator();
+            int i = 0;
+            while (enumerator.MoveNext() && i < 5)
+            { 
+                i++;
+                tradeList.Add(string.Format("At {0}, {1} {2} traded at {3}", enumerator.Current.Date.ToShortTimeString(), enumerator.Current.Quantity, enumerator.Current.Team, enumerator.Current.Price));
+            }
+
+            Clients.Client(connectionId).lastTrades(tradeList);
+        }
+    }
+
+    private static List<string> chat = new List<string>();
+
+    public void SendMessage(string user, string message)
+    {
+        if (string.IsNullOrEmpty(user))
+            return;
+
+        if (chat.Count() > 9)
+        {
+            chat.RemoveAt(0);
+        }
+
+        var messages = new List<string>();
+        var nbMessage = Math.Min(9, chat.Count);
+        for (int i = 0; i < nbMessage; i++)
+        {
+            messages.Add(chat[i]);
+        }
+        messages.Add(user + " - " + message);
+
+        chat = messages;
+        GetMessages();
+    }
+
+    public void GetMessages()
+    {
+        Clients.All.chat(chat);
     }
 }

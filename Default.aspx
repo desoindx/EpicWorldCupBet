@@ -12,8 +12,29 @@
     <script src="JavaScript/Order.js"></script>
     <script src="JavaScript/SignalROrder.js"></script>
 
-    <div style="width: 600px; height: 1200px;" id="BidAskDiv"><label>Loading in progress</label></div>
-    <div style="margin-top: -1100px; margin-left: 600px; width: 500px; height: 1200px;" id="OrderDiv">
+    <div style="width: 600px; height: 1200px;" id="BidAskDiv">
+        <label>Loading in progress</label></div>
+    <div style="margin-top: -1200px; margin-left: 650px; width: 500px;">
+        <p>
+            <label>Last Trades : </label>
+        </p>
+        <p>
+            <label id="Trade1"></label>
+        </p>
+        <p>
+            <label id="Trade2"></label>
+        </p>
+        <p>
+            <label id="Trade3"></label>
+        </p>
+        <p>
+            <label id="Trade4"></label>
+        </p>
+        <p>
+            <label id="Trade5"></label>
+        </p>
+    </div>
+    <div style="margin-top: 40px; margin-left: 600px; width: 500px; height: 200px;" id="OrderDiv">
         <table style="margin-left: 50px">
             <tbody>
                 <tr>
@@ -42,11 +63,50 @@
                 </tr>
                 <tr>
                     <td>
-                        <input style="margin-left: 10px"  type="button" id="SendOrder" value="Send" />
-                        <input style="margin-left: 20px; display: none;"  type="button" id="CancelOrder" value="Cancel Buy Order" />
+                        <input style="margin-left: 10px" type="button" id="SendOrder" value="Send" />
+                        <input style="margin-left: 20px; display: none;" type="button" id="CancelOrder" value="Cancel Buy Order" />
                     </td>
                 </tr>
             </tbody>
         </table>
+    </div>
+    <div style="margin-top: 20px; margin-left: 650px; width: 500px;">
+        <p>
+            <label>Chat : </label>
+        </p>
+        <p>
+            <label id="Message1"></label>
+        </p>
+        <p>
+            <label id="Message2"></label>
+        </p>
+        <p>
+            <label id="Message3"></label>
+        </p>
+        <p>
+            <label id="Message4"></label>
+        </p>
+        <p>
+            <label id="Message5"></label>
+        </p>
+        <p>
+            <label id="Message6"></label>
+        </p>
+        <p>
+            <label id="Message7"></label>
+        </p>
+        <p>
+            <label id="Message8"></label>
+        </p>
+        <p>
+            <label id="Message9"></label>
+        </p>
+        <p>
+            <label id="Message10"></label>
+        </p>
+        <p>
+            <input style="margin-left: 13px; width:400px" type='textbox' id='Message' />
+            <input style="margin-left: 10px" type="button" id="SendMessage" value="Send" />
+        </p>
     </div>
 </asp:Content>
