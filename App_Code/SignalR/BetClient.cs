@@ -8,6 +8,8 @@ using System.Web;
 
 public class BetClient
 {
+    private const int MaxExposure = 1500;
+
     public BetClient(IHubConnectionContext clients)
     {
         Clients = clients;
@@ -53,6 +55,70 @@ public class BetClient
         "Russia",
         "South Korea"
     };
+
+    public void GetClassement(string connectionId)
+    {
+        using (var context = new Entities())
+        {
+            var teamsBuyValue = new Dictionary<string, int>();
+            var teamsSellValue = new Dictionary<string, int>();
+            foreach (var team in Teams)
+            {
+                var result = context.Results.Where(x => x.Team == team).FirstOrDefault();
+                if (result != null)
+                {
+                    teamsBuyValue.Add(team, result.Value);
+                    teamsSellValue.Add(team, result.Value);
+                }
+                else
+                {
+                    var lastTrade = context.Trades.Where(x => x.Team == team).OrderByDescending(x => x.Date).FirstOrDefault();
+                    var bestAsk = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side == "SELL").OrderByDescending(x => x.Price).FirstOrDefault();
+                    if (bestAsk != null)
+                    {
+                        teamsBuyValue.Add(team, bestAsk.Price);
+                    }
+                    else if (lastTrade != null)
+                    {
+                        teamsBuyValue.Add(team, lastTrade.Price);
+                    }
+                    
+                    var bestBid = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side == "BUY").OrderBy(x => x.Price).FirstOrDefault();
+                    if (bestBid != null)
+                    {
+                        teamsSellValue.Add(team, bestBid.Price);
+                    }
+                    else if (lastTrade != null)
+                    {
+                        teamsSellValue.Add(team, lastTrade.Price);
+                    }
+                }
+            }
+
+            var userValue = new Dictionary<string, int>();
+            foreach (var money in context.Moneys)
+            {
+                userValue.Add(money.User, money.Money1);
+            }
+
+            foreach (var trade in context.Trades)
+            {
+                userValue[trade.Buyer] += teamsBuyValue[trade.Team] * trade.Quantity;
+                userValue[trade.Seller] -= teamsSellValue[trade.Team] * trade.Quantity; 
+            }
+
+            var orderedValue = userValue.OrderByDescending(x => x.Value);
+            var user = new List<string>();
+            var moneys = new List<int>();
+
+            foreach(var value in orderedValue)
+            {
+                user.Add(value.Key);
+                moneys.Add(value.Value);
+            }
+            Clients.Client(connectionId).newRanking(user, moneys);
+        }
+    }
 
     public void GetPositions(string user, string connectionId)
     {
@@ -158,12 +224,12 @@ public class BetClient
                 orders.Add(order);
             }
         }
-        Clients.All.newOrders(orders);
+        Clients.Client(connectionId).newOrders(orders);
     }
 
     public void CancelOrder(string user, string side, string team, string connectionId)
     {
-        if (!(string.IsNullOrEmpty(user) && Teams.Contains(team)))
+        if (!(!string.IsNullOrEmpty(user) && Teams.Contains(team)))
         {
             Clients.Client(connectionId).newMessage("Fail To cancel order");
             return;
@@ -203,15 +269,52 @@ public class BetClient
         {
             using (var context = new Entities())
             {
-                var remainingQuantity = InsertTrade(context, user, team, quantity, price, side, connectionId);
-                if (remainingQuantity > 0)
-                    InsertNewOrder(context, user, team, remainingQuantity, price, side, connectionId);
+                if (context.Results.Where(x => x.Team == team).FirstOrDefault() != null)
+                {
+                    Clients.Client(connectionId).newMessage("Cannot place order on this team anymore");
+                    return;
+                }
 
-                context.SaveChanges();
+                if (UserHasEnough(context, user, quantity, price, side))
+                {
+                    var remainingQuantity = InsertTrade(context, user, team, quantity, price, side, connectionId);
+                    if (remainingQuantity > 0)
+                        InsertNewOrder(context, user, team, remainingQuantity, price, side, connectionId);
+
+                    context.SaveChanges();
+                }
+                else
+                {
+                    Clients.Client(connectionId).newMessage("You already have too much exposure");
+                    return;
+                }
             }
         }
 
+        GetMoney(user, connectionId);
         GetTeam(user, connectionId);
+    }
+
+    private bool UserHasEnough(Entities context, string user, int quantity, int price, string side)
+    {
+        if (side == "SELL")
+            return true;
+
+        var userMoney = context.Moneys.Where(x => x.User == user).FirstOrDefault();
+        if (userMoney == null)
+        {
+            userMoney = new Money { User = user, Money1 = MaxExposure };
+            context.Moneys.Add(userMoney);
+        }
+
+        var previousOrders = context.Orders.Where(x => x.User == user && x.Status == 0 && x.Side == "BUY");
+        int exposure = price * quantity;
+        foreach (var previousOrder in previousOrders)
+        {
+            exposure += previousOrder.Price * previousOrder.Quantity;
+        }
+
+        return exposure <= MaxExposure;
     }
 
     private int InsertTrade(Entities context, string user, string team, int quantity, int price, string side, string connectionId)
@@ -250,7 +353,22 @@ public class BetClient
         trade.Price = price;
         trade.Seller = seller;
         context.Trades.Add(trade);
-        context.SaveChanges();
+
+        var buyerMoney = context.Moneys.Where(x => x.User == buyer).FirstOrDefault();
+        if (buyerMoney == null)
+        {
+            buyerMoney = new Money { User = buyer, Money1 = MaxExposure };
+            context.Moneys.Add(buyerMoney);
+        }
+        var sellerMoney = context.Moneys.Where(x => x.User == seller).FirstOrDefault();
+        if (sellerMoney == null)
+        {
+            sellerMoney = new Money { User = seller, Money1 = MaxExposure };
+            context.Moneys.Add(sellerMoney);
+        }
+
+        buyerMoney.Money1 -= price * quantity;
+        sellerMoney.Money1 += price * quantity;
     }
 
     private void InsertNewOrder(Entities context, string user, string team, int quantity, int price, string side, string connectionId)
@@ -270,5 +388,25 @@ public class BetClient
         order.Price = price;
         order.Side = side;
         context.Orders.Add(order);
+
+        Clients.Client(connectionId).newMessage("Succefuly add order");
+    }
+
+    public void GetMoney(string user, string connectionId)
+    {
+        if (string.IsNullOrEmpty(user))
+            return;
+
+        using (var context = new Entities())
+        {
+            var money = context.Moneys.Where(x => x.User == user).FirstOrDefault();
+            if (money == null)
+            {
+                money = new Money { User = user, Money1 = MaxExposure };
+                context.Moneys.Add(money);
+                context.SaveChanges();
+            }
+            Clients.Client(connectionId).newMoney(money.Money1);
+        }
     }
 }

@@ -8,11 +8,15 @@
         },
         newMessage: function (message) {
             alert(message);
+        },
+        newMoney: function (money) {
+            $("#UserMoney").text(money + '€');
         }
 });
 
 $.connection.hub.start()
     .done(function (state) {
+        $.connection.Bet.server.getMoney($("#UserId").text());
         $.connection.Bet.server.getPosition($("#UserId").text());
 
         $("#SendOrder").click(function () {

@@ -12,6 +12,17 @@ namespace DataAccesLayer
     using System;
     using System.Collections.Generic;
     
+    public partial class Money
+    {
+        public string User { get; set; }
+        public int Money1 { get; set; }
+    }
+}
+namespace DataAccesLayer
+{
+    using System;
+    using System.Collections.Generic;
+    
     public partial class Order
     {
         public int Id { get; set; }
@@ -22,6 +33,17 @@ namespace DataAccesLayer
         public int Status { get; set; }
         public int Price { get; set; }
         public string Side { get; set; }
+    }
+}
+namespace DataAccesLayer
+{
+    using System;
+    using System.Collections.Generic;
+    
+    public partial class Result
+    {
+        public string Team { get; set; }
+        public int Value { get; set; }
     }
 }
 namespace DataAccesLayer

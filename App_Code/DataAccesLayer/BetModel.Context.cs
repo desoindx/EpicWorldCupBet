@@ -27,8 +27,6 @@ namespace DataAccesLayer
         private static string GetConnectionString()
         {
             var uriString = ConfigurationManager.AppSettings["SQLSERVER_URI"];
-            if (uriString == null)
-                uriString = "sqlserver://nkffzcwhcdtslhqf:BQWXgX4RBNdKrVshFRhpFLxtaAW7bmuBNTUFK2EPCDSpcrbsWNkSkwPXrBWNb6Qq@d533926a-738d-4224-81bd-a34000eb626c.sqlserver.sequelizer.com/dbd533926a738d422481bda34000eb626c";
             var uri = new Uri(uriString);
 
             // Initialize the connection string builder for the
@@ -67,7 +65,9 @@ namespace DataAccesLayer
         {
             throw new UnintentionalCodeFirstException();
         }
-    
+
+        public virtual DbSet<Money> Moneys { get; set; }
+        public virtual DbSet<Result> Results { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<Trade> Trades { get; set; }
     }
