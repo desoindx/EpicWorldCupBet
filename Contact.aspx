@@ -5,6 +5,6 @@
     <h3>Xavier Desoidre</h3>
 
     <address>
-        <strong>Support:</strong>   <a href="xavier.desoindre@hotmail.fr">xavier.desoindre@hotmail.fr</a><br />
+        <strong>Support:</strong>   <a href="mailto:xavier.desoindre@hotmail.fr">xavier.desoindre@hotmail.fr</a><br />
     </address>
 </asp:Content>
