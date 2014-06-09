@@ -444,7 +444,8 @@ public class BetClient
         int Russia,
         int South)
     {
-        var pricingResult = Pricer.Price(new List<int> {Brazil,
+        var pricer = new Pricer();
+        var pricingResult = pricer.Price(new List<int> {Brazil,
         Croatia,
         Mexico,
         Cameroon,

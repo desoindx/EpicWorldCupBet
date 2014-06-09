@@ -6,11 +6,11 @@ using System.Web;
 /// <summary>
 /// Summary description for Pricer
 /// </summary>
-public static class Pricer
+public class Pricer
 {
     private const int mc = 100000;
-    private static Random r = new Random();
-    private static List<string> Teams = new List<string> {"Brazil",
+    private Random r = new Random();
+    private List<string> Teams = new List<string> {"Brazil",
         "Croatia",
         "Mexico",
         "Cameroon",
@@ -44,7 +44,7 @@ public static class Pricer
         "South Korea"
     };
 
-    public static Dictionary<string, int> TeamsValue = new Dictionary<string, int> { {"Brazil", 100},
+    public Dictionary<string, int> TeamsValue = new Dictionary<string, int> { {"Brazil", 100},
          {"Croatia",20},
          {"Mexico", 20},
          {"Cameroon",18},
@@ -78,7 +78,7 @@ public static class Pricer
          {"South Korea",9}
     };
 
-    public static Dictionary<string, double> Price(List<int> values)
+    public Dictionary<string, double> Price(List<int> values)
     {
         var price = new Dictionary<string, double>();
         int i = 0;
@@ -156,7 +156,7 @@ public static class Pricer
         return results;
     }
 
-    private static void PlayQuartGame(int team1, int team2, int matchNumber, Dictionary<int, string> games, Dictionary<string, double> price, Dictionary<int, string> demies)
+    private void PlayQuartGame(int team1, int team2, int matchNumber, Dictionary<int, string> games, Dictionary<string, double> price, Dictionary<int, string> demies)
     {
         var winner = PlayGame(games[team1], games[team2]);
         if (winner == 1)
@@ -171,7 +171,7 @@ public static class Pricer
         }
     }
 
-    private static Dictionary<int, string> Quarts(Dictionary<int, string> games, Dictionary<string, double> price)
+    private Dictionary<int, string> Quarts(Dictionary<int, string> games, Dictionary<string, double> price)
     {
         var demies = new Dictionary<int, string>();
         PlayQuartGame(49, 50, 57, games, price, demies);
@@ -182,7 +182,7 @@ public static class Pricer
         return demies;
     }
 
-    private static Dictionary<int, string> Huitiemes(Dictionary<string, string> games, Dictionary<string, double> price)
+    private Dictionary<int, string> Huitiemes(Dictionary<string, string> games, Dictionary<string, double> price)
     {
         var quarts = new Dictionary<int, string>();
         PlayHuitiemGame("0-1", "1-2", 49, games, price, quarts);
@@ -197,7 +197,7 @@ public static class Pricer
         return quarts;
     }
 
-    private static void PlayHuitiemGame(string team1, string team2, int matchNumber, Dictionary<string, string> games, Dictionary<string, double> price, Dictionary<int, string> quarts)
+    private void PlayHuitiemGame(string team1, string team2, int matchNumber, Dictionary<string, string> games, Dictionary<string, double> price, Dictionary<int, string> quarts)
     {
 
         var winner = PlayGame(games[team1], games[team2]);
@@ -213,7 +213,7 @@ public static class Pricer
         }
     }
 
-    private static Dictionary<string, string> Poule()
+    private Dictionary<string, string> Poule()
     {
         var finals = new Dictionary<string, string>();
         for (int i = 0; i < 8; i++)
@@ -238,7 +238,7 @@ public static class Pricer
         return finals;
     }
 
-    private static int PlayGame(string team1, string team2)
+    private int PlayGame(string team1, string team2)
     {
         double team1Value = TeamsValue[team1];
         double team2Value = TeamsValue[team2];
@@ -253,7 +253,7 @@ public static class Pricer
         }
     }
 
-    private static void PlayPouleGame(string team1, string team2, Dictionary<string, int> rank)
+    private void PlayPouleGame(string team1, string team2, Dictionary<string, int> rank)
     {
         double team1Value = TeamsValue[team1];
         double team2Value = TeamsValue[team2];
