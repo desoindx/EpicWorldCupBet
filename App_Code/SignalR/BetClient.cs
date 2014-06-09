@@ -82,7 +82,7 @@ public class BetClient
                     {
                         teamsBuyValue.Add(team, lastTrade.Price);
                     }
-                    
+
                     var bestBid = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side == "BUY").OrderBy(x => x.Price).FirstOrDefault();
                     if (bestBid != null)
                     {
@@ -104,14 +104,14 @@ public class BetClient
             foreach (var trade in context.Trades)
             {
                 userValue[trade.Buyer] += teamsBuyValue[trade.Team] * trade.Quantity;
-                userValue[trade.Seller] -= teamsSellValue[trade.Team] * trade.Quantity; 
+                userValue[trade.Seller] -= teamsSellValue[trade.Team] * trade.Quantity;
             }
 
             var orderedValue = userValue.OrderByDescending(x => x.Value);
             var user = new List<string>();
             var moneys = new List<int>();
 
-            foreach(var value in orderedValue)
+            foreach (var value in orderedValue)
             {
                 user.Add(value.Key);
                 moneys.Add(value.Value);
@@ -408,5 +408,83 @@ public class BetClient
             }
             Clients.Client(connectionId).newMoney(money.Money1);
         }
+    }
+
+    public void Price(string connectionId,
+        int Brazil,
+        int Croatia,
+        int Mexico,
+        int Cameroon,
+        int Australia,
+        int Chile,
+        int Netherlands,
+        int Spain,
+        int Colombia,
+        int Greece,
+        int Ivory,
+        int Japan,
+        int Costa,
+        int England,
+        int Italy,
+        int Uruguay,
+        int Ecuador,
+        int France,
+        int Honduras,
+        int Switzerland,
+        int Argentina,
+        int Bosnia,
+        int Iran,
+        int Nigeria,
+        int Germany,
+        int Ghana,
+        int Portugal,
+        int United,
+        int Algeria,
+        int Belgium,
+        int Russia,
+        int South)
+    {
+        var pricingResult = Pricer.Price(new List<int> {Brazil,
+        Croatia,
+        Mexico,
+        Cameroon,
+        Australia,
+        Chile,
+        Netherlands,
+        Spain,
+        Colombia,
+        Greece,
+        Ivory,
+        Japan,
+        Costa,
+        England,
+        Italy,
+        Uruguay,
+        Ecuador,
+        France,
+        Honduras,
+        Switzerland,
+        Argentina,
+        Bosnia,
+        Iran,
+        Nigeria,
+        Germany,
+        Ghana,
+        Portugal,
+        United,
+        Algeria,
+        Belgium,
+        Russia,
+        South});
+
+        var teams = new List<string>();
+        var price = new List<double>();
+
+        foreach (var value in pricingResult)
+        {
+            teams.Add(value.Key.Replace(" ", ""));
+            price.Add(value.Value);
+        }
+        Clients.Client(connectionId).pricingFinished(teams, price);
     }
 }
