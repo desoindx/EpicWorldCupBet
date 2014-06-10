@@ -8,7 +8,7 @@ using System.Web;
 
 public class BetClient
 {
-    private const int MaxExposure = 1500;
+    private const int MaxExposure = 10000;
 
     public BetClient(IHubConnectionContext clients)
     {
@@ -166,22 +166,44 @@ public class BetClient
                 }
             }
 
+            var teamToRemove = new List<string>();
+            foreach (var team in Teams)
+            {
+                var tmpTeam = temp[team];
+                int value;
+                if (tmpTeam.TryGetValue("Sum", out value))
+                {
+                    if (value == 0)
+                        teamToRemove.Add(team);
+                }
+            }
+
+            var stuntedTeams = new List<string>(Teams);
+            foreach (var team in teamToRemove)
+            {
+                temp.Remove(team);
+                stuntedTeams.Remove(team);
+            }
+
             var pos = new List<int>();
             for (int i = 0; i < users.Count; i++)
             {
                 var usr = users[i];
-                for (int j = 0; j < Teams.Count; j++)
+                for (int j = 0; j < stuntedTeams.Count; j++)
                 {
-                    var tmpTeam = temp[Teams[j]];
-                    int value;
-                    if (tmpTeam.TryGetValue(usr, out value))
-                        pos.Add(value);
-                    else
-                        pos.Add(0);
+                    Dictionary<string, int> tmpTeam;
+                    if (temp.TryGetValue(stuntedTeams[j], out tmpTeam))
+                    {
+                        int value;
+                        if (tmpTeam.TryGetValue(usr, out value))
+                            pos.Add(value);
+                        else
+                            pos.Add(0);
+                    }
                 }
             }
 
-            Clients.Client(connectionId).newPositions(Teams, users, pos);
+            Clients.Client(connectionId).newPositions(stuntedTeams, users, pos);
         }
     }
 
@@ -303,6 +325,7 @@ public class BetClient
 
         GetMoney(user, connectionId);
         GetTeam(user, connectionId);
+        GetLastTrades();
     }
 
     private bool UserHasEnough(Entities context, string user, int quantity, int price, string side)
@@ -499,7 +522,7 @@ public class BetClient
         Clients.Client(connectionId).pricingFinished(teams, price);
     }
 
-    public void GetLastTrades(string connectionId)
+    public void GetLastTrades(string connectionId = null)
     {
         using (var context = new Entities())
         {
@@ -508,12 +531,15 @@ public class BetClient
             var enumerator = trades.GetEnumerator();
             int i = 0;
             while (enumerator.MoveNext() && i < 5)
-            { 
+            {
                 i++;
                 tradeList.Add(string.Format("At {0}, {1} {2} traded at {3}", enumerator.Current.Date.ToShortTimeString(), enumerator.Current.Quantity, enumerator.Current.Team, enumerator.Current.Price));
             }
 
-            Clients.Client(connectionId).lastTrades(tradeList);
+            if (connectionId != null)
+                Clients.Client(connectionId).lastTrades(tradeList);
+            else
+                Clients.All.lastTrades(tradeList);
         }
     }
 

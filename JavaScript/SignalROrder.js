@@ -43,5 +43,12 @@
                 betHub.server.sendMessage($("#UserId").text(), $("#Message").val());
                 $("#Message").val('');
             });
+
+            $("#Message").keypress(function (event) {
+                if (event.which == 13) {
+                    event.preventDefault();
+                    $("#SendMessage").trigger("click");
+                }
+            })
         });
 });

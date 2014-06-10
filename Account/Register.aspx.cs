@@ -8,6 +8,9 @@ public partial class Account_Register : Page
 {
     protected void CreateUser_Click(object sender, EventArgs e)
     {
+        if (Context.User.Identity.Name != "Xavier")
+            return;
+
         var manager = new UserManager();
         var user = new ApplicationUser() { UserName = UserName.Text };
         IdentityResult result = manager.Create(user, Password.Text);
