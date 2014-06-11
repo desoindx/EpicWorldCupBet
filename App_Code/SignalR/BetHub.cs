@@ -60,6 +60,13 @@ namespace Microsoft.AspNet.SignalR.StockTicker
             _betClient.GetLastTrades(Context.ConnectionId);
         }
 
+        public void GetAllTrades(string user)
+        {
+            if (string.IsNullOrEmpty(user))
+                return;
+            _betClient.GetTrades(user, Context.ConnectionId);
+        }
+
         public void Price(string password,
         int Brazil,
         int Croatia,

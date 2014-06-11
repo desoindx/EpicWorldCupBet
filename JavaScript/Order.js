@@ -21,7 +21,8 @@
         for (i = numberOfItems; i-- > 0;) {
             order = orders[i];
             bidasks[i] = {};
-            bidasks[i].Team = order.Team;
+            bidasks[i].Team = order.Team + " (" + order.LastTradedPrice + ")";
+            bidasks[i].TeamName = order.Team;
             if (order.BestBid != 0)
                 bidasks[i].BestBid = order.BestBid;
             else
@@ -73,7 +74,7 @@
             if (cell.cell == 0)
                 return;
 
-            $("#TeamOrder").text(item.Team);
+            $("#TeamOrder").text(item.TeamName);
 
             if (cell.cell == 1) {
                 $("#CancelOrder").hide();
@@ -89,14 +90,14 @@
             }
             else if (cell.cell == 3) {
                 $("#CancelOrder").show();
-                $("#CancelOrder").html('Cancel Buy Order');
+                $("#CancelOrder").prop('value', 'Cancel Buy Order');
                 $("#SideOrder").text('BUY');
                 $("#PriceOrder").val(item.MyBid);
                 $("#QuantityOrder").val(item.MyBidQuantity);
             }
             else if (cell.cell == 4) {
                 $("#CancelOrder").show();
-                $("#CancelOrder").html('Cancel Sell Order');
+                $("#CancelOrder").prop('value', 'Cancel Sell Order');
                 $("#SideOrder").text('SELL');
                 $("#PriceOrder").val(item.MyAsk);
                 $("#QuantityOrder").val(item.MyAskQuantity);

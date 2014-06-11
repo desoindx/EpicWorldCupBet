@@ -56,42 +56,55 @@ public class BetClient
         "South Korea"
     };
 
+    public void GetTrades(string user, string connectionId)
+    {
+        var tradesMessages = new List<string>();
+        using (var context = new Entities())
+        {
+            var trades = context.Trades.Where(x => x.Buyer == user  || x.Seller == user).OrderByDescending(x => x.Date);
+            foreach (var trade in trades)
+            {
+                tradesMessages.Add(string.Format("{6} {2}, You traded {5}{0} {1} at {3} with {4}", trade.Quantity, trade.Team, trade.Date.ToLongTimeString(), trade.Price, trade.Seller == user ? trade.Buyer : trade.Seller, trade.Seller == user ? "-" : "", trade.Date.ToLongDateString()));
+            }
+        }
+        Clients.Client(connectionId).histoTrades(tradesMessages);
+    }
+
     public void GetClassement(string connectionId)
     {
         using (var context = new Entities())
         {
-            var teamsBuyValue = new Dictionary<string, int>();
-            var teamsSellValue = new Dictionary<string, int>();
+            var teamsValue = new Dictionary<string, int>();
             foreach (var team in Teams)
             {
                 var result = context.Results.Where(x => x.Team == team).FirstOrDefault();
                 if (result != null)
                 {
-                    teamsBuyValue.Add(team, result.Value);
-                    teamsSellValue.Add(team, result.Value);
+                    teamsValue.Add(team, result.Value);
                 }
                 else
                 {
-                    var lastTrade = context.Trades.Where(x => x.Team == team).OrderByDescending(x => x.Date).FirstOrDefault();
+                    var value = 0;
                     var bestAsk = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side == "SELL").OrderByDescending(x => x.Price).FirstOrDefault();
                     if (bestAsk != null)
                     {
-                        teamsBuyValue.Add(team, bestAsk.Price);
-                    }
-                    else if (lastTrade != null)
-                    {
-                        teamsBuyValue.Add(team, lastTrade.Price);
+                        value += bestAsk.Price;
                     }
 
                     var bestBid = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side == "BUY").OrderBy(x => x.Price).FirstOrDefault();
                     if (bestBid != null)
                     {
-                        teamsSellValue.Add(team, bestBid.Price);
+                        value += bestBid.Price;
+                        if (value > bestBid.Price)
+                            value /= 2;
                     }
-                    else if (lastTrade != null)
+                    
+                    if (value == 0)
                     {
-                        teamsSellValue.Add(team, lastTrade.Price);
+                        var lastTrade = context.Trades.Where(x => x.Team == team).OrderByDescending(x => x.Date).FirstOrDefault();
+                        value = lastTrade.Price;
                     }
+                    teamsValue.Add(team, value);
                 }
             }
 
@@ -103,8 +116,8 @@ public class BetClient
 
             foreach (var trade in context.Trades)
             {
-                userValue[trade.Buyer] += teamsBuyValue[trade.Team] * trade.Quantity;
-                userValue[trade.Seller] -= teamsSellValue[trade.Team] * trade.Quantity;
+                userValue[trade.Buyer] += teamsValue[trade.Team] * trade.Quantity;
+                userValue[trade.Seller] -= teamsValue[trade.Team] * trade.Quantity;
             }
 
             var orderedValue = userValue.OrderByDescending(x => x.Value);
@@ -242,7 +255,11 @@ public class BetClient
                     order.MyBid = myBid.Price;
                     order.MyBidQuantity = myBid.Quantity;
                 }
-
+                var lastPrice = context.Trades.Where(x => x.Team == team).OrderByDescending(x => x.Date).FirstOrDefault();
+                if (lastPrice != null)
+                {
+                    order.LastTradedPrice = lastPrice.Price;
+                }
                 orders.Add(order);
             }
         }
@@ -372,6 +389,9 @@ public class BetClient
                 matchingOrder.Status = 1;
                 quantity -= matchingOrder.Quantity;
             }
+
+            if (quantity == 0)
+                return 0;
         }
         return quantity;
     }

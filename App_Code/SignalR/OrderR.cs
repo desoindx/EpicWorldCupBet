@@ -17,5 +17,6 @@ namespace Microsoft.AspNet.SignalR.StockTicker
         public int BestAskQuantity { get; set; }
         public int MyBidQuantity { get; set; }
         public int MyAskQuantity { get; set; }
+        public int LastTradedPrice { get; set; }
     }
 }

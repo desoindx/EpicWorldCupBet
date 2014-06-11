@@ -11,6 +11,7 @@
     <script type="text/javascript" src="../signalr/hubs"></script>
     <script src="JavaScript/Positions.js"></script>
     <script src="JavaScript/SignalRPosition.js"></script>
-
+    
     <div style="width: 5000px; height: 1200px;" id="PositionsDiv"><label>Loading in progress</label></div>
+    <div style="width: 50000px; height: 1200px;" id="TradesDiv"><label>Loading in progress</label></div>
 </asp:Content>

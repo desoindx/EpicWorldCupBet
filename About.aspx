@@ -13,11 +13,11 @@
     <p>450 euros for the fourth</p>
     <p>250 euros if the team was eliminated in 1/4th finals</p>
     <p>100 euros if the team was eliminated in 1/8th finals</p>
-    <p>For example you decide to buy from John 5 Brazil at 65 euros</p>
-    <p>John directly received 65 euros</p>
+    <p>For example you decide to buy from John 5 Brazil at 650 euros</p>
+    <p>John directly received 3250 (650 x 5) euros</p>
     <p>At the end of the world cup</p>
-    <p>If the Brazil won the world cup John pay you 100 euros (you made a +35 euros PnL)</p>
-    <p>If the Brazil is eliminated in quarter finals John pay you 25 euros (you made a -40 euros PnL)</p>
+    <p>If the Brazil won the world cup John pay you 5000 (5 x 1000) euros (you made a +1750 euros PnL)</p>
+    <p>If the Brazil is eliminated in quarter finals John pay you 1250 (5 x 250) euros (you made a -2000 euros PnL)</p>
     <p>For the final payoff i'll use the following calculator (depending on the number of participant)</p>
     <a href="http://www.diypokertour.com/pokertour.aspx?tabindex=6&tabid=136">http://www.diypokertour.com/pokertour.aspx?tabindex=6&tabid=136</a>
 </asp:Content>
