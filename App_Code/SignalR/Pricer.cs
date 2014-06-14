@@ -230,7 +230,7 @@ public class Pricer
             PlayPouleGame(Teams[i * 4 + 1], Teams[i * 4 + 3], rank);
             PlayPouleGame(Teams[i * 4 + 2], Teams[i * 4 + 3], rank);
 
-            var finalRanking = rank.OrderByDescending(x => x.Value).ThenByDescending(x => r.NextDouble() *TeamsValue[x.Key]).Select(x => x.Key).ToList();
+            var finalRanking = rank.OrderByDescending(x => x.Value).ThenByDescending(x => r.NextDouble() * TeamsValue[x.Key]).Select(x => x.Key).ToList();
             finals.Add(i + "-1", finalRanking[0]);
             finals.Add(i + "-2", finalRanking[1]);
 
@@ -255,6 +255,9 @@ public class Pricer
 
     private void PlayPouleGame(string team1, string team2, Dictionary<string, int> rank)
     {
+        if (AlreadyPlayedGame(team1, team2, rank))
+            return;
+
         double team1Value = TeamsValue[team1];
         double team2Value = TeamsValue[team2];
         double draw = (team1Value + team2Value) / 5;
@@ -273,5 +276,52 @@ public class Pricer
         {
             rank[team2] += 3;
         }
+    }
+
+    private Dictionary<string, int> playedGame = new Dictionary<string, int> { 
+    { "Brazil-Croatia", 1 },
+    { "Mexico-Cameroon", 1 },
+    { "Netherlands-Spain", 1 },
+    { "Chile-Australia", 1 } };
+
+    private bool AlreadyPlayedGame(string team1, string team2, Dictionary<string, int> rank)
+    {
+        int result;
+        if (playedGame.TryGetValue(team1 + "-" + team2, out result))
+        {
+            switch (result)
+            {
+                case 1:
+                    rank[team1] += 3;
+                    break;
+                case 2:
+                    rank[team1] += 1;
+                    rank[team2] += 1;
+                    break;
+                case 3:
+                    rank[team2] += 3;
+                    break;
+            }
+            return true;
+        }
+        if (playedGame.TryGetValue(team2 + "-" + team1, out result))
+        {
+            switch (result)
+            {
+                case 1:
+                    rank[team2] += 3;
+                    break;
+                case 2:
+                    rank[team1] += 1;
+                    rank[team2] += 1;
+                    break;
+                case 3:
+                    rank[team1] += 3;
+                    break;
+            }
+            return true;
+        }
+
+        return false;
     }
 }

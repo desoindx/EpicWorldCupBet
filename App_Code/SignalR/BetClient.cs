@@ -463,6 +463,80 @@ public class BetClient
         }
     }
 
+    public void GetCharts(string connectionId)
+    {
+        const int hour = 4;
+        using (var context = new Entities())
+        {
+            var teamsTrades = new Dictionary<string, TeamTrades>();
+            DateTime currDate = new DateTime(2014, 6, 11, 7, 00, 00);
+            TradeR currentTradeHisto = null;
+            int lastPrice = 0;
+            foreach (var trade in context.Trades.OrderBy(x => x.Team).ThenBy(x => x.Date))
+            {
+                TeamTrades teamTrade;
+                lastPrice = trade.Price;
+                if (!teamsTrades.TryGetValue(trade.Team, out teamTrade))
+                {
+                    currDate = new DateTime(2014, 6, 11, 7, 00, 00);
+                    teamTrade = new TeamTrades { Team = trade.Team, Trades = new List<TradeR>() };
+                    teamsTrades.Add(trade.Team, teamTrade);
+                    while (currDate.AddHours(hour) < trade.Date)
+                    {
+                        currDate = currDate.AddHours(hour);
+                    }
+                    currentTradeHisto = new TradeR();
+                    currentTradeHisto.Time = currDate;
+                    currentTradeHisto.Open = trade.Price;
+                    currentTradeHisto.Close = trade.Price;
+                    currentTradeHisto.High = trade.Price;
+                    currentTradeHisto.Low = trade.Price;
+                    currentTradeHisto.Volume = trade.Quantity;
+                    teamTrade.TotalVolume = trade.Quantity;
+                    teamTrade.Trades.Add(currentTradeHisto);
+                }
+                else
+                {
+                    if (currDate.AddHours(hour) < trade.Date)
+                    {
+                        while (currDate.AddHours(hour) < trade.Date)
+                        {
+                            currDate = currDate.AddHours(hour);
+                            currentTradeHisto = new TradeR();
+                            currentTradeHisto.Time = currDate;
+                            currentTradeHisto.Open = lastPrice;
+                            currentTradeHisto.Close = lastPrice;
+                            currentTradeHisto.High = lastPrice;
+                            currentTradeHisto.Low = lastPrice;
+                            teamTrade.Trades.Add(currentTradeHisto);
+                        }
+
+                        currentTradeHisto = new TradeR();
+                        currentTradeHisto.Time = currDate;
+                        currentTradeHisto.Open = trade.Price;
+                        currentTradeHisto.Close = trade.Price;
+                        currentTradeHisto.High = trade.Price;
+                        currentTradeHisto.Low = trade.Price;
+                        currentTradeHisto.Volume = trade.Quantity;
+                        teamTrade.TotalVolume += trade.Quantity;
+                        teamTrade.Trades.Add(currentTradeHisto);
+                    }
+                    else
+                    {
+                        teamTrade.TotalVolume += trade.Quantity;
+                        currentTradeHisto.Volume += trade.Quantity;
+                        currentTradeHisto.Close = trade.Price;
+                        if (trade.Price > currentTradeHisto.High)
+                            currentTradeHisto.High = trade.Price;
+                        if (trade.Price < currentTradeHisto.Low)
+                            currentTradeHisto.Low = trade.Price;
+                    }
+                }
+            }
+            Clients.Client(connectionId).newCharts(teamsTrades.Values.ToList());
+        }
+    }
+
     public void Price(string connectionId,
         int Brazil,
         int Croatia,

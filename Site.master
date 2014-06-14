@@ -50,6 +50,7 @@
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li><a runat="server" href="~/">Home</a></li>
+                        <li><a runat="server" href="~/Charts">Histo</a></li>
                         <li><a runat="server" href="~/Positions">Positions</a></li>
                         <li><a runat="server" href="~/Ranking">Ranking</a></li>
                         <li><a runat="server" href="~/About">About</a></li>
@@ -81,9 +82,6 @@
                 </asp:ContentPlaceHolder>
             </div>
             <hr />
-            <footer>
-                <p>&copy; <%: DateTime.Now.Year %> - Epic World Cup Betting</p>
-            </footer>
         </div>
     </form>
 </body>

@@ -15,6 +15,11 @@ namespace Microsoft.AspNet.SignalR.StockTicker
             _betClient = new BetClient(GlobalHost.ConnectionManager.GetHubContext<BetHub>().Clients);
         }
 
+        public void GetCharts()
+        {
+            _betClient.GetCharts(Context.ConnectionId);
+        }
+
         public void GetPosition(string user)
         {
             _betClient.GetPositions(user, Context.ConnectionId);
