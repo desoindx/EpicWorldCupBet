@@ -253,10 +253,14 @@ public class Pricer
         }
     }
 
+    private int count = 0;
     private void PlayPouleGame(string team1, string team2, Dictionary<string, int> rank)
     {
         if (AlreadyPlayedGame(team1, team2, rank))
+        {
+            count++;
             return;
+        }
 
         double team1Value = TeamsValue[team1];
         double team2Value = TeamsValue[team2];
@@ -282,6 +286,17 @@ public class Pricer
     { "Brazil-Croatia", 1 },
     { "Mexico-Cameroon", 1 },
     { "Netherlands-Spain", 1 },
+    { "Colombia-Greece", 1 },
+    { "Ivory Coast-Japan", 1 },
+    { "Uruguay-Costa Rica", 3 },
+    { "England-Italy", 3 },
+    { "Switzerland-Ecuador", 1 },
+    { "France-Honduras", 1 },
+    { "Argentina-Bosnia And Herzgovina", 1 },
+    { "Germany-Portugal", 1 },
+    { "Ghana-United States", 3 },
+    { "Iran-Nigeria", 2 },
+    { "Belgium-Algeria", 1 },
     { "Chile-Australia", 1 } };
 
     private bool AlreadyPlayedGame(string team1, string team2, Dictionary<string, int> rank)

@@ -55,7 +55,7 @@
             <option>South Korea</option>
             <option>Spain</option>
             <option>Switzerland</option>
-            <option>United Strates</option>
+            <option>United States</option>
             <option>Uruguay</option>
         </select>
     </div>

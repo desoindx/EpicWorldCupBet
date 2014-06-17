@@ -364,7 +364,7 @@ public class BetClient
             exposure += previousOrder.Price * previousOrder.Quantity;
         }
 
-        return exposure <= MaxExposure;
+        return exposure <= userMoney.Money1;
     }
 
     private int InsertTrade(Entities context, string user, string team, int quantity, int price, string side, string connectionId)
