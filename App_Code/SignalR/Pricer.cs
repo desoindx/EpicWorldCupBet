@@ -44,38 +44,38 @@ public class Pricer
         "South Korea"
     };
 
-    public Dictionary<string, int> TeamsValue = new Dictionary<string, int> { {"Brazil", 100},
-         {"Croatia",20},
-         {"Mexico", 20},
-         {"Cameroon",18},
-         {"Australia",5},
-         {"Chile",10},
-         {"Netherlands",40},
-         {"Spain",70},
-         {"Colombia",25},
-         {"Greece",28},
-         {"Ivory Coast",19},
-         {"Japan",10},
-         {"Costa Rica",10},
-         {"England",30},
-         {"Italy",40},
-         {"Uruguay",40},
-         {"Ecuador",30},
-         {"France",60},
-         {"Honduras",5},
-         {"Switzerland",15},
-         {"Argentina",80},
-         {"Bosnia And Herzgovina",5},
-         {"Iran",5},
-         {"Nigeria",10},
-         {"Germany",95},
-         {"Ghana",39},
-         {"Portugal",55},
-         {"United States",30},
-         {"Algeria",20},
-         {"Belgium",29},
-         {"Russia",17},
-         {"South Korea",9}
+    public Dictionary<string, double> TeamsValue = new Dictionary<string, double> { {"Brazil", 200},
+         {"Croatia",51},
+         {"Mexico", 62},
+         {"Cameroon",15},
+         {"Australia",15},
+         {"Chile",92},
+         {"Netherlands",118},
+         {"Spain",137},
+         {"Colombia",109},
+         {"Greece",72},
+         {"Ivory Coast",42},
+         {"Japan",50},
+         {"Costa Rica",4},
+         {"England",97},
+         {"Italy",102},
+         {"Uruguay",101},
+         {"Ecuador",42},
+         {"France",97},
+         {"Honduras",1},
+         {"Switzerland",45},
+         {"Argentina",154},
+         {"Bosnia And Herzgovina",42},
+         {"Iran",3},
+         {"Nigeria",35},
+         {"Germany",158},
+         {"Ghana",52},
+         {"Portugal",115},
+         {"United States",60},
+         {"Algeria",3},
+         {"Belgium",119},
+         {"Russia",59},
+         {"South Korea",18}
     };
 
     public Dictionary<string, double> Price(List<int> values)
@@ -88,10 +88,16 @@ public class Pricer
             price.Add(team, 0);
             i++;
         }
+        return SimulateWC(price);
+    }
 
-        for (i = 0; i < mc; i++)
+    private Dictionary<string, double> SimulateWC(Dictionary<string, double> price)
+    {
+        for (int i = 0; i < mc; i++)
         {
             var huitieme = Poule();
+            if (count != playedGame.Count)
+                return null;
             var quart = Huitiemes(huitieme, price);
             var demies = Quarts(quart, price);
             var winner1 = PlayGame(demies[57], demies[58]);
@@ -297,6 +303,12 @@ public class Pricer
     { "Ghana-United States", 3 },
     { "Iran-Nigeria", 2 },
     { "Belgium-Algeria", 1 },
+    { "Brazil-Mexico", 2 },
+    { "Russia-South Korea", 2 },
+    { "Australia-Netherlands", 3 },
+    { "Spain-Chile", 3 },
+    { "Colombia-Ivory Coast", 1 },
+    { "Cameroon-Croatia", 3 },
     { "Chile-Australia", 1 } };
 
     private bool AlreadyPlayedGame(string team1, string team2, Dictionary<string, int> rank)
@@ -338,5 +350,10 @@ public class Pricer
         }
 
         return false;
+    }
+
+    internal Dictionary<string, double> Price()
+    {
+        return SimulateWC(TeamsValue);
     }
 }

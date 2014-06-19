@@ -85,13 +85,13 @@ public class BetClient
                 else
                 {
                     var value = 0;
-                    var bestAsk = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side == "SELL").OrderByDescending(x => x.Price).FirstOrDefault();
+                    var bestAsk = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side == "SELL").OrderBy(x => x.Price).FirstOrDefault();
                     if (bestAsk != null)
                     {
                         value += bestAsk.Price;
                     }
 
-                    var bestBid = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side == "BUY").OrderBy(x => x.Price).FirstOrDefault();
+                    var bestBid = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side == "BUY").OrderByDescending(x => x.Price).FirstOrDefault();
                     if (bestBid != null)
                     {
                         value += bestBid.Price;
@@ -664,5 +664,21 @@ public class BetClient
     public void GetMessages()
     {
         Clients.All.chat(chat);
+    }
+
+    internal void Price(string connectionId)
+    {
+        var pricer = new Pricer();
+        var pricingResult = pricer.Price();
+
+        var teams = new List<string>();
+        var price = new List<double>();
+
+        foreach (var value in pricingResult)
+        {
+            teams.Add(value.Key.Replace(" ", ""));
+            price.Add(value.Value);
+        }
+        Clients.Client(connectionId).pricingFinished(teams, price);
     }
 }

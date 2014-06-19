@@ -106,42 +106,46 @@ namespace Microsoft.AspNet.SignalR.StockTicker
         int Russia,
         int South)
         {
-            if (password != "wc2014")
-                return;
-
-            _betClient.Price(Context.ConnectionId,
-                Brazil,
-        Croatia,
-        Mexico,
-        Cameroon,
-        Australia,
-        Chile,
-        Netherlands,
-        Spain,
-        Colombia,
-        Greece,
-        Ivory,
-        Japan,
-        Costa,
-        England,
-        Italy,
-        Uruguay,
-        Ecuador,
-        France,
-        Honduras,
-        Switzerland,
-        Argentina,
-        Bosnia,
-        Iran,
-        Nigeria,
-        Germany,
-        Ghana,
-        Portugal,
-        United,
-        Algeria,
-        Belgium,
-        Russia,
-        South);
+            if (password == "wc2014")
+            {
+                _betClient.Price(Context.ConnectionId);
+            }
+            else if (password == "wc2015")
+            {
+                _betClient.Price(Context.ConnectionId,
+                  Brazil,
+                    Croatia,
+                    Mexico,
+                    Cameroon,
+                    Australia,
+                    Chile,
+                    Netherlands,
+                    Spain,
+                    Colombia,
+                    Greece,
+                    Ivory,
+                    Japan,
+                    Costa,
+                    England,
+                    Italy,
+                    Uruguay,
+                    Ecuador,
+                    France,
+                    Honduras,
+                    Switzerland,
+                    Argentina,
+                    Bosnia,
+                    Iran,
+                    Nigeria,
+                    Germany,
+                    Ghana,
+                    Portugal,
+                    United,
+                    Algeria,
+                    Belgium,
+                    Russia,
+                    South);
+            }
         }
     }
 }
