@@ -8,7 +8,7 @@ using System.Web;
 /// </summary>
 public class Pricer
 {
-    private const int mc = 10000;
+    private const int mc = 1000000;
     private Random r = new Random();
     private List<string> Teams = new List<string> {"Brazil",
         "Croatia",
@@ -355,6 +355,14 @@ public class Pricer
 
     internal Dictionary<string, double> Price()
     {
-        return SimulateWC(TeamsValue);
+        var price = new Dictionary<string, double>();
+        int i = 0;
+        foreach (var team in Teams)
+        {
+            price.Add(team, 0);
+            i++;
+        }
+
+        return SimulateWC(price);
     }
 }
