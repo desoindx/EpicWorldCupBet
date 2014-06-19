@@ -98,6 +98,7 @@ public class Pricer
             var huitieme = Poule();
             if (count != playedGame.Count)
                 return null;
+            count = 0;
             var quart = Huitiemes(huitieme, price);
             var demies = Quarts(quart, price);
             var winner1 = PlayGame(demies[57], demies[58]);
