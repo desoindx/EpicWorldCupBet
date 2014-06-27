@@ -44,36 +44,36 @@ public class Pricer
         "South Korea"
     };
 
-    public Dictionary<string, double> TeamsValue = new Dictionary<string, double> { {"Brazil", 200},
+    public Dictionary<string, double> TeamsValue = new Dictionary<string, double> { {"Brazil", 100},
          {"Croatia",51},
-         {"Mexico", 62},
+         {"Mexico", 21.9},
          {"Cameroon",15},
          {"Australia",15},
-         {"Chile",92},
-         {"Netherlands",118},
+         {"Chile",23.5},
+         {"Netherlands",42.5},
          {"Spain",137},
-         {"Colombia",109},
-         {"Greece",72},
+         {"Colombia",35.1},
+         {"Greece",26},
          {"Ivory Coast",42},
          {"Japan",50},
-         {"Costa Rica",4},
+         {"Costa Rica",12.2},
          {"England",97},
          {"Italy",102},
-         {"Uruguay",101},
+         {"Uruguay",26.6},
          {"Ecuador",42},
-         {"France",97},
+         {"France",33},
          {"Honduras",1},
-         {"Switzerland",45},
-         {"Argentina",154},
+         {"Switzerland",16.6},
+         {"Argentina",58.7},
          {"Bosnia And Herzgovina",42},
          {"Iran",3},
-         {"Nigeria",35},
-         {"Germany",158},
+         {"Nigeria",16.3},
+         {"Germany",61.3},
          {"Ghana",52},
          {"Portugal",115},
-         {"United States",60},
-         {"Algeria",3},
-         {"Belgium",119},
+         {"United States",17.5},
+         {"Algeria",9.2},
+         {"Belgium",46.1},
          {"Russia",59},
          {"South Korea",18}
     };
@@ -99,6 +99,22 @@ public class Pricer
             if (count != playedGame.Count)
                 return null;
             count = 0;
+            huitieme["0-1"] = "Brazil";
+            huitieme["0-2"] = "Mexico";
+            huitieme["1-1"] = "Netherlands";
+            huitieme["1-2"] = "Chile";
+            huitieme["2-1"] = "Colombia";
+            huitieme["2-2"] = "Greece";
+            huitieme["3-1"] = "Costa Rica";
+            huitieme["3-2"] = "Uruguay";
+            huitieme["4-1"] = "France";
+            huitieme["4-2"] = "Switzerland";
+            huitieme["5-1"] = "Argentina";
+            huitieme["5-2"] = "Nigeria";
+            huitieme["6-1"] = "Germany";
+            huitieme["6-2"] = "United States";
+            huitieme["7-1"] = "Belgium";
+            huitieme["7-2"] = "Algeria";
             var quart = Huitiemes(huitieme, price);
             var demies = Quarts(quart, price);
             var winner1 = PlayGame(demies[57], demies[58]);
@@ -310,6 +326,21 @@ public class Pricer
     { "Spain-Chile", 3 },
     { "Colombia-Ivory Coast", 1 },
     { "Cameroon-Croatia", 3 },
+    { "Uruguay-England", 1 },
+    { "Japan-Greece", 2 },
+    { "Italy-Costa Rica", 3 },
+    { "Switzerland-France", 3 },
+    { "Honduras-Ecuador", 3 },
+    { "Argentina-Iran", 1 },
+    { "Germany-Ghana", 2 },
+    { "Portugal-United States", 2 },
+    { "Nigeria-Bosnia And Herzgovina", 1 },
+    { "Belgium-Russia", 1 },
+    { "South Korea-Algeria", 3 },
+    { "Netherlands-Chile", 1 },
+    { "Australia-Spain", 3 },
+    { "Brazil-Cameroon", 1 },
+    { "Mexico-Croatia", 1 },
     { "Chile-Australia", 1 } };
 
     private bool AlreadyPlayedGame(string team1, string team2, Dictionary<string, int> rank)

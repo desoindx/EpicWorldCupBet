@@ -10,6 +10,7 @@ namespace Microsoft.AspNet.SignalR.StockTicker
     public class BetHub : Hub
     {
         private BetClient _betClient;
+
         public BetHub()
         {
             _betClient = new BetClient(GlobalHost.ConnectionManager.GetHubContext<BetHub>().Clients);
@@ -18,6 +19,11 @@ namespace Microsoft.AspNet.SignalR.StockTicker
         public void GetCharts()
         {
             _betClient.GetCharts(Context.ConnectionId);
+        }
+
+        public void GetOrders()
+        {
+            _betClient.GetOrders(Context.ConnectionId);
         }
 
         public void GetPosition(string user)

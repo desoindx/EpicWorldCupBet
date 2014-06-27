@@ -61,7 +61,7 @@ public class BetClient
         var tradesMessages = new List<string>();
         using (var context = new Entities())
         {
-            var trades = context.Trades.Where(x => x.Buyer == user  || x.Seller == user).OrderByDescending(x => x.Date);
+            var trades = context.Trades.Where(x => x.Buyer == user || x.Seller == user).OrderByDescending(x => x.Date);
             foreach (var trade in trades)
             {
                 tradesMessages.Add(string.Format("{6} {2}, You traded {5}{0} {1} at {3} with {4}", trade.Quantity, trade.Team, trade.Date.ToLongTimeString(), trade.Price, trade.Seller == user ? trade.Buyer : trade.Seller, trade.Seller == user ? "-" : "", trade.Date.ToLongDateString()));
@@ -98,7 +98,7 @@ public class BetClient
                         if (value > bestBid.Price)
                             value /= 2;
                     }
-                    
+
                     if (value == 0)
                     {
                         var lastTrade = context.Trades.Where(x => x.Team == team).OrderByDescending(x => x.Date).FirstOrDefault();
@@ -229,6 +229,11 @@ public class BetClient
         {
             foreach (var team in Teams)
             {
+                var result = context.Results.Where(x => x.Team == team).FirstOrDefault();
+                if (result != null)
+                {
+                    continue;
+                }
                 var order = new OrderR();
                 order.Team = team;
                 var bestAsk = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side == "SELL").OrderBy(x => x.Price).FirstOrDefault();
@@ -534,6 +539,15 @@ public class BetClient
                 }
             }
             Clients.Client(connectionId).newCharts(teamsTrades.Values.ToList());
+        }
+    }
+
+    internal void GetOrders(string connectionId)
+    {
+        using (var context = new Entities())
+        {
+            foreach (var trade in context.Orders.OrderBy(x => x.Date))
+            { }
         }
     }
 
