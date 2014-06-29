@@ -303,7 +303,7 @@ public class BetClient
 
     public void NewOrder(string user, string team, int quantity, int price, string side, string connectionId)
     {
-        if (!(!string.IsNullOrEmpty(user) && Teams.Contains(team) && quantity > 0 && price > 100 && price < 1000 && (side == "BUY" || side == "SELL")))
+        if (!(!string.IsNullOrEmpty(user) && Teams.Contains(team) && quantity > 0 && quantity < 251 && price > 100 && price < 1000 && (side == "BUY" || side == "SELL")))
         {
             Clients.Client(connectionId).newMessage("Fail To add order");
             return;
@@ -329,7 +329,7 @@ public class BetClient
                     }
                 }
 
-                if (UserHasEnough(context, user, quantity, price, side))
+                if (UserHasEnough(context, user, team, quantity, price, side))
                 {
                     var remainingQuantity = InsertTrade(context, user, team, quantity, price, side, connectionId);
                     if (remainingQuantity > 0)
@@ -350,8 +350,31 @@ public class BetClient
         GetLastTrades();
     }
 
-    private bool UserHasEnough(Entities context, string user, int quantity, int price, string side)
+    private bool UserHasEnough(Entities context, string user, string team, int quantity, int price, string side)
     {
+        var positions = context.Trades.Where(x => (x.Seller == user || x.Buyer == user) && x.Team == team);
+        var total = 0;
+        foreach (var position in positions)
+        {
+            if (position.Buyer == user)
+                total += position.Quantity;
+            else
+                total -= position.Quantity;
+        }
+
+        if (side == "SELL" && total < 0)
+        {
+            total -= quantity;
+            if (total < -250)
+                return false;
+        }
+        else if (side == "BUY" && total > 0)
+        {
+            total += quantity;
+            if (total > 250)
+                return false;
+        }
+
         if (side == "SELL")
             return true;
 
