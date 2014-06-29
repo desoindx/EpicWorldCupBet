@@ -303,7 +303,7 @@ public class BetClient
 
     public void NewOrder(string user, string team, int quantity, int price, string side, string connectionId)
     {
-        if (!(!string.IsNullOrEmpty(user) && Teams.Contains(team) && quantity > 0 && price > 0 && price < 1000 && (side == "BUY" || side == "SELL")))
+        if (!(!string.IsNullOrEmpty(user) && Teams.Contains(team) && quantity > 0 && price > 100 && price < 1000 && (side == "BUY" || side == "SELL")))
         {
             Clients.Client(connectionId).newMessage("Fail To add order");
             return;
@@ -540,6 +540,16 @@ public class BetClient
             }
             Clients.Client(connectionId).newCharts(teamsTrades.Values.ToList());
         }
+    }
+
+    public void EliminateTeam(string connectionId, string team, int value)
+    {
+        using (var context = new Entities())
+        {
+            context.Results.Add(new Result { Team = team, Value = value });
+            context.SaveChanges();
+        }
+        Clients.Client(connectionId).newMessage("Team Eliminated");
     }
 
     internal void GetOrders(string connectionId)

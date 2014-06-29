@@ -102,11 +102,11 @@ public class Pricer
             huitieme["0-1"] = "Brazil";
             huitieme["0-2"] = "Mexico";
             huitieme["1-1"] = "Netherlands";
-            huitieme["1-2"] = "Chile";
+            huitieme["1-2"] = "Brazil";
             huitieme["2-1"] = "Colombia";
             huitieme["2-2"] = "Greece";
             huitieme["3-1"] = "Costa Rica";
-            huitieme["3-2"] = "Uruguay";
+            huitieme["3-2"] = "Colombia";
             huitieme["4-1"] = "France";
             huitieme["4-2"] = "Switzerland";
             huitieme["5-1"] = "Argentina";

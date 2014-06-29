@@ -78,6 +78,12 @@ namespace Microsoft.AspNet.SignalR.StockTicker
             _betClient.GetTrades(user, Context.ConnectionId);
         }
 
+        public void EliminateTeam(string password, string team, int value)
+        {
+            if (password == "77330")
+                _betClient.EliminateTeam(Context.ConnectionId, team, value);
+        }
+
         public void Price(string password,
         int Brazil,
         int Croatia,

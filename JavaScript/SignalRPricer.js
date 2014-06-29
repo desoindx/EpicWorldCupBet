@@ -12,6 +12,9 @@
 
     $.connection.hub.start()
         .done(function (state) {
+            $("#Eliminate").click(function () {
+                betHub.server.eliminateTeam($("#Password").val(), $("#Team").val(), $("#Value").val());
+            });
             $("#Price").click(function () {
                 betHub.server.price($("#Password").val(),
                     $("#Brazil").val(),
