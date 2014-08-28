@@ -230,10 +230,10 @@ public class BetClient
             foreach (var team in Teams)
             {
                 var result = context.Results.Where(x => x.Team == team).FirstOrDefault();
-                if (result != null)
+              /*  if (result != null)
                 {
                     continue;
-                }
+                }*/
                 var order = new OrderR();
                 order.Team = team;
                 var bestAsk = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side == "SELL").OrderBy(x => x.Price).FirstOrDefault();
