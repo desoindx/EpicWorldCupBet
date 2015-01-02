@@ -133,7 +133,7 @@
                             <tr>
                                 <td>
                                     <label style="">Quantity : </label>
-                                    <input style="width:220px;margin-left: 12px; margin-top: 10px;" type='textbox' id='QuantityOrder' />
+                                    <input style="width:220px;margin-left: 13px; margin-top: 10px;" type='textbox' id='QuantityOrder' />
                                 </td>
                             </tr>
                             <tr>
