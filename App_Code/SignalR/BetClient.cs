@@ -245,7 +245,7 @@ public class BetClient
             foreach (var team in Teams)
             {
                 var result = context.Results.Where(x => x.Team == team).FirstOrDefault();
-              /*  if (result != null)
+                if (result != null)
                     continue;
 
                 orders.Add(GetTeam(context, user, team));
