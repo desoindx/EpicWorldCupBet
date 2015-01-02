@@ -77,7 +77,7 @@
             </div>
         </div>
         <div class="container body-content">
-            <div style="width: 1000px; height: 1000px;">
+            <div style="margin-left:50px;height:900px; margin-top: 50px;">
                 <asp:ContentPlaceHolder ID="MainContent" runat="server">
                 </asp:ContentPlaceHolder>
             </div>

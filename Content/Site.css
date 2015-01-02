@@ -18,6 +18,68 @@ textarea {
     max-width: 280px;
 }
 
+.priceUp {
+    font: bold;
+    background-color: green;
+}
+
+.priceDown {
+    font: bold;
+    background-color: red;
+}
+
+#blanket {
+background-color:#111;
+opacity: 0.65;
+*background:none;
+position:absolute;
+z-index: 9001;
+top:0px;
+left:0px;
+width:100%;
+}
+
+#newOrderDiv {
+position:absolute;
+background:#e6e6e6;
+width:400px;
+height:400px;
+border:5px solid #000;
+z-index: 9002;
+}
+
+#orderBookDiv {
+position:absolute;
+background:#e6e6e6;
+width:470px;
+height:400px;
+border:5px solid #000;
+z-index: 9002;
+}
+
+.SelectedSide {
+    color: #F1CB65;
+    background-color: #e6e6e6;
+    border-color: #adadad;
+}
+
+.chatName{
+    color:#F1CB65;
+    font-size:13px;
+}
+
+button.btn.dropdown-toggle.selectpicker.teamOrderSelect.btn-default{
+    margin-left: 30px;
+}
+
+.visibleAlert {
+    margin-top:50px;
+}
+
+.hiddenAlert {
+    margin-top:50px;
+    display:none;
+}
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {
     .jumbotron {

@@ -8,11 +8,18 @@ using System.Web;
 
 public class BetClient
 {
-    private const int MaxExposure = 10000;
+    private const string ErrorClass = "alert-danger";
+    private const string SuccessClass = "alert-success";
+    private const string InfoClass = "alert-info";
 
-    public BetClient(IHubConnectionContext clients)
+    private const int MaxExposure = 10000;
+    private readonly Dictionary<string, OrderBook> _orderBooks;
+
+    public BetClient(IHubConnectionContext clients, Dictionary<string, string> userConnectionId)
     {
+        _orderBooks = new Dictionary<string, OrderBook>();
         Clients = clients;
+        _userConnectionId = userConnectionId;
         Teams.Sort();
     }
 
@@ -21,6 +28,8 @@ public class BetClient
         get;
         set;
     }
+
+    private Dictionary<string, string> _userConnectionId;
 
     private List<string> Teams = new List<string> {"Brazil",
         "Croatia",
@@ -55,6 +64,11 @@ public class BetClient
         "Russia",
         "South Korea"
     };
+
+    public void GetTeams(string connectionId)
+    {
+        Clients.Client(connectionId).allTeams(Teams);
+    }
 
     public void GetTrades(string user, string connectionId)
     {
@@ -222,60 +236,67 @@ public class BetClient
 
     public void GetTeam(string user, string connectionId)
     {
-        var random = new Random();
-        var orders = new List<OrderR>();
+        if (string.IsNullOrEmpty(user))
+            return;
 
+        var orders = new List<OrderR>();
         using (var context = new Entities())
         {
             foreach (var team in Teams)
             {
                 var result = context.Results.Where(x => x.Team == team).FirstOrDefault();
               /*  if (result != null)
-                {
                     continue;
-                }*/
-                var order = new OrderR();
-                order.Team = team;
-                var bestAsk = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side == "SELL").OrderBy(x => x.Price).FirstOrDefault();
-                if (bestAsk != null)
-                {
-                    order.BestAsk = bestAsk.Price;
-                    order.BestAskQuantity = bestAsk.Quantity;
-                }
-                var bestBid = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side == "BUY").OrderByDescending(x => x.Price).FirstOrDefault();
-                if (bestBid != null)
-                {
-                    order.BestBid = bestBid.Price;
-                    order.BestBidQuantity = bestBid.Quantity;
-                }
-                var myAsk = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side == "SELL" && x.User == user).OrderBy(x => x.Price).FirstOrDefault();
-                if (myAsk != null)
-                {
-                    order.MyAsk = myAsk.Price;
-                    order.MyAskQuantity = myAsk.Quantity;
-                }
-                var myBid = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side == "BUY" && x.User == user).OrderByDescending(x => x.Price).FirstOrDefault();
-                if (myBid != null)
-                {
-                    order.MyBid = myBid.Price;
-                    order.MyBidQuantity = myBid.Quantity;
-                }
-                var lastPrice = context.Trades.Where(x => x.Team == team).OrderByDescending(x => x.Date).FirstOrDefault();
-                if (lastPrice != null)
-                {
-                    order.LastTradedPrice = lastPrice.Price;
-                }
-                orders.Add(order);
+
+                orders.Add(GetTeam(context, user, team));
             }
         }
         Clients.Client(connectionId).newOrders(orders);
+    }
+
+    private OrderR GetTeam(Entities context, string user, string team)
+    {
+        var order = new OrderR();
+        order.Team = team;
+        var bestAsk = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side == "SELL").OrderBy(x => x.Price).FirstOrDefault();
+        if (bestAsk != null)
+        {
+            order.BestAsk = bestAsk.Price;
+            order.BestAskQuantity = bestAsk.Quantity;
+        }
+        var bestBid = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side == "BUY").OrderByDescending(x => x.Price).FirstOrDefault();
+        if (bestBid != null)
+        {
+            order.BestBid = bestBid.Price;
+            order.BestBidQuantity = bestBid.Quantity;
+        }
+        var myAsk = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side == "SELL" && x.User == user).OrderBy(x => x.Price).FirstOrDefault();
+        if (myAsk != null)
+        {
+            order.MyAsk = myAsk.Price;
+            order.MyAskQuantity = myAsk.Quantity;
+        }
+        var myBid = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side == "BUY" && x.User == user).OrderByDescending(x => x.Price).FirstOrDefault();
+        if (myBid != null)
+        {
+            order.MyBid = myBid.Price;
+            order.MyBidQuantity = myBid.Quantity;
+        }
+        var lastPrices = context.Trades.Where(x => x.Team == team).OrderByDescending(x => x.Date).ToList();
+        if (lastPrices != null && lastPrices.Count > 0)
+        {
+            order.LastTradedPrice = lastPrices[0].Price;
+            if (lastPrices.Count > 1)
+                order.LastTradedPriceEvolution = order.LastTradedPrice - lastPrices[1].Price;
+        }
+        return order;
     }
 
     public void CancelOrder(string user, string side, string team, string connectionId)
     {
         if (!(!string.IsNullOrEmpty(user) && Teams.Contains(team)))
         {
-            Clients.Client(connectionId).newMessage("Fail To cancel order");
+            Clients.Client(connectionId).newMessage("Fail To cancel order", ErrorClass);
             return;
         }
 
@@ -286,7 +307,7 @@ public class BetClient
                 var previousOrders = context.Orders.Where(x => x.User == user && x.Status == 0 && x.Team == team && x.Side == side);
                 if (previousOrders.Count() == 0)
                 {
-                    Clients.Client(connectionId).newMessage("No order found to cancel");
+                    Clients.Client(connectionId).newMessage("No order found to cancel", ErrorClass);
                     return;
                 }
                 foreach (var previousOrder in previousOrders)
@@ -297,56 +318,90 @@ public class BetClient
             }
         }
 
-        Clients.Client(connectionId).newMessage("Successfuly canceled order");
+        Clients.Client(connectionId).newMessage("Successfuly canceled order", SuccessClass);
         GetTeam(user, connectionId);
+    }
+
+    private bool CheckOrder(string user, string team, int quantity, int price, string side, string connectionId)
+    {
+        if (string.IsNullOrEmpty(user))
+        {
+            Clients.Client(connectionId).newMessage("Fail To add order because you are not logged in", ErrorClass);
+            return false;
+        }
+
+        if (!Teams.Contains(team))
+        {
+            Clients.Client(connectionId).newMessage("Fail To add order because the team does not exist", ErrorClass);
+            return false;
+        }
+
+        if (quantity < 1)
+        {
+            Clients.Client(connectionId).newMessage("Fail To add order because the quantity specified must be stricly positive", ErrorClass);
+            return false;
+        }
+
+        if (price < 1 || price > 999)
+        {
+            Clients.Client(connectionId).newMessage("Fail To add order because the price specified must be between 1 and 999", ErrorClass);
+            return false;
+        } 
+        
+        if (side != "BUY" && side != "SELL")
+        {
+            Clients.Client(connectionId).newMessage("Fail To add order because the way specified is incorect", ErrorClass);
+            return false;
+        }
+
+        return true;
     }
 
     public void NewOrder(string user, string team, int quantity, int price, string side, string connectionId)
     {
-        if (!(!string.IsNullOrEmpty(user) && Teams.Contains(team) && quantity > 0 && quantity < 251 && price > 100 && price < 1000 && (side == "BUY" || side == "SELL")))
-        {
-            Clients.Client(connectionId).newMessage("Fail To add order");
+        if (!CheckOrder(user, team, quantity, price, side, connectionId))
             return;
-        }
 
+        var usersToNotify = new HashSet<string>();
+        usersToNotify.Add(user);
         lock (this)
         {
             using (var context = new Entities())
             {
-                if (context.Results.Where(x => x.Team == team).FirstOrDefault() != null)
-                {
-                    Clients.Client(connectionId).newMessage("Cannot place order on this team anymore");
-                    return;
-                }
-
+                 if (context.Results.Where(x => x.Team == team).FirstOrDefault() != null)
+                 {
+                     Clients.Client(connectionId).newMessage("Cannot place order on this team anymore", ErrorClass);
+                     return;
+                 }
+                 
                 var otherOrder = context.Orders.Where(x => x.User == user && x.Status == 0 && x.Team == team && x.Side != side).FirstOrDefault();
                 if (otherOrder != null)
                 {
                     if ((side == "BUY" && otherOrder.Price <= price) || (side == "SELL" && otherOrder.Price > price))
                     {
-                        Clients.Client(connectionId).newMessage("please check your price !!!");
+                        Clients.Client(connectionId).newMessage("please check your price !!!", ErrorClass);
                         return;
                     }
                 }
 
                 if (UserHasEnough(context, user, team, quantity, price, side))
                 {
-                    var remainingQuantity = InsertTrade(context, user, team, quantity, price, side, connectionId);
+                    var remainingQuantity = InsertTrade(context, user, team, quantity, price, side, connectionId, usersToNotify);
                     if (remainingQuantity > 0)
                         InsertNewOrder(context, user, team, remainingQuantity, price, side, connectionId);
 
                     context.SaveChanges();
+                    OnNewOrder(context, team, usersToNotify);
                 }
                 else
                 {
-                    Clients.Client(connectionId).newMessage("You already have too much exposure");
+                    Clients.Client(connectionId).newMessage("You already have too much exposure", InfoClass);
                     return;
                 }
             }
         }
 
         GetMoney(user, connectionId);
-        GetTeam(user, connectionId);
         GetLastTrades();
     }
 
@@ -395,7 +450,7 @@ public class BetClient
         return exposure <= userMoney.Money1;
     }
 
-    private int InsertTrade(Entities context, string user, string team, int quantity, int price, string side, string connectionId)
+    private int InsertTrade(Entities context, string user, string team, int quantity, int price, string side, string connectionId, HashSet<string> usersToNotify)
     {
         IQueryable<Order> matchingOrders;
         if (side == "BUY")
@@ -405,8 +460,9 @@ public class BetClient
 
         foreach (var matchingOrder in matchingOrders)
         {
+            usersToNotify.Add(matchingOrder.User);
             InsertNewTrade(context, side == "BUY" ? user : matchingOrder.User, side == "SELL" ? user : matchingOrder.User, team, Math.Min(quantity, matchingOrder.Quantity), matchingOrder.Price);
-            Clients.Client(connectionId).newMessage(string.Format("you traded {0} {1} at {2} with {3}", Math.Min(quantity, matchingOrder.Quantity), team, matchingOrder.Price, matchingOrder.User));
+            Clients.Client(connectionId).newMessage(string.Format("you traded {0} {1} at {2} with {3}", Math.Min(quantity, matchingOrder.Quantity), team, matchingOrder.Price, matchingOrder.User), InfoClass);
             if (quantity < matchingOrder.Quantity)
             {
                 matchingOrder.Quantity -= quantity;
@@ -454,7 +510,7 @@ public class BetClient
 
     private void InsertNewOrder(Entities context, string user, string team, int quantity, int price, string side, string connectionId)
     {
-        var previousOrders = context.Orders.Where(x => x.User == user && x.Status == 0 && x.Team == team && x.Side == side);
+        var previousOrders = context.Orders.Where(x => x.User == user && x.Status == 0 && x.Team == team && x.Side == side && x.Status != 2);
         foreach (var previousOrder in previousOrders)
         {
             previousOrder.Status = 2;
@@ -470,7 +526,29 @@ public class BetClient
         order.Side = side;
         context.Orders.Add(order);
 
-        Clients.Client(connectionId).newMessage("Succefuly add order");
+        Clients.Client(connectionId).newMessage("Succefuly add order", SuccessClass);
+    }
+
+    private void OnNewOrder(Entities context, string team, HashSet<string> users)
+    {
+        _orderBooks.Remove(team);
+        var connectionIdToIgnore = new string[users.Count];
+        OrderR order = null;
+        int i = 0;
+        foreach (var user in users)
+        {
+            order = GetTeam(context, user, team);
+            string connectionId;
+            if (_userConnectionId.TryGetValue(user, out connectionId))
+            {
+                Clients.Client(connectionId).newPrice(order, true);
+                connectionIdToIgnore[i] = connectionId;
+                i++;
+            }
+        }
+
+        if (order != null)
+            Clients.AllExcept(connectionIdToIgnore).newPrice(order, false);
     }
 
     public void GetMoney(string user, string connectionId)
@@ -575,15 +653,6 @@ public class BetClient
         Clients.Client(connectionId).newMessage("Team Eliminated");
     }
 
-    internal void GetOrders(string connectionId)
-    {
-        using (var context = new Entities())
-        {
-            foreach (var trade in context.Orders.OrderBy(x => x.Date))
-            { }
-        }
-    }
-
     public void Price(string connectionId,
         int Brazil,
         int Croatia,
@@ -685,6 +754,7 @@ public class BetClient
     }
 
     private static List<string> chat = new List<string>();
+    private static List<string> chatName = new List<string>();
 
     public void SendMessage(string user, string message)
     {
@@ -694,23 +764,28 @@ public class BetClient
         if (chat.Count() > 9)
         {
             chat.RemoveAt(0);
+            chatName.RemoveAt(0);
         }
 
         var messages = new List<string>();
+        var messagesName = new List<string>();
         var nbMessage = Math.Min(9, chat.Count);
         for (int i = 0; i < nbMessage; i++)
         {
             messages.Add(chat[i]);
+            messagesName.Add(chatName[i]);
         }
-        messages.Add(user + " - " + message);
+        messages.Add(message);
+        messagesName.Add(string.Format("{0} ({1}) -", user, DateTime.Now.ToShortTimeString()));
 
         chat = messages;
+        chatName = messagesName;
         GetMessages();
     }
 
     public void GetMessages()
     {
-        Clients.All.chat(chat);
+        Clients.All.chat(chatName, chat);
     }
 
     internal void Price(string connectionId)
@@ -727,5 +802,35 @@ public class BetClient
             price.Add(value.Value);
         }
         Clients.Client(connectionId).pricingFinished(teams, price);
+    }
+
+    public void GetOrderBook(string team, string connectionId)
+    {
+        OrderBook orderBook;
+        if (_orderBooks.TryGetValue(team, out orderBook))
+        {
+            Clients.Client(connectionId).showOrderBook(team, orderBook.Bids, orderBook.Asks);
+        }
+        else
+            using (var context = new Entities())
+            {
+                var asks = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side == "SELL").GroupBy(x => x.Price).Select(x => new OrderBookInfo { Price = x.Key, Quantity = x.Sum(o => o.Quantity) }).OrderBy(x => x.Price).ToList();
+                var bids = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side == "BUY").GroupBy(x => x.Price).Select(x => new OrderBookInfo { Price = x.Key, Quantity = x.Sum(o => o.Quantity) }).OrderByDescending(x => x.Price).ToList();
+
+                _orderBooks[team] = new OrderBook { Asks = asks, Bids = bids };
+                Clients.Client(connectionId).showOrderBook(team, bids, asks);
+            }
+    }
+
+    private class OrderBook
+    {
+        public List<OrderBookInfo> Asks;
+        public List<OrderBookInfo> Bids;
+    }
+
+    private class OrderBookInfo
+    {
+        public int Price;
+        public int Quantity;
     }
 }

@@ -2131,6 +2131,9 @@ if (typeof Slick === "undefined") {
     }
 
     function flashCell(row, cell, speed) {
+        flashCell(row, cell, speed, options.cellFlashingCssClass, 4)
+    }
+    function flashCell(row, cell, speed, classToFlash, numberOfFlash) {
       speed = speed || 100;
       if (rowsCache[row]) {
         var $cell = $(getCellNode(row, cell));
@@ -2141,14 +2144,14 @@ if (typeof Slick === "undefined") {
           }
           setTimeout(function () {
                 $cell.queue(function () {
-                  $cell.toggleClass(options.cellFlashingCssClass).dequeue();
+                    $cell.toggleClass(classToFlash).dequeue();
                   toggleCellClass(times - 1);
                 });
               },
               speed);
         }
 
-        toggleCellClass(4);
+        toggleCellClass(numberOfFlash);
       }
     }
 

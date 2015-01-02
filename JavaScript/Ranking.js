@@ -5,8 +5,7 @@
          columns = [],
          options = {
              enableCellNavigation: true,
-             enableColumnReorder: false,
-             multiColumnSort: true
+             enableColumnReorder: false
          },
         
          i, j;
@@ -21,6 +20,9 @@
          }
 
         grid = new Slick.Grid("#RankingDiv", rank, columns, options);
+
+        grid.setSelectionModel(new Slick.CellSelectionModel());
+        grid.registerPlugin(new Slick.CellExternalCopyManager());
 
         grid.onSort.subscribe(function (e, args) {
             var cols = args.sortCols;

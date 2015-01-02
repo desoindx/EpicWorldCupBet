@@ -10,10 +10,12 @@ namespace Microsoft.AspNet.SignalR.StockTicker
     public class BetHub : Hub
     {
         private BetClient _betClient;
+        private Dictionary<string, string> _userConnectionId;
 
         public BetHub()
         {
-            _betClient = new BetClient(GlobalHost.ConnectionManager.GetHubContext<BetHub>().Clients);
+            _userConnectionId = new Dictionary<string, string>();
+            _betClient = new BetClient(GlobalHost.ConnectionManager.GetHubContext<BetHub>().Clients, _userConnectionId);
         }
 
         public void GetCharts()
@@ -21,13 +23,9 @@ namespace Microsoft.AspNet.SignalR.StockTicker
             _betClient.GetCharts(Context.ConnectionId);
         }
 
-        public void GetOrders()
-        {
-            _betClient.GetOrders(Context.ConnectionId);
-        }
-
         public void GetPosition(string user)
         {
+            _userConnectionId[user] = Context.ConnectionId;
             _betClient.GetPositions(user, Context.ConnectionId);
         }
 
@@ -36,28 +34,38 @@ namespace Microsoft.AspNet.SignalR.StockTicker
             _betClient.GetClassement(Context.ConnectionId);
         }
 
+        public void GetTeams()
+        {
+            _betClient.GetTeams(Context.ConnectionId);
+        }
+
         public void GetTeam(string user)
         {
+            _userConnectionId[user] = Context.ConnectionId;
             _betClient.GetTeam(user, Context.ConnectionId);
         }
 
         public void SendOrder(string user, string team, int quantity, int price, string side)
         {
+            _userConnectionId[user] = Context.ConnectionId;
             _betClient.NewOrder(user, team, quantity, price, side.ToUpper(), Context.ConnectionId);
         }
 
         public void CancelOrder(string user, string side, string team)
         {
+            _userConnectionId[user] = Context.ConnectionId;
             _betClient.CancelOrder(user, side.ToUpper(), team, Context.ConnectionId);
         }
 
         public void GetMoney(string user)
         {
+            _userConnectionId[user] = Context.ConnectionId;
             _betClient.GetMoney(user, Context.ConnectionId);
         }
 
         public void SendMessage(string user, string message)
         {
+            _userConnectionId[user] = Context.ConnectionId;
             _betClient.SendMessage(user, message);
         }
 
@@ -71,8 +79,14 @@ namespace Microsoft.AspNet.SignalR.StockTicker
             _betClient.GetLastTrades(Context.ConnectionId);
         }
 
+        public void GetOrderBook(string team)
+        {
+            _betClient.GetOrderBook(team.Split('(')[0].TrimEnd(), Context.ConnectionId);
+        }
+
         public void GetAllTrades(string user)
         {
+            _userConnectionId[user] = Context.ConnectionId;
             if (string.IsNullOrEmpty(user))
                 return;
             _betClient.GetTrades(user, Context.ConnectionId);
