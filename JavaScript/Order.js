@@ -1,11 +1,11 @@
-﻿$('.TeamCell').live('mouseover mouseout', function (event) {
-    if (event.type == 'mouseover') {
-        $.connection.Bet.server.getOrderBook(event.currentTarget.innerText);
-        popup('orderBookDiv');
-    } else {
-        popup('orderBookDiv');
-    }
-});
+﻿function onTeamCellMouseOver() {
+    $.connection.Bet.server.getOrderBook($(this).context.innerText);
+    popup('orderBookDiv');
+}
+
+function onTeamCellMouseOut() {
+    popup('orderBookDiv');
+}
 
 function clickSellSide() {
     $("#SideOrderSell").addClass("SelectedSide")
@@ -199,6 +199,11 @@ $(function () {
             });
             $.grid.invalidateAllRows();
             $.grid.render();
+        });
+
+        $('.TeamCell').hoverIntent({
+            over: onTeamCellMouseOver,
+            out: onTeamCellMouseOut
         });
 
         $.grid.onClick.subscribe(function (e, args) {
