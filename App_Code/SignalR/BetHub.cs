@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
+using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 
-namespace Microsoft.AspNet.SignalR.StockTicker
+namespace SignalR
 {
     [HubName("Bet")]
     public class BetHub : Hub
     {
-        private BetClient _betClient;
-        private Dictionary<string, string> _userConnectionId;
+        private readonly BetClient _betClient;
+        private readonly Dictionary<string, string> _userConnectionId;
 
         public BetHub()
         {
@@ -94,43 +92,43 @@ namespace Microsoft.AspNet.SignalR.StockTicker
 
         public void EliminateTeam(string password, string team, int value)
         {
-            if (password == "77330")
+            if (password == "yeah")
                 _betClient.EliminateTeam(Context.ConnectionId, team, value);
         }
 
         public void Price(string password,
-        int Brazil,
-        int Croatia,
-        int Mexico,
-        int Cameroon,
-        int Australia,
-        int Chile,
-        int Netherlands,
-        int Spain,
-        int Colombia,
-        int Greece,
-        int Ivory,
-        int Japan,
-        int Costa,
-        int England,
-        int Italy,
-        int Uruguay,
-        int Ecuador,
-        int France,
-        int Honduras,
-        int Switzerland,
-        int Argentina,
-        int Bosnia,
-        int Iran,
-        int Nigeria,
-        int Germany,
-        int Ghana,
-        int Portugal,
-        int United,
-        int Algeria,
-        int Belgium,
-        int Russia,
-        int South)
+        int brazil,
+        int croatia,
+        int mexico,
+        int cameroon,
+        int australia,
+        int chile,
+        int netherlands,
+        int spain,
+        int colombia,
+        int greece,
+        int ivory,
+        int japan,
+        int costa,
+        int england,
+        int italy,
+        int uruguay,
+        int ecuador,
+        int france,
+        int honduras,
+        int switzerland,
+        int argentina,
+        int bosnia,
+        int iran,
+        int nigeria,
+        int germany,
+        int ghana,
+        int portugal,
+        int united,
+        int algeria,
+        int belgium,
+        int russia,
+        int south)
         {
             if (password == "wc2014")
             {
@@ -139,38 +137,38 @@ namespace Microsoft.AspNet.SignalR.StockTicker
             else if (password == "wc2015")
             {
                 _betClient.Price(Context.ConnectionId,
-                  Brazil,
-                    Croatia,
-                    Mexico,
-                    Cameroon,
-                    Australia,
-                    Chile,
-                    Netherlands,
-                    Spain,
-                    Colombia,
-                    Greece,
-                    Ivory,
-                    Japan,
-                    Costa,
-                    England,
-                    Italy,
-                    Uruguay,
-                    Ecuador,
-                    France,
-                    Honduras,
-                    Switzerland,
-                    Argentina,
-                    Bosnia,
-                    Iran,
-                    Nigeria,
-                    Germany,
-                    Ghana,
-                    Portugal,
-                    United,
-                    Algeria,
-                    Belgium,
-                    Russia,
-                    South);
+                  brazil,
+                    croatia,
+                    mexico,
+                    cameroon,
+                    australia,
+                    chile,
+                    netherlands,
+                    spain,
+                    colombia,
+                    greece,
+                    ivory,
+                    japan,
+                    costa,
+                    england,
+                    italy,
+                    uruguay,
+                    ecuador,
+                    france,
+                    honduras,
+                    switzerland,
+                    argentina,
+                    bosnia,
+                    iran,
+                    nigeria,
+                    germany,
+                    ghana,
+                    portugal,
+                    united,
+                    algeria,
+                    belgium,
+                    russia,
+                    south);
             }
         }
     }

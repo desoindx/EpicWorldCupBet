@@ -6,9 +6,7 @@
  */
 
 .bootstrap-select {
-  /*width: 220px\9; IE8 and below*/
-  width: 220px \0;
-  /*IE9 and below*/
+    width: 220px;
 }
 .bootstrap-select > .btn {
   width: 100%;
@@ -175,7 +173,7 @@
   margin-right: 34px;
 }
 .bootstrap-select.show-menu-arrow.open > .btn {
-  z-index: 1035 + 1;
+  z-index: 1036;
 }
 .bootstrap-select.show-menu-arrow .dropdown-toggle:before {
   content: '';

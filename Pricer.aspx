@@ -32,7 +32,7 @@
                         <label>Brazil</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='Brazil' value='1'/>
+                        <input style="margin-left: 35px" type='number' id='Brazil' value='1'/>
                     </td>
                     <td>
                         <label id='BrazilPrice'></label>
@@ -43,7 +43,7 @@
                         <label>Cameroon</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='Cameroon' value='1'/>
+                        <input style="margin-left: 35px" type='number' id='Cameroon' value='1'/>
                     </td>
                     <td>
                         <label id='CameroonPrice'></label>
@@ -54,7 +54,7 @@
                         <label>Croatia</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='Croatia' value='1'/>
+                        <input style="margin-left: 35px" type='number' id='Croatia' value='1'/>
                     </td>
                     <td>
                         <label id='CroatiaPrice'></label>
@@ -65,7 +65,7 @@
                         <label>Mexico</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='Mexico' value='1'/>
+                        <input style="margin-left: 35px" type='number' id='Mexico' value='1'/>
                     </td>
                     <td>
                         <label id='MexicoPrice'></label>
@@ -76,7 +76,7 @@
                         <label>Australia</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='Australia' value='1'/>
+                        <input style="margin-left: 35px" type='number' id='Australia' value='1'/>
                     </td>
                     <td>
                         <label id='AustraliaPrice'></label>
@@ -87,7 +87,7 @@
                         <label>Chile</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='Chile' value='1'/>
+                        <input style="margin-left: 35px" type='number' id='Chile' value='1'/>
                     </td>
                     <td>
                         <label id='ChilePrice'></label>
@@ -98,7 +98,7 @@
                         <label>Netherlands</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='Netherlands' value='1'/>
+                        <input style="margin-left: 35px" type='number' id='Netherlands' value='1'/>
                     </td>
                     <td>
                         <label id='NetherlandsPrice'></label>
@@ -109,7 +109,7 @@
                         <label>Spain</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='Spain' value='1'/>
+                        <input style="margin-left: 35px" type='number' id='Spain' value='1'/>
                     </td>
                     <td>
                         <label id='SpainPrice'></label>
@@ -120,7 +120,7 @@
                         <label>Colombia</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='Colombia' value='1'/>
+                        <input style="margin-left: 35px" type='number' id='Colombia' value='1'/>
                     </td>
                     <td>
                         <label id='ColombiaPrice'></label>
@@ -131,7 +131,7 @@
                         <label>Greece</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='Greece' value='1'/>
+                        <input style="margin-left: 35px" type='number' id='Greece' value='1'/>
                     </td>
                     <td>
                         <label id='GreecePrice'></label>
@@ -142,7 +142,7 @@
                         <label>Ivory Coast</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='IvoryCoast' value='1'/>
+                        <input style="margin-left: 35px" type='number' id='IvoryCoast' value='1'/>
                     </td>
                     <td>
                         <label id='IvoryCoastPrice'></label>
@@ -153,7 +153,7 @@
                         <label>Japan</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='Japan' value='1'/>
+                        <input style="margin-left: 35px" type='number' id='Japan' value='1'/>
                     </td>
                     <td>
                         <label id='JapanPrice'></label>
@@ -164,7 +164,7 @@
                         <label>Costa Rica</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='CostaRica' value='1'/>
+                        <input style="margin-left: 35px" type='number' id='CostaRica' value='1'/>
                     </td>
                     <td>
                         <label id='CostaRicaPrice'></label>
@@ -175,7 +175,7 @@
                         <label>England</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='England' value='1'/>
+                        <input style="margin-left: 35px" type='number' id='England' value='1'/>
                     </td>
                     <td>
                         <label id='EnglandPrice'></label>
@@ -186,7 +186,7 @@
                         <label>Italy</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='Italy' value='1'/>
+                        <input style="margin-left: 35px" type='number' id='Italy' value='1'/>
                     </td>
                     <td>
                         <label id='ItalyPrice'></label>
@@ -197,7 +197,7 @@
                         <label>Uruguay</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='Uruguay' value='1'/>
+                        <input style="margin-left: 35px" type='number' id='Uruguay' value='1'/>
                     </td>
                     <td>
                         <label id='UruguayPrice'></label>
@@ -208,7 +208,7 @@
                         <label>Ecuador</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='Ecuador' value='1'/>
+                        <input style="margin-left: 35px" type='number' id='Ecuador' value='1'/>
                     </td>
                     <td>
                         <label id='EcuadorPrice'></label>
@@ -219,7 +219,7 @@
                         <label>France</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='France' value='1'/>
+                        <input style="margin-left: 35px" type='number' id='France' value='1'/>
                     </td>
                     <td>
                         <label id='FrancePrice'></label>
@@ -230,7 +230,7 @@
                         <label>Honduras</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='Honduras' value='1'/>
+                        <input style="margin-left: 35px" type='number' id='Honduras' value='1'/>
                     </td>
                     <td>
                         <label id='HondurasPrice'></label>
@@ -241,7 +241,7 @@
                         <label>Switzerland</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='Switzerland' value='1'/>
+                        <input style="margin-left: 35px" type='number' id='Switzerland' value='1'/>
                     </td>
                     <td>
                         <label id='SwitzerlandPrice'></label>
@@ -252,7 +252,7 @@
                         <label>Argentina</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='Argentina' value='1'/>
+                        <input style="margin-left: 35px" type='number' id='Argentina' value='1'/>
                     </td>
                     <td>
                         <label id='ArgentinaPrice'></label>
@@ -263,7 +263,7 @@
                         <label>Bosnia And Herzgovina</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='BosniaAndHerzgovina' value='1'/>
+                        <input style="margin-left: 35px" type='number' id='BosniaAndHerzgovina' value='1'/>
                     </td>
                     <td>
                         <label id='BosniaAndHerzgovinaPrice'></label>
@@ -274,7 +274,7 @@
                         <label>Iran</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='Iran' value='1'/>
+                        <input style="margin-left: 35px" type='number' id='Iran' value='1'/>
                     </td>
                     <td>
                         <label id='IranPrice'></label>
@@ -285,7 +285,7 @@
                         <label>Nigeria</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='Nigeria' value='1'/>
+                        <input style="margin-left: 35px" type='number' id='Nigeria' value='1'/>
                     </td>
                     <td>
                         <label id='NigeriaPrice'></label>
@@ -296,7 +296,7 @@
                         <label>Germany</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='Germany' value='1'/>
+                        <input style="margin-left: 35px" type='number' id='Germany' value='1'/>
                     </td>
                     <td>
                         <label id='GermanyPrice'></label>
@@ -307,7 +307,7 @@
                         <label>Ghana</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='Ghana' value='1'/>
+                        <input style="margin-left: 35px" type='number' id='Ghana' value='1'/>
                     </td>
                     <td>
                         <label id='GhanaPrice'></label>
@@ -318,7 +318,7 @@
                         <label>Portugal</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='Portugal' value='1'/>
+                        <input style="margin-left: 35px" type='number' id='Portugal' value='1'/>
                     </td>
                     <td>
                         <label id='PortugalPrice'></label>
@@ -329,7 +329,7 @@
                         <label>United States</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='UnitedStates' value='1'/>
+                        <input style="margin-left: 35px" type='number' id='UnitedStates' value='1'/>
                     </td>
                     <td>
                         <label id='UnitedStatesPrice'></label>
@@ -340,7 +340,7 @@
                         <label>Algeria</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='Algeria' value='1'/>
+                        <input style="margin-left: 35px" type='number' id='Algeria' value='1'/>
                     </td>
                     <td>
                         <label id='AlgeriaPrice'></label>
@@ -351,7 +351,7 @@
                         <label>Belgium</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='Belgium' value='1'/>
+                        <input style="margin-left: 35px" type='number' id='Belgium' value='1'/>
                     </td>
                     <td>
                         <label id='BelgiumPrice'></label>
@@ -362,7 +362,7 @@
                         <label>Russia</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='Russia' value='1'/>
+                        <input style="margin-left: 35px" type='number' id='Russia' value='1'/>
                     </td>
                     <td>
                         <label id='RussiaPrice'></label>
@@ -373,7 +373,7 @@
                         <label>South Korea</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='SouthKorea' value='1'/>
+                        <input style="margin-left: 35px" type='number' id='SouthKorea' value='1'/>
                     </td>
                     <td>
                         <label id='SouthKoreaPrice'></label>

@@ -91,7 +91,7 @@
             <label id="Message10"></label>
         </p>
         <p>
-            <input style="margin-left: 13px; width:400px" type='textbox' id='Message' />
+            <input style="margin-left: 13px; width:400px" type='text' id='Message' />
             <input style="margin-left: 10px" type="button" id="SendMessage" value="Send" class="btn btn-default"/>
         </p>
     </div>
@@ -128,13 +128,13 @@
                             <tr>
                                 <td>
                                     <label style="">Price : </label>
-                                    <input style="width:220px;margin-left: 35px; margin-top: 10px;" type='textbox' id='PriceOrder' />
+                                    <input style="width:220px;margin-left: 35px; margin-top: 10px;" type='number' min="1" max="999" id='PriceOrder' />
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <label style="">Quantity : </label>
-                                    <input style="width:220px;margin-left: 13px; margin-top: 10px;" type='textbox' id='QuantityOrder' />
+                                    <input style="width:220px;margin-left: 13px; margin-top: 10px;" type='number' min="1" value="10" id='QuantityOrder' />
                                 </td>
                             </tr>
                             <tr>

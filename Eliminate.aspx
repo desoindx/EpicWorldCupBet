@@ -32,10 +32,10 @@
                         <label>Eliminate</label>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='Team' value='team'/>
+                        <input style="margin-left: 35px" type='text' id='Team' value='team'/>
                     </td>
                     <td>
-                        <input style="margin-left: 35px" type='textbox' id='Value' value='value'/>
+                        <input style="margin-left: 35px" type='number' id='Value' value='value'/>
                     </td>
                 </tr>
             </tbody>
