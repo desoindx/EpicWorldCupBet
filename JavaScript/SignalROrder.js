@@ -67,24 +67,21 @@
 
     $.connection.hub.start()
         .done(function (state) {
-            $.connection.Bet.server.getTeams();
-            $.connection.Bet.server.getMoney($("#UserId").text());
-            $.connection.Bet.server.getTeam($("#UserId").text());
             $.connection.Bet.server.getLastTrades();
             $.connection.Bet.server.getMessages();
 
             $("#SendOrder").click(function () {
-                betHub.server.sendOrder($("#UserId").text(), $("#TeamOrder").val(), $("#QuantityOrder").val(), $("#PriceOrder").val(), $("#SideOrder").val());
+                betHub.server.sendOrder($("#TeamOrder").val(), $("#QuantityOrder").val(), $("#PriceOrder").val(), $("#SideOrder").val());
                 popup('newOrderDiv');
             });
 
             $("#CancelOrder").click(function () {
-                betHub.server.cancelOrder($("#UserId").text(), $("#SideOrder").val(), $("#TeamOrder").val());
+                betHub.server.cancelOrder($("#SideOrder").val(), $("#TeamOrder").val());
                 popup('newOrderDiv');
             });
 
             $("#SendMessage").click(function () {
-                betHub.server.sendMessage($("#UserId").text(), $("#Message").val());
+                betHub.server.sendMessage($("#Message").val());
                 $("#Message").val('');
             });
 

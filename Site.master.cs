@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Claims;
-using System.Security.Principal;
 using System.Web;
 using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Datas.Entities;
+using SignalR.SQL;
 
 public partial class SiteMaster : MasterPage
 {
@@ -72,5 +72,27 @@ public partial class SiteMaster : MasterPage
     protected void Unnamed_LoggingOut(object sender, LoginCancelEventArgs e)
     {
         Context.GetOwinContext().Authentication.SignOut();
+    }
+
+    public string SelectedUniverse { get { return _userUniverses[0].Name; }}
+    public int SelectedUniverseId { get { return _userUniverses[0].Id; }}
+    private List<Universe> _userUniverses;
+
+    protected bool UserHasMultipleUniverse()
+    {
+        var user = Context.User.Identity.Name;
+        if (string.IsNullOrEmpty(user))
+            return false;
+
+        _userUniverses = Sql.GetUserUniverses(user);
+        return _userUniverses.Count > 1;
+    }
+
+    protected string GetUserUniverse()
+    {
+        if (_userUniverses != null && _userUniverses.Count == 1)
+            return _userUniverses[0].Name;
+
+        return string.Empty;
     }
 }

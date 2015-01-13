@@ -1,10 +1,13 @@
 ﻿<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="_Default" %>
+<%@ MasterType virtualpath="~/Site.Master" %>
 
-<asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
+<asp:Content ID="HeadContent" ContentPlaceHolderID="HeadContent" runat="server">
+    <link rel="stylesheet" href="Content/slick.grid.css" type="text/css">
+    <link rel="stylesheet" href="Content/slick-default-theme.css" type="text/css">
+    <link rel="stylesheet" href="Content/bootstrap-select.css" type="text/css">
+</asp:Content>
     
-    <link rel="stylesheet" href="Content/slick.grid.css" type="text/css" />
-    <link rel="stylesheet" href="Content/slick-default-theme.css" type="text/css" />
-    <link rel="stylesheet" href="Scripts/bootstrap-select.css" type="text/css" />
+<asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <script src="Scripts/jquery-1.7.2.min.js"></script>
     <script src="Scripts/jquery.event.drag.js"></script>
     <script src="Scripts/SlickGrid/slick.core.js"></script>
@@ -17,6 +20,11 @@
     <script src="JavaScript/SignalROrder.js"></script>
     <script src="JavaScript/PopUp.js"></script>
     
+    <% if (UniverseHasMultipleCompetition()) {%>
+        <label>Test</label>
+    <% } else { %>
+        <label class="h3" style="margin-top: 0;"><%: GetUniverseCompetition() %></label>
+    <% } %>
     <div id="myAlert" class="alert hiddenAlert" role="alert">
        <label id ="alertMessage">Better check yourself, you're not looking too good.</label>
     </div>
@@ -97,7 +105,7 @@
     </div>
     <div id="blanket" style="display:none"></div>
     <div id="newOrderDiv" style="display:none">
-        <span class="glyphicon glyphicon-remove" aria-hidden="true" id="ClosePopUp"style="color:red;position:absolute; top:5px; right: 5px;">
+        <span class="glyphicon glyphicon-remove" aria-hidden="true" id="ClosePopUp" style="color:red;position:absolute; top:5px; right: 5px;">
         </span>
         <div role="tabpanel">
             <ul class="nav nav-tabs" id="OrderTab" role="tablist">
@@ -163,4 +171,8 @@
         <div id="askGrid" style ="width: 200px;height: 200px; margin-top:-200px; margin-left:250px;">
         </div>
     </div>
+    <script type='text/javascript'>
+        competitionId = <%: GetCompetitionId()%>;
+        drawOrdersGrid(<%: GetOrders()%>);
+    </script>
 </asp:Content>

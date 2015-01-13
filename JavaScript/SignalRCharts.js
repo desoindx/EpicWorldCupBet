@@ -18,7 +18,7 @@
 
 $.connection.hub.start()
     .done(function (state) {
-        $.connection.Bet.server.getMoney($("#UserId").text());
+        $.connection.Bet.server.getMoney();
         $.connection.Bet.server.getCharts();
     });
 });

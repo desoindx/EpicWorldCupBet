@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DataAccesLayer;
+using Datas.Entities;
 using Microsoft.AspNet.SignalR.Hubs;
+using SignalR.SQL;
 
 namespace SignalR
 {
@@ -20,7 +21,6 @@ namespace SignalR
             _orderBooks = new Dictionary<string, OrderBook>();
             Clients = clients;
             _userConnectionId = userConnectionId;
-            _teams.Sort();
         }
 
         private IHubConnectionContext Clients
@@ -30,45 +30,6 @@ namespace SignalR
         }
 
         private readonly Dictionary<string, string> _userConnectionId;
-
-        private readonly List<string> _teams = new List<string> {"Brazil",
-            "Croatia",
-            "Mexico",
-            "Australia",
-            "Chile",
-            "Netherlands",
-            "Spain",
-            "Colombia",
-            "Greece",
-            "Ivory Coast",
-            "Japan",
-            "Costa Rica",
-            "England",
-            "Italy",
-            "Uruguay",
-            "Ecuador",
-            "Cameroon",
-            "France",
-            "Honduras",
-            "Switzerland",
-            "Argentina",
-            "Bosnia And Herzgovina",
-            "Iran",
-            "Nigeria",
-            "Germany",
-            "Ghana",
-            "Portugal",
-            "United States",
-            "Algeria",
-            "Belgium",
-            "Russia",
-            "South Korea"
-        };
-
-        public void GetTeams(string connectionId)
-        {
-            Clients.Client(connectionId).allTeams(_teams);
-        }
 
         public void GetTrades(string user, string connectionId)
         {
@@ -92,40 +53,7 @@ namespace SignalR
             using (var context = new Entities())
             {
                 var teamsValue = new Dictionary<string, int>();
-                foreach (var team in _teams)
-                {
-                    var result = context.Results.FirstOrDefault(x => x.Team == team);
-                    if (result != null)
-                    {
-                        teamsValue.Add(team, result.Value);
-                    }
-                    else
-                    {
-                        var value = 0;
-                        var bestAsk = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side == "SELL").OrderBy(x => x.Price).FirstOrDefault();
-                        if (bestAsk != null)
-                        {
-                            value += bestAsk.Price;
-                        }
-
-                        var bestBid = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side == "BUY").OrderByDescending(x => x.Price).FirstOrDefault();
-                        if (bestBid != null)
-                        {
-                            value += bestBid.Price;
-                            if (value > bestBid.Price)
-                                value /= 2;
-                        }
-
-                        if (value == 0)
-                        {
-                            var lastTrade = context.Trades.Where(x => x.Team == team).OrderByDescending(x => x.Date).FirstOrDefault();
-                            if (lastTrade != null) 
-                                value = lastTrade.Price;
-                        }
-                        teamsValue.Add(team, value);
-                    }
-                }
-
+               
                 var userValue = context.Moneys.ToDictionary(money => money.User, money => money.Money1);
 
                 foreach (var trade in context.Trades)
@@ -147,6 +75,7 @@ namespace SignalR
             }
         }
 
+        private List<string> _teams = new List<string>(); 
         public void GetPositions(string user, string connectionId)
         {
             using (var context = new Entities())
@@ -231,66 +160,9 @@ namespace SignalR
             }
         }
 
-        public void GetTeam(string user, string connectionId)
+        public void CancelOrder(string user, string side, string team, string connectionId, int universeId, int competitionId)
         {
             if (string.IsNullOrEmpty(user))
-                return;
-
-            var orders = new List<OrderR>();
-            using (var context = new Entities())
-            {
-                foreach (var team in _teams)
-                {
-                    var result = context.Results.FirstOrDefault(x => x.Team == team);
-                    if (result != null)
-                        continue;
-
-                    orders.Add(GetTeam(context, user, team));
-                }
-            }
-            Clients.Client(connectionId).newOrders(orders);
-        }
-
-        private OrderR GetTeam(Entities context, string user, string team)
-        {
-            var order = new OrderR {Team = team};
-            var bestAsk = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side == "SELL").OrderBy(x => x.Price).FirstOrDefault();
-            if (bestAsk != null)
-            {
-                order.BestAsk = bestAsk.Price;
-                order.BestAskQuantity = bestAsk.Quantity;
-            }
-            var bestBid = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side == "BUY").OrderByDescending(x => x.Price).FirstOrDefault();
-            if (bestBid != null)
-            {
-                order.BestBid = bestBid.Price;
-                order.BestBidQuantity = bestBid.Quantity;
-            }
-            var myAsk = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side == "SELL" && x.User == user).OrderBy(x => x.Price).FirstOrDefault();
-            if (myAsk != null)
-            {
-                order.MyAsk = myAsk.Price;
-                order.MyAskQuantity = myAsk.Quantity;
-            }
-            var myBid = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side == "BUY" && x.User == user).OrderByDescending(x => x.Price).FirstOrDefault();
-            if (myBid != null)
-            {
-                order.MyBid = myBid.Price;
-                order.MyBidQuantity = myBid.Quantity;
-            }
-            var lastPrices = context.Trades.Where(x => x.Team == team).OrderByDescending(x => x.Date).ToList();
-            if (lastPrices.Count > 0)
-            {
-                order.LastTradedPrice = lastPrices[0].Price;
-                if (lastPrices.Count > 1)
-                    order.LastTradedPriceEvolution = order.LastTradedPrice - lastPrices[1].Price;
-            }
-            return order;
-        }
-
-        public void CancelOrder(string user, string side, string team, string connectionId)
-        {
-            if (!(!string.IsNullOrEmpty(user) && _teams.Contains(team)))
             {
                 Clients.Client(connectionId).newMessage("Fail To cancel order", ErrorClass);
                 return;
@@ -300,7 +172,7 @@ namespace SignalR
             {
                 using (var context = new Entities())
                 {
-                    var previousOrders = context.Orders.Where(x => x.User == user && x.Status == 0 && x.Team == team && x.Side == side);
+                    var previousOrders = context.Orders.Where(x => x.User == user && x.Status == 0 && x.Team == team && x.Side.Trim() == side);
                     if (!previousOrders.Any())
                     {
                         Clients.Client(connectionId).newMessage("No order found to cancel", ErrorClass);
@@ -311,11 +183,11 @@ namespace SignalR
                         previousOrder.Status = 2;
                     }
                     context.SaveChanges();
+                    OnNewOrder(context, team, new HashSet<string> {user}, universeId, competitionId);
                 }
             }
 
             Clients.Client(connectionId).newMessage("Successfuly canceled order", SuccessClass);
-            GetTeam(user, connectionId);
         }
 
         private bool CheckOrder(string user, string team, int quantity, int price, string side, string connectionId)
@@ -353,12 +225,12 @@ namespace SignalR
             return true;
         }
 
-        public void NewOrder(string user, string team, int quantity, int price, string side, string connectionId)
+        public void NewOrder(string user, string team, int quantity, int price, string side, string connectionId, int universeId, int competitionId)
         {
             if (!CheckOrder(user, team, quantity, price, side, connectionId))
                 return;
 
-            var usersToNotify = new HashSet<string> {user};
+            var usersToNotify = new HashSet<string> { user };
             lock (this)
             {
                 using (var context = new Entities())
@@ -386,7 +258,7 @@ namespace SignalR
                             InsertNewOrder(context, user, team, remainingQuantity, price, side, connectionId);
 
                         context.SaveChanges();
-                        OnNewOrder(context, team, usersToNotify);
+                        OnNewOrder(context, team, usersToNotify, universeId, competitionId);
                     }
                     else
                     {
@@ -396,7 +268,7 @@ namespace SignalR
                 }
             }
 
-            GetMoney(user, connectionId);
+            // GetMoney(user, connectionId);
             GetLastTrades();
         }
 
@@ -435,7 +307,7 @@ namespace SignalR
                 context.Moneys.Add(userMoney);
             }
 
-            var previousOrders = context.Orders.Where(x => x.User == user && x.Status == 0 && x.Side == "BUY");
+            var previousOrders = context.Orders.Where(x => x.User == user && x.Status == 0 && x.Side.Trim() == "BUY");
             int exposure = price * quantity;
             foreach (var previousOrder in previousOrders)
             {
@@ -449,11 +321,11 @@ namespace SignalR
         {
             IQueryable<Order> matchingOrders = side == "BUY"
                 ? context.Orders.Where(
-                    x => x.User != user && x.Status == 0 && x.Team == team && x.Side == "SELL" && x.Price <= price)
+                    x => x.User != user && x.Status == 0 && x.Team == team && x.Side.Trim() == "SELL" && x.Price <= price)
                     .OrderBy(x => x.Price)
                     .ThenBy(x => x.Date)
                 : context.Orders.Where(
-                    x => x.User != user && x.Status == 0 && x.Team == team && x.Side == "BUY" && x.Price >= price)
+                    x => x.User != user && x.Status == 0 && x.Team == team && x.Side.Trim() == "BUY" && x.Price >= price)
                     .OrderByDescending(x => x.Price)
                     .ThenBy(x => x.Date);
 
@@ -467,7 +339,7 @@ namespace SignalR
                     matchingOrder.Quantity -= quantity;
                     return 0;
                 }
-                
+
                 matchingOrder.Status = 1;
                 quantity -= matchingOrder.Quantity;
 
@@ -509,7 +381,7 @@ namespace SignalR
 
         private void InsertNewOrder(Entities context, string user, string team, int quantity, int price, string side, string connectionId)
         {
-            var previousOrders = context.Orders.Where(x => x.User == user && x.Status == 0 && x.Team == team && x.Side == side && x.Status != 2);
+            var previousOrders = context.Orders.Where(x => x.User == user && x.Status == 0 && x.Team == team && x.Side.Trim() == side && x.Status != 2);
             foreach (var previousOrder in previousOrders)
             {
                 previousOrder.Status = 2;
@@ -530,7 +402,7 @@ namespace SignalR
             Clients.Client(connectionId).newMessage("Succefuly add order", SuccessClass);
         }
 
-        private void OnNewOrder(Entities context, string team, HashSet<string> users)
+        private void OnNewOrder(Entities context, string team, HashSet<string> users, int universeId, int competitionId)
         {
             _orderBooks.Remove(team);
             var connectionIdToIgnore = new string[users.Count];
@@ -538,7 +410,7 @@ namespace SignalR
             int i = 0;
             foreach (var user in users)
             {
-                order = GetTeam(context, user, team);
+                order = Sql.GetTeamInformation(context, user, team, universeId, competitionId);
                 string connectionId;
                 if (_userConnectionId.TryGetValue(user, out connectionId))
                 {
@@ -550,24 +422,6 @@ namespace SignalR
 
             if (order != null)
                 Clients.AllExcept(connectionIdToIgnore).newPrice(order, false);
-        }
-
-        public void GetMoney(string user, string connectionId)
-        {
-            if (string.IsNullOrEmpty(user))
-                return;
-
-            using (var context = new Entities())
-            {
-                var money = context.Moneys.FirstOrDefault(x => x.User == user);
-                if (money == null)
-                {
-                    money = new Money { User = user, Money1 = MaxExposure };
-                    context.Moneys.Add(money);
-                    context.SaveChanges();
-                }
-                Clients.Client(connectionId).newMoney(money.Money1);
-            }
         }
 
         public void GetCharts(string connectionId)
@@ -820,8 +674,8 @@ namespace SignalR
             else
                 using (var context = new Entities())
                 {
-                    var asks = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side == "SELL").GroupBy(x => x.Price).Select(x => new OrderBookInfo { Price = x.Key, Quantity = x.Sum(o => o.Quantity) }).OrderBy(x => x.Price).ToList();
-                    var bids = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side == "BUY").GroupBy(x => x.Price).Select(x => new OrderBookInfo { Price = x.Key, Quantity = x.Sum(o => o.Quantity) }).OrderByDescending(x => x.Price).ToList();
+                    var asks = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side.Trim() == "SELL").GroupBy(x => x.Price).Select(x => new OrderBookInfo { Price = x.Key, Quantity = x.Sum(o => o.Quantity) }).OrderBy(x => x.Price).ToList();
+                    var bids = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side.Trim() == "BUY").GroupBy(x => x.Price).Select(x => new OrderBookInfo { Price = x.Key, Quantity = x.Sum(o => o.Quantity) }).OrderByDescending(x => x.Price).ToList();
 
                     _orderBooks[team] = new OrderBook { Asks = asks, Bids = bids };
                     Clients.Client(connectionId).showOrderBook(team, bids, asks);

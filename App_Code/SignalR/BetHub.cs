@@ -1,17 +1,27 @@
 ﻿using System.Collections.Generic;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
+using WorldCupBetting;
 
 namespace SignalR
 {
     [HubName("Bet")]
     public class BetHub : Hub
     {
+        protected ApplicationDbContext ApplicationDbContext { get; set; }
+        protected UserManager<ApplicationUser> UserManager { get; set; }
+
+        private string User { get { return Context.User.Identity.Name; } }
         private readonly BetClient _betClient;
         private readonly Dictionary<string, string> _userConnectionId;
 
         public BetHub()
         {
+           ApplicationDbContext = new ApplicationDbContext();
+           UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(ApplicationDbContext));
+
             _userConnectionId = new Dictionary<string, string>();
             _betClient = new BetClient(GlobalHost.ConnectionManager.GetHubContext<BetHub>().Clients, _userConnectionId);
         }
@@ -21,10 +31,10 @@ namespace SignalR
             _betClient.GetCharts(Context.ConnectionId);
         }
 
-        public void GetPosition(string user)
+        public void GetPosition()
         {
-            _userConnectionId[user] = Context.ConnectionId;
-            _betClient.GetPositions(user, Context.ConnectionId);
+            _userConnectionId[User] = Context.ConnectionId;
+            _betClient.GetPositions(User, Context.ConnectionId);
         }
 
         public void GetRanking()
@@ -32,39 +42,22 @@ namespace SignalR
             _betClient.GetClassement(Context.ConnectionId);
         }
 
-        public void GetTeams()
+        public void SendOrder(string team, int quantity, int price, string side, int universeId, int competitionId)
         {
-            _betClient.GetTeams(Context.ConnectionId);
+            _userConnectionId[User] = Context.ConnectionId;
+            _betClient.NewOrder(User, team, quantity, price, side.ToUpper(), Context.ConnectionId, universeId, competitionId);
         }
 
-        public void GetTeam(string user)
+        public void CancelOrder(string side, string team, int universeId, int competitionId)
         {
-            _userConnectionId[user] = Context.ConnectionId;
-            _betClient.GetTeam(user, Context.ConnectionId);
+            _userConnectionId[User] = Context.ConnectionId;
+            _betClient.CancelOrder(User, side.ToUpper(), team, Context.ConnectionId, universeId, competitionId);
         }
 
-        public void SendOrder(string user, string team, int quantity, int price, string side)
+        public void SendMessage(string message)
         {
-            _userConnectionId[user] = Context.ConnectionId;
-            _betClient.NewOrder(user, team, quantity, price, side.ToUpper(), Context.ConnectionId);
-        }
-
-        public void CancelOrder(string user, string side, string team)
-        {
-            _userConnectionId[user] = Context.ConnectionId;
-            _betClient.CancelOrder(user, side.ToUpper(), team, Context.ConnectionId);
-        }
-
-        public void GetMoney(string user)
-        {
-            _userConnectionId[user] = Context.ConnectionId;
-            _betClient.GetMoney(user, Context.ConnectionId);
-        }
-
-        public void SendMessage(string user, string message)
-        {
-            _userConnectionId[user] = Context.ConnectionId;
-            _betClient.SendMessage(user, message);
+            _userConnectionId[User] = Context.ConnectionId;
+            _betClient.SendMessage(User, message);
         }
 
         public void GetMessages()
@@ -82,12 +75,12 @@ namespace SignalR
             _betClient.GetOrderBook(team.Split('(')[0].TrimEnd(), Context.ConnectionId);
         }
 
-        public void GetAllTrades(string user)
+        public void GetAllTrades()
         {
-            _userConnectionId[user] = Context.ConnectionId;
-            if (string.IsNullOrEmpty(user))
+            if (string.IsNullOrEmpty(User))
                 return;
-            _betClient.GetTrades(user, Context.ConnectionId);
+            _userConnectionId[User] = Context.ConnectionId;
+            _betClient.GetTrades(User, Context.ConnectionId);
         }
 
         public void EliminateTeam(string password, string team, int value)

@@ -24,17 +24,17 @@
 
 $.connection.hub.start()
     .done(function (state) {
-        $.connection.Bet.server.getMoney($("#UserId").text());
-        $.connection.Bet.server.getPosition($("#UserId").text());
-        $.connection.Bet.server.getAllTrades($("#UserId").text());
+        $.connection.Bet.server.getMoney();
+        $.connection.Bet.server.getPosition();
+        $.connection.Bet.server.getAllTrades();
 
 
         $("#SendOrder").click(function () {
-            betHub.server.sendOrder($("#UserId").text(), $("#TeamOrder").text(), $("#QuantityOrder").val(), $("#PriceOrder").val(), $("#SideOrder").text());
+            betHub.server.sendOrder($("#TeamOrder").text(), $("#QuantityOrder").val(), $("#PriceOrder").val(), $("#SideOrder").text());
         });
 
         $("#CancelOrder").click(function () {
-            betHub.server.cancelOrder($("#UserId").text(), $("#SideOrder").text(), $("#TeamOrder").text());
+            betHub.server.cancelOrder($("#SideOrder").text(), $("#TeamOrder").text());
         });
     });
 });
