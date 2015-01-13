@@ -1,12 +1,9 @@
 
 App_Data/EpicBet.mdf
 App_Data/EpicBet_log.ldf
-App_Data/EpicBet_log.ldf
 EpicWorldCupBet.proj.DotSettings.user
-App_Data/EpicBet.mdf
-App_Data/EpicBet.mdf
 Datas/obj/*
-Datas/bin/Debug/*
+Datas/bin/*
 EpicWorldCupBet.sln.DotSettings.user
 EpicWorldCupBet.v12.suo
 packages/*
