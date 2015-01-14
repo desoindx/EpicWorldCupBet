@@ -30,7 +30,7 @@ namespace SignalR.SQL
             }
         }
 
-        public static List<Datas.Entities.Universe> GetUserUniverses(string user)
+        public static List<Universe> GetUserUniverses(string user)
         {
             using (var context = new Entities())
             {
