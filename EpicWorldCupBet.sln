@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "EpicWorldCupBet", "EpicWorldCupBet/packages.config", "{AAC15F51-FCD1-4209-9A88-4E6D622228FC}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "EpicWorldCupBet", "EpicWorldCupBet\packages.config", "{AAC15F51-FCD1-4209-9A88-4E6D622228FC}"
 	ProjectSection(WebsiteProperties) = preProject
 		UseIISExpress = "true"
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5"
