@@ -18,6 +18,10 @@ textarea {
     max-width: 280px;
 }
 
+    input:focus {
+        outline-color: #F1CB65;
+    }
+
 .priceUp {
     font-weight: bold;
     background-color: green;
@@ -58,10 +62,22 @@ textarea {
 }
 
 .SelectedSide {
+    color: #333;
+    background-color: #fff;
+    border-color: #F1CB65;
+}
+
+.UnselectedSide {
     color: #F1CB65;
     background-color: #e6e6e6;
-    border-color: #adadad;
+    border-color: #ccc;
 }
+
+    .UnselectedSide:hover {
+        color: #F1CB65;
+        background-color: #ebebeb;
+        border-color: #adadad;
+    }
 
 .chatName {
     color: #F1CB65;
@@ -69,7 +85,8 @@ textarea {
 }
 
 button.btn.dropdown-toggle.selectpicker.teamOrderSelect.btn-default {
-    margin-left: 30px;
+    margin-left: 74px;
+    margin-top: -40px;
 }
 
 .visibleAlert {

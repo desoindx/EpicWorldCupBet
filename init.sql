@@ -1,7 +1,9 @@
-﻿insert into Competitions values ('Cup', '2015-01-01', '2015-02-01', 'Football World Cup 2014') 
+﻿insert into Competitions values ('Cup', '2015-01-01', '2015-02-01', 'Football World Cup 2014')
+insert into Competitions values ('Cup', '2015-01-01', '2015-02-01', 'Football World Cup 2015')
 insert into Universes values ('Test', 'Xavier')
 insert into UniverseAvailables values (1, 'Xavier')
 insert into UniverseCompetitions values (1,1)
+insert into UniverseCompetitions values (1,2)
 insert into Orders ([User], Date, Team, Quantity, Status, Price, Side, IdUniverseCompetition) select [User], Date, Team, Quantity, Status, Price, Side, 1 from [dbo].[Order];
 insert into Trades (Buyer, Seller, Date, Team, Quantity, Price, IdUniverseCompetition) select Buyer, Seller, Date, Team, Quantity, Price, 1 from [dbo].[Trade];
 insert into Teams (Name, IdCompetition) values ('Brazil', 1),
@@ -36,3 +38,35 @@ insert into Teams (Name, IdCompetition) values ('Brazil', 1),
             ('Belgium', 1),
             ('Russia', 1),
             ('South Korea', 1);
+insert into Teams (Name, IdCompetition) values ('Brazil', 2),
+            ('Croatia', 2),
+            ('Mexico', 2),
+            ('Cameroon', 2),
+            ('Australia', 2),
+            ('Chile', 2),
+            ('Netherlands', 2),
+            ('Spain', 2),
+            ('Colombia', 2),
+            ('Greece', 2),
+            ('Ivory Coast', 2),
+            ('Japan', 2),
+            ('Costa Rica', 2),
+            ('England', 2),
+            ('Italy', 2),
+            ('Uruguay', 2),
+            ('Ecuador', 2),
+            ('France', 2),
+            ('Honduras', 2),
+            ('Switzerland', 2),
+            ('Argentina', 2),
+            ('Bosnia And Herzgovina', 2),
+            ('Iran', 2),
+            ('Nigeria', 2),
+            ('Germany', 2),
+            ('Ghana', 2),
+            ('Portugal', 2),
+            ('United States', 2),
+            ('Algeria', 2),
+            ('Belgium', 2),
+            ('Russia', 2),
+            ('South Korea', 2);

@@ -1,4 +1,5 @@
 ﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Site.master.cs" Inherits="SiteMaster" %>
+
 <%@ Import Namespace="SignalR.SQL" %>
 
 <!DOCTYPE html>
@@ -48,17 +49,23 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <label style="width: 255px" class="navbar-brand">Epic World Cup Betting
-                    <% if (UserHasMultipleUniverse()) {%>
-                    <label class="navbar-brand">Test</label>
-                    <% } else { %>
-                    <p id="universe" style="margin-top:5px;font-size:12px;"><%: GetUserUniverse() %></p>
-                    <% } %></label>
+                    <label style="width: 255px" class="navbar-brand">
+                        Epic World Cup Betting
+                    <% if (UserHasMultipleUniverse())
+                       {%>
+                        <label class="navbar-brand">Test</label>
+                        <% }
+                       else
+                       { %>
+                        <p id="universe" style="margin-top: 5px; font-size: 12px;"><%: GetUserUniverse() %></p>
+                        <% } %>
+                    </label>
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li><a runat="server" href="~/">Home</a></li>
-                        <% if (Context.User.Identity.IsAuthenticated) { %>
+                        <% if (Context.User.Identity.IsAuthenticated)
+                           { %>
                         <li><a runat="server" href="~/Positions">Positions</a></li>
                         <li><a runat="server" href="~/Ranking">Ranking</a></li>
                         <% } %>
@@ -77,8 +84,9 @@
                                 <li><a id="UserMoney"><%: Sql.GetMoney(Context.User.Identity.GetUserName()) %> €</a></li>
                                 <li>
                                     <asp:LoginStatus runat="server" LogoutAction="Redirect" LogoutText="Log off" LogoutPageUrl="~/" OnLoggingOut="Unnamed_LoggingOut" />
-                                </li> 
-                                <% if (Context.User.IsInRole("Admin")) { %>
+                                </li>
+                                <% if (Context.User.IsInRole("Admin"))
+                                   { %>
                                 <li><a runat="server" href="~/Account/Register">Register</a></li>
                                 <% } %>
                             </ul>
@@ -88,7 +96,7 @@
             </div>
         </div>
         <div class="container body-content">
-            <div style="margin-left:50px;height:900px; margin-top: 50px;">
+            <div style="margin-left: 50px; height: 900px; margin-top: 50px;">
                 <asp:ContentPlaceHolder ID="MainContent" runat="server">
                 </asp:ContentPlaceHolder>
             </div>

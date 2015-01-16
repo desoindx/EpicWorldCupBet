@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using Datas.Entities;
 
@@ -26,7 +27,7 @@ namespace SignalR.SQL
                 {
                     if (team.Result.HasValue)
                         continue;
-                    
+
                     orders.Add(GetTeamInformation(context, user, team, id));
                 }
             }
@@ -101,18 +102,34 @@ namespace SignalR.SQL
             return order;
         }
 
+        public static List<Team> GetTeamsForCompetition(int competitionId)
+        {
+            using (var context = new Entities())
+            {
+                return GetTeamsForCompetition(competitionId, context);
+            }
+        }
+
         private static List<Team> GetTeamsForCompetition(int competitionId, Entities context)
         {
             List<Team> teams;
             if (!Teams.TryGetValue(competitionId, out teams))
             {
-                teams = context.Teams.Where(x => x.IdCompetition == competitionId).ToList();
+                teams = context.Teams.Where(x => x.IdCompetition == competitionId).OrderBy(x => x.Name).ToList();
                 Teams[competitionId] = teams;
             }
             return teams;
         }
 
-        private static bool TryGetUniverseCompetitionId(int universeId, int competitionId, Entities context, out int id)
+        public static bool TryGetUniverseCompetitionId(int universeId, int competitionId, out int id)
+        {
+            using (var context = new Entities())
+            {
+                return TryGetUniverseCompetitionId(universeId, competitionId, context, out id);
+            }
+        }
+
+        public static bool TryGetUniverseCompetitionId(int universeId, int competitionId, Entities context, out int id)
         {
             var key = string.Format("{0}-{1}", universeId, competitionId);
             if (!UniverseCompetitions.TryGetValue(key, out id))
@@ -126,18 +143,6 @@ namespace SignalR.SQL
                 id = universeCompetition.Id;
             }
             return true;
-        }
-
-        private static bool IsUserAuthorizedOn(string user, int universeId, Entities context)
-        {
-            bool isAuthorized;
-            var key = string.Format("user:{0}-universe:{1}", user, universeId);
-            if (!UserUniverses.TryGetValue(key, out isAuthorized))
-            {
-                isAuthorized = context.UniverseAvailables.Any(x => x.UserName == user && x.IdUniverse == universeId);
-                UserUniverses[key] = isAuthorized;
-            }
-            return isAuthorized;
         }
     }
 }

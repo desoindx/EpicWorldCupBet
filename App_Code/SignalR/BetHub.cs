@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
+using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
+using SignalR.SQL;
 using WorldCupBetting;
 
 namespace SignalR
@@ -15,25 +18,40 @@ namespace SignalR
 
         private string User { get { return Context.User.Identity.Name; } }
         private readonly BetClient _betClient;
-        private readonly Dictionary<string, string> _userConnectionId;
+        private static readonly Dictionary<string, string> _userConnectionId = new Dictionary<string, string>();
+
+        public override Task OnConnected()
+        {
+            _userConnectionId[User] = Context.ConnectionId;
+            var userAvailableCompetitions = Sql.GetUserAvailableCompetitions(User);
+            foreach (var competition in userAvailableCompetitions)
+            {
+                Groups.Add(Context.ConnectionId, competition.ToString(CultureInfo.InvariantCulture));
+            }
+            return base.OnConnected();
+        }
+
+        public override Task OnDisconnected()
+        {
+            _userConnectionId.Remove(User);
+            var userAvailableCompetitions = Sql.GetUserAvailableCompetitions(User);
+            foreach (var competition in userAvailableCompetitions)
+            {
+                Groups.Remove(Context.ConnectionId, competition.ToString(CultureInfo.InvariantCulture));
+            }
+            return base.OnDisconnected();
+        }
 
         public BetHub()
         {
-           ApplicationDbContext = new ApplicationDbContext();
-           UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(ApplicationDbContext));
+            ApplicationDbContext = new ApplicationDbContext();
+            UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(ApplicationDbContext));
 
-            _userConnectionId = new Dictionary<string, string>();
             _betClient = new BetClient(GlobalHost.ConnectionManager.GetHubContext<BetHub>().Clients, _userConnectionId);
-        }
-
-        public void GetCharts()
-        {
-            _betClient.GetCharts(Context.ConnectionId);
         }
 
         public void GetPosition()
         {
-            _userConnectionId[User] = Context.ConnectionId;
             _betClient.GetPositions(User, Context.ConnectionId);
         }
 
@@ -44,20 +62,19 @@ namespace SignalR
 
         public void SendOrder(string team, int quantity, int price, string side, int universeId, int competitionId)
         {
-            _userConnectionId[User] = Context.ConnectionId;
             _betClient.NewOrder(User, team, quantity, price, side.ToUpper(), Context.ConnectionId, universeId, competitionId);
         }
 
         public void CancelOrder(string side, string team, int universeId, int competitionId)
         {
-            _userConnectionId[User] = Context.ConnectionId;
             _betClient.CancelOrder(User, side.ToUpper(), team, Context.ConnectionId, universeId, competitionId);
         }
 
-        public void SendMessage(string message)
+        public void SendMessage(int universeId, string message)
         {
-            _userConnectionId[User] = Context.ConnectionId;
-            _betClient.SendMessage(User, message);
+            var lastMessage = Chats.NewMessage(universeId, User, message);
+            if (lastMessage != null)
+                Clients.Group(universeId.ToString(CultureInfo.InvariantCulture)).chat(lastMessage);
         }
 
         public void GetMessages()
@@ -70,16 +87,15 @@ namespace SignalR
             _betClient.GetLastTrades(Context.ConnectionId);
         }
 
-        public void GetOrderBook(string team)
+        public void GetOrderBook(string team, int universeId, int competitionId)
         {
-            _betClient.GetOrderBook(team.Split('(')[0].TrimEnd(), Context.ConnectionId);
+            _betClient.GetOrderBook(team.Split('(')[0].TrimEnd(), universeId, competitionId, Context.ConnectionId);
         }
 
         public void GetAllTrades()
         {
             if (string.IsNullOrEmpty(User))
                 return;
-            _userConnectionId[User] = Context.ConnectionId;
             _betClient.GetTrades(User, Context.ConnectionId);
         }
 

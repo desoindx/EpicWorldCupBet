@@ -9,8 +9,11 @@ namespace SignalR.SQL
         private static readonly ConcurrentDictionary<int, List<Team>> Teams =
             new ConcurrentDictionary<int, List<Team>>();
 
-        private static readonly ConcurrentDictionary<string, bool> UserUniverses =
+        private static readonly ConcurrentDictionary<string, bool> UserUniversesRights =
             new ConcurrentDictionary<string, bool>();
+
+        private static readonly ConcurrentDictionary<string, List<int>> UserCompetitions =
+            new ConcurrentDictionary<string, List<int>>();
 
         private static readonly ConcurrentDictionary<string, int> UniverseCompetitions =
             new ConcurrentDictionary<string, int>();

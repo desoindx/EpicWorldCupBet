@@ -88,9 +88,9 @@
     <Key>
       <PropertyRef Name="Id" />
     </Key>
-    <Property Name="IdUniverse" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="IdUniverse" Type="int" Nullable="false" />
     <Property Name="IdCompetition" Type="int" Nullable="false" />
-    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
   </EntityType>
   <EntityType Name="UniverseAvailables">
     <Key>
@@ -187,9 +187,9 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="IdUniverse" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdUniverse" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="None" />
           <Property Name="IdCompetition" Type="Int32" Nullable="false" />
-          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
         </EntityType>
         <EntityType Name="UniverseAvailable">
           <Key>

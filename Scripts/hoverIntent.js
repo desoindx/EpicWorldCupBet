@@ -34,9 +34,9 @@
 
         // default configuration values
         var cfg = {
-            interval: 100,
+            interval: 750,
             sensitivity: 6,
-            timeout: 0
+            timeout: 150
         };
 
         if (typeof handlerIn === "object") {

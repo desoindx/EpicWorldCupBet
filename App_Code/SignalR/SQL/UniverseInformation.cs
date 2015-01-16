@@ -83,5 +83,13 @@ namespace SignalR.SQL
             }
             return value;
         }
+
+        public static List<Trade> GetLastTradeForUniverse(int universeId, int numberOfTrades = 5)
+        {
+            using (var context = new Entities())
+            {
+                return context.Trades.OrderByDescending(x => x.Date).Take(numberOfTrades).ToList();
+            }
+        }
     }
 }

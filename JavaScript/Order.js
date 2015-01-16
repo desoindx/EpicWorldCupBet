@@ -1,141 +1,157 @@
-﻿function onTeamCellMouseOver() {
-    $.connection.Bet.server.getOrderBook($(this).context.innerText);
+﻿function showTeamSelectPicker(competitionId) {
+    var teamsPicker = $('.teamSelectPicker');
+    for (var j = 0; j < teamsPicker.length; j++)
+        teamsPicker[j].style.display = 'none';
+    $("#TeamOrderDiv" + competitionId)[0].style.display = '';
+    $("#TeamOrder-" + competitionId).selectpicker('setStyle', 'teamOrderSelect', 'add');
+    $("#TeamOrder-" + competitionId).selectpicker('refresh');
+}
+
+function onTeamCellMouseOver() {
+    $.connection.Bet.server.getOrderBook($(this).context.innerText, universeId, currentCompetitionId);
     popup('orderBookDiv');
 }
 
 function onTeamCellMouseOut() {
-    popup('orderBookDiv');
+    if (!$.manuallyCloseorderBookDiv)
+        popup('orderBookDiv');
+    $.manuallyCloseorderBookDiv = false;
 }
 
 function clickSellSide() {
-    $("#SideOrderSell").addClass("SelectedSide")
+    $("#SideOrderSell").addClass("SelectedSide");
+    $("#SideOrderSell").removeClass("UnselectedSide");
     $("#SideOrderBuy").removeClass("SelectedSide");
+    $("#SideOrderBuy").addClass("UnselectedSide");
     $("#SideOrder").val("SELL");
 }
 
 function clickBuySide() {
-    $("#SideOrderBuy").addClass("SelectedSide")
+    $("#SideOrderBuy").addClass("SelectedSide");
+    $("#SideOrderBuy").removeClass("UnselectedSide");
     $("#SideOrderSell").removeClass("SelectedSide");
+    $("#SideOrderSell").addClass("UnselectedSide");
     $("#SideOrder").val("BUY");
 }
 
-function setUpOrder(order, isMine, i, shouldFlash, cellToFlash) {
+function setUpOrder(order, isMine, i, shouldFlash, cellToFlash, competitionId) {
     var cellNb = 0;
+    var currentDatas = $.bidasks[competitionId][i];
     if (order.LastTradedPriceEvolution > 0)
-        $.bidasks[i].Team = order.Team + " (" + order.LastTradedPrice + ") " + "<span class='glyphicon glyphicon-arrow-up'style='color:green'/>";
+        currentDatas.Team = order.Team + " (" + order.LastTradedPrice + ") " + "<span class='glyphicon glyphicon-arrow-up'style='color:green'/>";
     else if (order.LastTradedPriceEvolution < 0)
-        $.bidasks[i].Team = order.Team + " (" + order.LastTradedPrice + ") " + "<span class='glyphicon glyphicon-arrow-down'style='color:red'/>";
+        currentDatas.Team = order.Team + " (" + order.LastTradedPrice + ") " + "<span class='glyphicon glyphicon-arrow-down'style='color:red'/>";
     else
-        $.bidasks[i].Team = order.Team + " (" + order.LastTradedPrice + ") " + "<span class='glyphicon glyphicon-arrow-right'style='color:blue'/>";
-    $.bidasks[i].TeamName = order.Team;
+        currentDatas.Team = order.Team + " (" + order.LastTradedPrice + ") " + "<span class='glyphicon glyphicon-arrow-right'style='color:blue'/>";
+    currentDatas.TeamName = order.Team;
 
     if (order.BestBid != 0) {
         if (shouldFlash) {
-            var cellIndex = $.grid.getColumnIndex('BestBid');
-            if ($.bidasks[i].BestBid > order.BestBid) {
+            var cellIndex = $.grids[competitionId].getColumnIndex('BestBid');
+            if (currentDatas.BestBid > order.BestBid) {
                 cellToFlash[cellNb] = { row: i, cell: cellIndex, className: 'priceDown' };
                 cellNb++;
             }
-            else if ($.bidasks[i].BestBid < order.BestBid) {
+            else if (currentDatas.BestBid < order.BestBid) {
                 cellToFlash[cellNb] = { row: i, cell: cellIndex, className: 'priceUp' };
                 cellNb++;
             }
         }
-        $.bidasks[i].BestBid = order.BestBid;
+        currentDatas.BestBid = order.BestBid;
     }
     else {
         if (shouldFlash) {
-            var cellIndex = $.grid.getColumnIndex('BestBid');
-            if ($.bidasks[i].BestBid != '') {
+            var cellIndex = $.grids[competitionId].getColumnIndex('BestBid');
+            if (currentDatas.BestBid != '') {
                 cellToFlash[cellNb] = { row: i, cell: cellIndex, className: 'priceDown' };
                 cellNb++;
             }
         }
-        $.bidasks[i].BestBid = '';
+        currentDatas.BestBid = '';
     }
 
     if (order.BestAsk != 0) {
         if (shouldFlash) {
-            var cellIndex = $.grid.getColumnIndex('BestAsk');
-            if ($.bidasks[i].BestAsk > order.BestAsk) {
+            var cellIndex = $.grids[competitionId].getColumnIndex('BestAsk');
+            if (currentDatas.BestAsk > order.BestAsk) {
                 cellToFlash[cellNb] = { row: i, cell: cellIndex, className: 'priceDown' };
                 cellNb++;
             }
-            else if ($.bidasks[i].BestAsk < order.BestAsk) {
+            else if (currentDatas.BestAsk < order.BestAsk) {
                 cellToFlash[cellNb] = { row: i, cell: cellIndex, className: 'priceUp' };
                 cellNb++;
             }
         }
-        $.bidasks[i].BestAsk = order.BestAsk;
+        currentDatas.BestAsk = order.BestAsk;
     }
     else {
         if (shouldFlash) {
-            var cellIndex = $.grid.getColumnIndex('BestAsk');
-            if ($.bidasks[i].BestAsk != '') {
+            var cellIndex = $.grids[competitionId].getColumnIndex('BestAsk');
+            if (currentDatas.BestAsk != '') {
                 cellToFlash[cellNb] = { row: i, cell: cellIndex, className: 'priceDown' };
                 cellNb++;
             }
         }
-        $.bidasks[i].BestAsk = '';
+        currentDatas.BestAsk = '';
     }
 
-    $.bidasks[i].BestBidQuantity = order.BestBidQuantity;
-    $.bidasks[i].BestAskQuantity = order.BestAskQuantity;
+    currentDatas.BestBidQuantity = order.BestBidQuantity;
+    currentDatas.BestAskQuantity = order.BestAskQuantity;
 
     if (!isMine) return;
 
     if (order.MyBid != 0) {
         if (shouldFlash) {
-            var cellIndex = $.grid.getColumnIndex('MyBid');
-            if ($.bidasks[i].MyBid > order.MyBid) {
+            var cellIndex = $.grids[competitionId].getColumnIndex('MyBid');
+            if (currentDatas.MyBid > order.MyBid) {
                 cellToFlash[cellNb] = { row: i, cell: cellIndex, className: 'priceDown' };
                 cellNb++;
             }
-            else if ($.bidasks[i].MyBid < order.MyBid) {
+            else if (currentDatas.MyBid < order.MyBid) {
                 cellToFlash[cellNb] = { row: i, cell: cellIndex, className: 'priceUp' };
                 cellNb++;
             }
         }
-        $.bidasks[i].MyBid = order.MyBid;
+        currentDatas.MyBid = order.MyBid;
     }
     else {
         if (shouldFlash) {
-            var cellIndex = $.grid.getColumnIndex('MyBid');
-            if ($.bidasks[i].MyBid != '') {
+            var cellIndex = $.grids[competitionId].getColumnIndex('MyBid');
+            if (currentDatas.MyBid != '') {
                 cellToFlash[cellNb] = { row: i, cell: cellIndex, className: 'priceDown' };
                 cellNb++;
             }
         }
-        $.bidasks[i].MyBid = '';
+        currentDatas.MyBid = '';
     }
 
     if (order.MyAsk != 0) {
         if (shouldFlash) {
-            var cellIndex = $.grid.getColumnIndex('MyAsk');
-            if ($.bidasks[i].MyAsk > order.MyAsk) {
+            var cellIndex = $.grids[competitionId].getColumnIndex('MyAsk');
+            if (currentDatas.MyAsk > order.MyAsk) {
                 cellToFlash[cellNb] = { row: i, cell: cellIndex, className: 'priceDown' };
                 cellNb++;
             }
-            else if ($.bidasks[i].MyAsk < order.MyAsk) {
+            else if (currentDatas.MyAsk < order.MyAsk) {
                 cellToFlash[cellNb] = { row: i, cell: cellIndex, className: 'priceUp' };
                 cellNb++;
             }
         }
-        $.bidasks[i].MyAsk = order.MyAsk;
+        currentDatas.MyAsk = order.MyAsk;
     }
     else {
         if (shouldFlash) {
-            var cellIndex = $.grid.getColumnIndex('MyAsk');
-            if ($.bidasks[i].MyAsk != '') {
+            var cellIndex = $.grids[competitionId].getColumnIndex('MyAsk');
+            if (currentDatas.MyAsk != '') {
                 cellToFlash[cellNb] = { row: i, cell: cellIndex, className: 'priceDown' };
                 cellNb++;
             }
         }
-        $.bidasks[i].MyAsk = '';
+        currentDatas.MyAsk = '';
     }
 
-    $.bidasks[i].MyBidQuantity = order.MyBidQuantity;
-    $.bidasks[i].MyAskQuantity = order.MyAskQuantity;
+    currentDatas.MyBidQuantity = order.MyBidQuantity;
+    currentDatas.MyAskQuantity = order.MyAskQuantity;
 }
 
 function formatter(row, cell, value, columnDef, dataContext) {
@@ -157,8 +173,14 @@ function drawOrderBook(team, bids, asks) {
     new Slick.Grid("#askGrid", asks, columns, options);
 }
 
-function drawOrdersGrid(orders) {
-    $.bidasks = [];
+function drawOrdersGrid(orders, competitionId) {
+    if (!$.bidasks)
+        $.bidasks = [];
+    if (!$.grids)
+        $.grids = [];
+
+    var currentDatas = [];
+
     var columns = [
       { id: "Team", name: "Team", field: "Team", width: 200, sortable: true, formatter: formatter, cssClass: "TeamCell" },
       { id: "BestBid", name: "Best Bid", field: "BestBid", width: 100, sortable: true },
@@ -173,20 +195,22 @@ function drawOrdersGrid(orders) {
 
     numberOfItems = orders.length, i;
 
+    $.bidasks[competitionId] = currentDatas;
     // Assign values to the data.
     for (i = numberOfItems; i-- > 0;) {
-        order = orders[i];
-        $.bidasks[i] = {};
-        setUpOrder(order, true, i, false, null);
+        var order = orders[i];
+        currentDatas[i] = {};
+        setUpOrder(order, true, i, false, null, competitionId);
     }
 
-    $.grid = new Slick.Grid("#BidAskDiv", $.bidasks, columns, options);
+    var currentGrid = new Slick.Grid("#BidAskDiv-" + competitionId, currentDatas, columns, options);
+    currentGrid.Id = competitionId;
 
-    $.grid.onSort.subscribe(function (e, args) {
+    currentGrid.onSort.subscribe(function (e, args) {
         var cols = args.sortCol;
         var field = cols.field;
         var sign = args.sortAsc ? 1 : -1;
-        $.bidasks.sort(function (dataRow1, dataRow2) {
+        $.bidasks[this.Id].sort(function (dataRow1, dataRow2) {
             var value1 = dataRow1[field], value2 = dataRow2[field];
             if (value1 == '')
                 value1 = 0;
@@ -195,8 +219,8 @@ function drawOrdersGrid(orders) {
             var result = (value1 == value2 ? 0 : (value1 > value2 ? 1 : -1)) * sign;
             return result;
         });
-        $.grid.invalidateAllRows();
-        $.grid.render();
+        this.invalidateAllRows();
+        this.render();
     });
 
     $('.TeamCell').hoverIntent({
@@ -204,14 +228,14 @@ function drawOrdersGrid(orders) {
         out: onTeamCellMouseOut
     });
 
-    $.grid.onClick.subscribe(function (e, args) {
-        var cell = $.grid.getCellFromEvent(e);
-        if (!cell || !$.grid.canCellBeSelected(cell.row, cell.cell)) {
+    currentGrid.onClick.subscribe(function (e, args) {
+        var cell = this.getCellFromEvent(e);
+        if (!cell || !this.canCellBeSelected(cell.row, cell.cell)) {
             return;
         }
         var item = args.grid.getData()[args.row];
-
-        $("#TeamOrder").selectpicker('val', item.TeamName);
+        showTeamSelectPicker(this.Id);
+        $("#TeamOrder-" + this.Id).selectpicker('val', item.TeamName);
 
         if (cell.cell == 0) {
             return;
@@ -230,18 +254,21 @@ function drawOrdersGrid(orders) {
         }
         else if (cell.cell == 3) {
             $("#CancelOrder").show();
-            $("#CancelOrder").prop('value', 'Cancel Buy Order');
+            $("#CancelOrder").prop('value', 'Cancel Existing Order');
             clickBuySide();
             $("#PriceOrder").val(item.MyBid);
             $("#QuantityOrder").val(item.MyBidQuantity);
         }
         else if (cell.cell == 4) {
             $("#CancelOrder").show();
-            $("#CancelOrder").prop('value', 'Cancel Sell Order');
+            $("#CancelOrder").prop('value', 'Cancel Existing Order');
             clickSellSide();
             $("#PriceOrder").val(item.MyAsk);
             $("#QuantityOrder").val(item.MyAskQuantity);
         }
         popup('newOrderDiv');
+        $("#PriceOrder").focus();
     });
+
+    $.grids[competitionId] = currentGrid;
 }

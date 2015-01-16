@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 using Datas.Entities;
 using SignalR;
 using SignalR.SQL;
@@ -13,34 +14,54 @@ public partial class _Default : Page
     {
     }
 
-    private List<Competition> _universeCompetitions;
+    public List<Competition> UniverseCompetitions;
     protected bool UniverseHasMultipleCompetition()
     {
-        _universeCompetitions = Sql.GetUniverseCompetitions(Master.SelectedUniverse);
-        return _universeCompetitions.Count > 1;
+        UniverseCompetitions = Sql.GetUniverseCompetitions(Master.SelectedUniverse);
+        return UniverseCompetitions.Count > 1;
     }
 
     protected string GetUniverseCompetition()
     {
-        if (_universeCompetitions != null && _universeCompetitions.Count == 1)
-            return _universeCompetitions[0].Name;
+        if (UniverseCompetitions != null && UniverseCompetitions.Count == 1)
+            return UniverseCompetitions[0].Name;
 
         return string.Empty;
     }
 
     protected int GetCompetitionId()
     {
-        if (_universeCompetitions != null && _universeCompetitions.Count == 1)
-            return _universeCompetitions[0].Id;
+        if (UniverseCompetitions != null && UniverseCompetitions.Count == 1)
+            return UniverseCompetitions[0].Id;
 
         return -1;
     }
 
-    protected IHtmlString GetOrders()
+    protected IHtmlString GetOrders(int? id = null)
     {
+        if (!id.HasValue)
+            id = GetCompetitionId();
         return
             JavaScriptSerializer.SerializeObject(Sql.GetTeamsInformation(Context.User.Identity.Name,
-                Master.SelectedUniverseId,
-                _universeCompetitions[0].Id));
+                Master.SelectedUniverseId, id.Value));
+    }
+
+    protected List<string> GetLastTrade()
+    {
+        var trades = Sql.GetLastTradeForUniverse(Master.SelectedUniverseId);
+        return
+            trades.Select(
+                x =>
+                    string.Format("At {0}, {1} {2} traded at {3}", x.Date.ToShortTimeString(), x.Quantity, x.Team,
+                        x.Price)).ToList();
+    }
+    protected List<string[]> GetMessages()
+    {
+        return Chats.GetChat(Master.SelectedUniverseId);
+    }
+
+    protected List<string> GetTeamFor(int competitionId)
+    {
+        return Sql.GetTeamsForCompetition(competitionId).Select(x => x.Name).ToList();
     }
 }

@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 01/13/2015 15:24:29
+-- Date Created: 01/15/2015 16:52:43
 -- Generated from EDMX file: C:\Users\Xav\Desktop\EpicWorldCupBet\EpicWorldCupBet\Datas\Entities\BetModel.edmx
 -- --------------------------------------------------
 
@@ -122,9 +122,9 @@ GO
 
 -- Creating table 'UniverseCompetitions'
 CREATE TABLE [dbo].[UniverseCompetitions] (
-    [IdUniverse] int IDENTITY(1,1) NOT NULL,
+    [IdUniverse] int  NOT NULL,
     [IdCompetition] int  NOT NULL,
-    [Id] int  NOT NULL
+    [Id] int IDENTITY(1,1) NOT NULL
 );
 GO
 

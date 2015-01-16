@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
+using SignalR.SQL;
 
 public partial class Positions : Page
 {
@@ -11,4 +9,11 @@ public partial class Positions : Page
     {
 
     }
+//    protected IHtmlString GetPositions()
+//    {
+//        return
+//            JavaScriptSerializer.SerializeObject(Sql.GetTeamsInformation(Context.User.Identity.Name,
+//                Master.SelectedUniverseId,
+//                _universeCompetitions[0].Id));
+//    }
 }

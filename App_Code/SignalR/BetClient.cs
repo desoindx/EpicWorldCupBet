@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Datas.Entities;
 using Microsoft.AspNet.SignalR.Hubs;
@@ -53,7 +54,7 @@ namespace SignalR
             using (var context = new Entities())
             {
                 var teamsValue = new Dictionary<string, int>();
-               
+
                 var userValue = context.Moneys.ToDictionary(money => money.User, money => money.Money1);
 
                 foreach (var trade in context.Trades)
@@ -75,7 +76,7 @@ namespace SignalR
             }
         }
 
-        private List<string> _teams = new List<string>(); 
+        private List<string> _teams = new List<string>();
         public void GetPositions(string user, string connectionId)
         {
             using (var context = new Entities())
@@ -168,11 +169,18 @@ namespace SignalR
                 return;
             }
 
+            int id;
+            if (!Sql.TryGetUniverseCompetitionId(universeId, competitionId, out id))
+            {
+                Clients.Client(connectionId).newMessage("Fail To cancel order", ErrorClass);
+                return;
+            }
+
             lock (this)
             {
                 using (var context = new Entities())
                 {
-                    var previousOrders = context.Orders.Where(x => x.User == user && x.Status == 0 && x.Team == team && x.Side.Trim() == side);
+                    var previousOrders = context.Orders.Where(x => x.User == user && x.Status == 0 && x.Team == team && x.Side.Trim() == side && x.IdUniverseCompetition == id);
                     if (!previousOrders.Any())
                     {
                         Clients.Client(connectionId).newMessage("No order found to cancel", ErrorClass);
@@ -183,14 +191,14 @@ namespace SignalR
                         previousOrder.Status = 2;
                     }
                     context.SaveChanges();
-                    OnNewOrder(context, team, new HashSet<string> {user}, universeId, competitionId);
+                    OnNewOrder(context, team, new HashSet<string> { user }, universeId, competitionId, id);
                 }
             }
 
             Clients.Client(connectionId).newMessage("Successfuly canceled order", SuccessClass);
         }
 
-        private bool CheckOrder(string user, string team, int quantity, int price, string side, string connectionId)
+        private bool CheckOrder(string user, string team, int quantity, int price, string side, string connectionId, int universeId, int competitionId)
         {
             if (string.IsNullOrEmpty(user))
             {
@@ -198,9 +206,9 @@ namespace SignalR
                 return false;
             }
 
-            if (!_teams.Contains(team))
+            if (!Sql.IsUserAuthorizedOn(user, universeId))
             {
-                Clients.Client(connectionId).newMessage("Fail To add order because the team does not exist", ErrorClass);
+                Clients.Client(connectionId).newMessage("Fail To add order because you are not allowed on this universe", ErrorClass);
                 return false;
             }
 
@@ -227,7 +235,7 @@ namespace SignalR
 
         public void NewOrder(string user, string team, int quantity, int price, string side, string connectionId, int universeId, int competitionId)
         {
-            if (!CheckOrder(user, team, quantity, price, side, connectionId))
+            if (!CheckOrder(user, team, quantity, price, side, connectionId, universeId, competitionId))
                 return;
 
             var usersToNotify = new HashSet<string> { user };
@@ -235,13 +243,30 @@ namespace SignalR
             {
                 using (var context = new Entities())
                 {
-                    if (context.Results.FirstOrDefault(x => x.Team == team) != null)
+                    int id;
+                    if (!Sql.TryGetUniverseCompetitionId(universeId, competitionId, context, out id))
+                    {
+                        Clients.Client(connectionId).newMessage("Fail To add order because this competition doesn't exist", ErrorClass);
+                        return;
+                    }
+
+                    var choosedTeam = context.Teams.FirstOrDefault(x => x.Name == team && x.IdCompetition == competitionId);
+                    if (choosedTeam == null)
+                    {
+                        Clients.Client(connectionId).newMessage("Fail To add order because the team does not exist", ErrorClass);
+                        return;
+                    }
+                    if (choosedTeam.Result.HasValue)
                     {
                         Clients.Client(connectionId).newMessage("Cannot place order on this team anymore", ErrorClass);
                         return;
                     }
 
-                    var otherOrder = context.Orders.FirstOrDefault(x => x.User == user && x.Status == 0 && x.Team == team && x.Side != side);
+                    var otherOrder =
+                        context.Orders.FirstOrDefault(
+                            x =>
+                                x.User == user && x.Status == 0 && x.Team == team && x.Side != side &&
+                                x.IdUniverseCompetition == id);
                     if (otherOrder != null)
                     {
                         if ((side == "BUY" && otherOrder.Price <= price) || (side == "SELL" && otherOrder.Price > price))
@@ -253,12 +278,12 @@ namespace SignalR
 
                     if (UserHasEnough(context, user, team, quantity, price, side))
                     {
-                        var remainingQuantity = InsertTrade(context, user, team, quantity, price, side, connectionId, usersToNotify);
+                        var remainingQuantity = InsertTrade(context, user, team, quantity, price, side, id, connectionId, usersToNotify);
                         if (remainingQuantity > 0)
-                            InsertNewOrder(context, user, team, remainingQuantity, price, side, connectionId);
+                            InsertNewOrder(context, user, team, remainingQuantity, price, side, id, connectionId);
 
                         context.SaveChanges();
-                        OnNewOrder(context, team, usersToNotify, universeId, competitionId);
+                        OnNewOrder(context, team, usersToNotify, universeId, competitionId, id);
                     }
                     else
                     {
@@ -317,22 +342,22 @@ namespace SignalR
             return exposure <= userMoney.Money1;
         }
 
-        private int InsertTrade(Entities context, string user, string team, int quantity, int price, string side, string connectionId, HashSet<string> usersToNotify)
+        private int InsertTrade(Entities context, string user, string team, int quantity, int price, string side, int universeCompetitionId, string connectionId, HashSet<string> usersToNotify)
         {
             IQueryable<Order> matchingOrders = side == "BUY"
                 ? context.Orders.Where(
-                    x => x.User != user && x.Status == 0 && x.Team == team && x.Side.Trim() == "SELL" && x.Price <= price)
+                    x => x.User != user && x.Status == 0 && x.Team == team && x.Side.Trim() == "SELL" && x.Price <= price && x.IdUniverseCompetition == universeCompetitionId)
                     .OrderBy(x => x.Price)
                     .ThenBy(x => x.Date)
                 : context.Orders.Where(
-                    x => x.User != user && x.Status == 0 && x.Team == team && x.Side.Trim() == "BUY" && x.Price >= price)
+                    x => x.User != user && x.Status == 0 && x.Team == team && x.Side.Trim() == "BUY" && x.Price >= price && x.IdUniverseCompetition == universeCompetitionId)
                     .OrderByDescending(x => x.Price)
                     .ThenBy(x => x.Date);
 
             foreach (var matchingOrder in matchingOrders)
             {
                 usersToNotify.Add(matchingOrder.User);
-                InsertNewTrade(context, side == "BUY" ? user : matchingOrder.User, side == "SELL" ? user : matchingOrder.User, team, Math.Min(quantity, matchingOrder.Quantity), matchingOrder.Price);
+                InsertNewTrade(context, side == "BUY" ? user : matchingOrder.User, side == "SELL" ? user : matchingOrder.User, team, Math.Min(quantity, matchingOrder.Quantity), matchingOrder.Price, universeCompetitionId);
                 Clients.Client(connectionId).newMessage(string.Format("you traded {0} {1} at {2} with {3}", Math.Min(quantity, matchingOrder.Quantity), team, matchingOrder.Price, matchingOrder.User), InfoClass);
                 if (quantity < matchingOrder.Quantity)
                 {
@@ -349,7 +374,7 @@ namespace SignalR
             return quantity;
         }
 
-        private void InsertNewTrade(Entities context, string buyer, string seller, string team, int quantity, int price)
+        private void InsertNewTrade(Entities context, string buyer, string seller, string team, int quantity, int price, int universeCompetitionId)
         {
             var trade = new Trade
             {
@@ -358,7 +383,8 @@ namespace SignalR
                 Team = team,
                 Buyer = buyer,
                 Price = price,
-                Seller = seller
+                Seller = seller,
+                IdUniverseCompetition = universeCompetitionId
             };
             context.Trades.Add(trade);
 
@@ -379,9 +405,13 @@ namespace SignalR
             sellerMoney.Money1 += price * quantity;
         }
 
-        private void InsertNewOrder(Entities context, string user, string team, int quantity, int price, string side, string connectionId)
+        private void InsertNewOrder(Entities context, string user, string team, int quantity, int price, string side, int idUniverseCompetition, string connectionId)
         {
-            var previousOrders = context.Orders.Where(x => x.User == user && x.Status == 0 && x.Team == team && x.Side.Trim() == side && x.Status != 2);
+            var previousOrders =
+                context.Orders.Where(
+                    x =>
+                        x.User == user && x.Status == 0 && x.Team == team && x.Side.Trim() == side && x.Status != 2 &&
+                        x.IdUniverseCompetition == idUniverseCompetition);
             foreach (var previousOrder in previousOrders)
             {
                 previousOrder.Status = 2;
@@ -395,16 +425,17 @@ namespace SignalR
                 Team = team,
                 User = user,
                 Price = price,
-                Side = side
+                Side = side,
+                IdUniverseCompetition = idUniverseCompetition
             };
             context.Orders.Add(order);
 
             Clients.Client(connectionId).newMessage("Succefuly add order", SuccessClass);
         }
 
-        private void OnNewOrder(Entities context, string team, HashSet<string> users, int universeId, int competitionId)
+        private void OnNewOrder(Entities context, string team, HashSet<string> users, int universeId, int competitionId, int id)
         {
-            _orderBooks.Remove(team);
+            _orderBooks.Remove(team + "-" + id);
             var connectionIdToIgnore = new string[users.Count];
             OrderR order = null;
             int i = 0;
@@ -414,14 +445,16 @@ namespace SignalR
                 string connectionId;
                 if (_userConnectionId.TryGetValue(user, out connectionId))
                 {
-                    Clients.Client(connectionId).newPrice(order, true);
+                    Clients.Client(connectionId).newPrice(order, true, competitionId);
                     connectionIdToIgnore[i] = connectionId;
                     i++;
                 }
             }
 
             if (order != null)
-                Clients.AllExcept(connectionIdToIgnore).newPrice(order, false);
+                Clients.Group(universeId.ToString(CultureInfo.InvariantCulture))
+                    .AllExcept(connectionIdToIgnore)
+                    .newPrice(order, false, competitionId);
         }
 
         public void GetCharts(string connectionId)
@@ -664,20 +697,26 @@ namespace SignalR
             Clients.Client(connectionId).pricingFinished(teams, price);
         }
 
-        public void GetOrderBook(string team, string connectionId)
+        public void GetOrderBook(string team, int universeId, int competitionId, string connectionId)
         {
+            int id;
+            if (!Sql.TryGetUniverseCompetitionId(universeId, competitionId, out id))
+                return;
+
             OrderBook orderBook;
-            if (_orderBooks.TryGetValue(team, out orderBook))
+            var key = team + "-" + id;
+            if (_orderBooks.TryGetValue(key, out orderBook))
             {
                 Clients.Client(connectionId).showOrderBook(team, orderBook.Bids, orderBook.Asks);
             }
             else
                 using (var context = new Entities())
                 {
-                    var asks = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side.Trim() == "SELL").GroupBy(x => x.Price).Select(x => new OrderBookInfo { Price = x.Key, Quantity = x.Sum(o => o.Quantity) }).OrderBy(x => x.Price).ToList();
-                    var bids = context.Orders.Where(x => x.Team == team && x.Status == 0 && x.Side.Trim() == "BUY").GroupBy(x => x.Price).Select(x => new OrderBookInfo { Price = x.Key, Quantity = x.Sum(o => o.Quantity) }).OrderByDescending(x => x.Price).ToList();
+                    var orders = context.Orders.Where(x => x.Team == team && x.Status == 0&& x.IdUniverseCompetition == id);
+                    var asks = orders.Where(x => x.Side.Trim() == "SELL").GroupBy(x => x.Price).Select(x => new OrderBookInfo { Price = x.Key, Quantity = x.Sum(o => o.Quantity) }).OrderBy(x => x.Price).ToList();
+                    var bids = orders.Where(x => x.Side.Trim() == "BUY").GroupBy(x => x.Price).Select(x => new OrderBookInfo { Price = x.Key, Quantity = x.Sum(o => o.Quantity) }).OrderByDescending(x => x.Price).ToList();
 
-                    _orderBooks[team] = new OrderBook { Asks = asks, Bids = bids };
+                    _orderBooks[key] = new OrderBook { Asks = asks, Bids = bids };
                     Clients.Client(connectionId).showOrderBook(team, bids, asks);
                 }
         }

@@ -1,13 +1,16 @@
 ﻿<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="_Default" %>
-<%@ MasterType virtualpath="~/Site.Master" %>
+
+<%@ MasterType VirtualPath="~/Site.Master" %>
 
 <asp:Content ID="HeadContent" ContentPlaceHolderID="HeadContent" runat="server">
     <link rel="stylesheet" href="Content/slick.grid.css" type="text/css">
     <link rel="stylesheet" href="Content/slick-default-theme.css" type="text/css">
     <link rel="stylesheet" href="Content/bootstrap-select.css" type="text/css">
 </asp:Content>
-    
+
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
+    <% if (Context.User.Identity.IsAuthenticated)
+       { %>
     <script src="Scripts/jquery-1.7.2.min.js"></script>
     <script src="Scripts/jquery.event.drag.js"></script>
     <script src="Scripts/SlickGrid/slick.core.js"></script>
@@ -19,94 +22,103 @@
     <script src="JavaScript/Order.js"></script>
     <script src="JavaScript/SignalROrder.js"></script>
     <script src="JavaScript/PopUp.js"></script>
-    
-    <% if (UniverseHasMultipleCompetition()) {%>
-        <label>Test</label>
-    <% } else { %>
-        <label class="h3" style="margin-top: 0;"><%: GetUniverseCompetition() %></label>
-    <% } %>
+
     <div id="myAlert" class="alert hiddenAlert" role="alert">
-       <label id ="alertMessage">Better check yourself, you're not looking too good.</label>
+        <label id="alertMessage">These is not the message you are looking for</label>
     </div>
-    <div style="width: 600px; height: 900px;" id="BidAskDiv">
-        <label>Loading in progress</label>
+    <% if (UniverseHasMultipleCompetition())
+       {%>
+    <div role="tabpanel">
+        <ul class="nav nav-tabs" id="CompetitionTab" role="tablist" style="width: 600px;">
+            <li role="presentation" class="dropdown active">
+                <a id="CompetitionDropDownButton" class="dropdown-toggle active" data-toggle="dropdown" href="#" role="button" aria-expanded="false" aria-controls="CompetitionTabMenu">Dropdown <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu" id="CompetitionTabMenu">
+                    <% bool hasActive = false;
+                       foreach (var competition in UniverseCompetitions)
+                       {%>
+                    <li role="presentation" class="<%: hasActive ? "" : "active" %>">
+                        <a title="<%: competition.Id %>" href="#<%: "BidAskDiv-" + competition.Id %>" aria-controls="<%: "BidAskDiv-" + competition.Id %>" role="tab" data-toggle="tab">
+                            <%: competition.Name %>
+                        </a>
+                    </li>
+                    <% if (!hasActive)
+                       {%>
+                    <script type='text/javascript'> 
+                        $("#CompetitionDropDownButton")[0].innerHTML = '<%: competition.Name %>' + " <span class='caret'></span>";
+                        currentCompetitionId = <%: competition.Id %>;
+                    </script>
+                    <%}
+                       hasActive = true;
+                       }%>
+                </ul>
+            </li>
+        </ul>
+        <div id="CompetitionTabContent" class="tab-content" style="width: 600px; height: 900px;">
+            <% hasActive = false;
+               foreach (var competition in UniverseCompetitions)
+               {%>
+            <div role="tabpanel" class="tab-pane <%: hasActive ? "" : "active" %>" id='<%: "BidAskDiv-" + competition.Id %>' style="width: 600px; height: 900px;">
+            </div>
+            <%
+                   hasActive = true;
+               }%>
+        </div>
     </div>
+    <script type='text/javascript'> 
+        <% foreach (var competition in UniverseCompetitions)
+           {%>
+        drawOrdersGrid(<%: GetOrders(competition.Id)%>, <%:competition.Id%>);
+        <%}%>
+    </script>
+    <% }
+       else
+       { %>
+    <label class="h3" style="margin-top: 0;"><%: GetUniverseCompetition() %></label>
+    <div style="width: 600px; height: 900px;" id='<%: "BidAskDiv-" + GetCompetitionId() %>'>
+    </div>
+    <script type='text/javascript'>
+        drawOrdersGrid(<%: GetOrders()%>, <%: GetCompetitionId()%>);
+    </script>
+    <% } %>
     <div style="margin-top: -900px; margin-left: 700px;">
-        <input style="margin-left: 10px" type="button" id="OpenPopUp" value="Place A New Order" class="btn btn-default"/>
+        <input style="margin-left: 10px" type="button" id="OpenPopUp" value="Place A New Order" class="btn btn-default" />
     </div>
     <div style="margin-top: 25px; margin-left: 650px; width: 500px;">
         <p>
             <label class="h4">Last Trades : </label>
         </p>
+        <% var i = 1;
+           foreach (var trade in GetLastTrade())
+           { %>
         <p>
-            <label id="Trade1"></label>
+            <label id='<%: "Trade" + i %>'><%: trade %></label>
         </p>
-        <p>
-            <label id="Trade2"></label>
-        </p>
-        <p>
-            <label id="Trade3"></label>
-        </p>
-        <p>
-            <label id="Trade4"></label>
-        </p>
-        <p>
-            <label id="Trade5"></label>
-        </p>
+        <% i++;
+           } %>
     </div>
     <div style="margin-top: 25px; margin-left: 650px; width: 500px;">
         <p>
             <label class="h4">Chat : </label>
         </p>
+        <div id="ChatDiv" style="overflow: auto; width: 450px; height: 245px;">
+            <% foreach (var message in GetMessages())
+               { %>
+            <p>
+                <label class="chatName"><%: message[0] %></label>
+                <label><%: message[1] %></label>
+            </p>
+            <% } %>
+            <p>
+        </div>
         <p>
-            <label id="Name1" class="chatName"></label>
-            <label id="Message1"></label>
-        </p>
-        <p>
-            <label id="Name2" class="chatName"></label>
-            <label id="Message2"></label>
-        </p>
-        <p>
-            <label id="Name3" class="chatName"></label>
-            <label id="Message3"></label>
-        </p>
-        <p>
-            <label id="Name4" class="chatName"></label>
-            <label id="Message4"></label>
-        </p>
-        <p>
-            <label id="Name5" class="chatName"></label>
-            <label id="Message5"></label>
-        </p>
-        <p>
-            <label id="Name6" class="chatName"></label>
-            <label id="Message6"></label>
-        </p>
-        <p>
-            <label id="Name7" class="chatName"></label>
-            <label id="Message7"></label>
-        </p>
-        <p>
-            <label id="Name8" class="chatName"></label>
-            <label id="Message8"></label>
-        </p>
-        <p>
-            <label id="Name9" class="chatName"></label>
-            <label id="Message9"></label>
-        </p>
-        <p>
-            <label id="Name10" class="chatName"></label>
-            <label id="Message10"></label>
-        </p>
-        <p>
-            <input style="margin-left: 13px; width:400px" type='text' id='Message' />
-            <input style="margin-left: 10px" type="button" id="SendMessage" value="Send" class="btn btn-default"/>
+            <input style="margin-left: 13px; width: 400px" type='text' id='Message' />
+            <input style="margin-left: 10px" type="button" id="SendMessage" value="Send" class="btn btn-default" />
         </p>
     </div>
-    <div id="blanket" style="display:none"></div>
-    <div id="newOrderDiv" style="display:none">
-        <span class="glyphicon glyphicon-remove" aria-hidden="true" id="ClosePopUp" style="color:red;position:absolute; top:5px; right: 5px;">
-        </span>
+    <div id="blanket" style="display: none"></div>
+    <div id="newOrderDiv" style="display: none">
+        <span class="glyphicon glyphicon-remove" aria-hidden="true" id="ClosePopUp" style="color: red; position: absolute; top: 5px; right: 5px;"></span>
         <div role="tabpanel">
             <ul class="nav nav-tabs" id="OrderTab" role="tablist">
                 <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Simple</a></li>
@@ -119,30 +131,42 @@
                             <tr>
                                 <td>
                                     <label style="">Side : </label>
-                                    <div class="btn-group" role="group" style="margin-left:37px;">
-                                        <button type="button" class="btn btn-default SelectedSide" id="SideOrderBuy">BUY</button>
-                                        <button type="button" class="btn btn-default" id="SideOrderSell">SELL</button>
+                                    <div class="btn-group" role="group" style="margin-left: 37px;">
+                                        <button type="button" class="btn SelectedSide" id="SideOrderBuy">BUY</button>
+                                        <button type="button" class="btn UnselectedSide" id="SideOrderSell">SELL</button>
                                     </div>
                                     <input type="hidden" id="SideOrder" value="BUY" />
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <label style="margin-top:17px">Team : </label>
-                                    <select class="selectpicker" id="TeamOrder">
-                                    </select>
+                                    <label style="margin-top: 17px; margin-right: 30px;">Team : </label>
+                                    <% var hasDisplayed = false;
+                                       foreach (var competition in UniverseCompetitions)
+                                       {%>
+                                    <div class="teamSelectPicker" style="height: 0px; <%: hasDisplayed ? "display:none" : "" %>" id='<%:"TeamOrderDiv" + competition.Id%>'>
+                                        <select class="selectpicker" id='<%:"TeamOrder-" + competition.Id%>'>
+                                            <% foreach (var team in GetTeamFor(competition.Id))
+                                               {%>
+                                            <option><%: team %></option>
+                                            <% }%>
+                                        </select>
+                                    </div>
+                                    <%
+                                               hasDisplayed = true;
+                                       }%>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <label style="">Price : </label>
-                                    <input style="width:220px;margin-left: 35px; margin-top: 10px;" type='number' min="1" max="999" id='PriceOrder' />
+                                    <input style="width: 220px; margin-left: 35px; margin-top: 10px;" type='number' min="1" max="999" id='PriceOrder' />
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <label style="">Quantity : </label>
-                                    <input style="width:220px;margin-left: 13px; margin-top: 10px;" type='number' min="1" value="10" id='QuantityOrder' />
+                                    <input style="width: 220px; margin-left: 13px; margin-top: 10px;" type='number' min="1" value="10" id='QuantityOrder' />
                                 </td>
                             </tr>
                             <tr>
@@ -158,21 +182,20 @@
             </div>
         </div>
     </div>
-    <div id="orderBookDiv" style="text-align:center;display:none">
-        <span class="glyphicon glyphicon-remove" aria-hidden="true" id="ClosePopOrderBook" style="color:red;position:absolute; top:5px; right: 5px;">
-        </span>
+    <div id="orderBookDiv" style="text-align: center; display: none">
+        <span class="glyphicon glyphicon-remove" aria-hidden="true" id="ClosePopOrderBook" style="color: red; position: absolute; top: 5px; right: 5px;"></span>
         <label class="h4" id="orderBookTeamName"></label>
         <p>
             <label>Bids</label>
-            <label style="margin-left:220px;">Asks</label>
+            <label style="margin-left: 220px;">Asks</label>
         </p>
-        <div id="bidGrid" style ="width: 200px;height: 200px;margin-left:5px;">
+        <div id="bidGrid" style="width: 200px; height: 200px; margin-left: 5px;">
         </div>
-        <div id="askGrid" style ="width: 200px;height: 200px; margin-top:-200px; margin-left:250px;">
+        <div id="askGrid" style="width: 200px; height: 200px; margin-top: -200px; margin-left: 250px;">
         </div>
     </div>
     <script type='text/javascript'>
-        competitionId = <%: GetCompetitionId()%>;
-        drawOrdersGrid(<%: GetOrders()%>);
+        universeId = <%: Master.SelectedUniverseId%>;
     </script>
+    <% } %>
 </asp:Content>
