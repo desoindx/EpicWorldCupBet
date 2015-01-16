@@ -1,10 +1,7 @@
-﻿using System.Configuration;
-using System.Data.Entity;
-using Microsoft.AspNet.Identity;
+﻿using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
-using WorldCupBetting;
 
 [assembly: OwinStartup(typeof(Startup))]
 

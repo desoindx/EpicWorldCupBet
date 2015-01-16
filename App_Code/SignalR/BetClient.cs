@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Datas.Entities;
 using Microsoft.AspNet.SignalR.Hubs;
 using SignalR.SQL;
 

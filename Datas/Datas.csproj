@@ -16,7 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\Bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -120,6 +120,14 @@
     <Compile Include="Migrations\201501121848184_SuppressMoney.Designer.cs">
       <DependentUpon>201501121848184_SuppressMoney.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201501161851158_test.cs" />
+    <Compile Include="Migrations\201501161851158_test.Designer.cs">
+      <DependentUpon>201501161851158_test.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201501161911072_clean.cs" />
+    <Compile Include="Migrations\201501161911072_clean.Designer.cs">
+      <DependentUpon>201501161911072_clean.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="User\IdentityModels.cs" />
@@ -155,6 +163,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201501121848184_SuppressMoney.resx">
       <DependentUpon>201501121848184_SuppressMoney.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501161851158_test.resx">
+      <DependentUpon>201501161851158_test.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501161911072_clean.resx">
+      <DependentUpon>201501161911072_clean.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -4,7 +4,6 @@ using System.Web;
 using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using Datas.Entities;
 using SignalR.SQL;
 
 public partial class SiteMaster : MasterPage

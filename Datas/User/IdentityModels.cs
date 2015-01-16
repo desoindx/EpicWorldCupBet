@@ -23,7 +23,7 @@ namespace WorldCupBetting
         public string Email { get; set; }
     }
 
-    public class ApplicationDbContext : System.Data.Entity.DbContext//IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
             : base("DefaultConnection")
