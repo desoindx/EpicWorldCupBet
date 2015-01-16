@@ -54,7 +54,7 @@ namespace SignalR.SQL
         {
             var order = new OrderR { Team = team.Name };
             var allOrders =
-                context.Orders.Where(x => x.IdUniverseCompetition == id && x.Team == team.Name && x.Status == 0)
+                context.Orders.Where(x => x.IdUniverseCompetition == id && x.Team == team.Id && x.Status == 0)
                     .ToList();
             var bestAsk =
                 allOrders.Where(x => x.Side.Trim() == "SELL")
@@ -90,7 +90,7 @@ namespace SignalR.SQL
             }
 
             var lastPrices =
-                context.Trades.Where(x => x.IdUniverseCompetition == id && x.Team == team.Name)
+                context.Trades.Where(x => x.IdUniverseCompetition == id && x.Team == team.Id)
                     .OrderByDescending(x => x.Date)
                     .ToList();
             if (lastPrices.Count > 0)
@@ -113,12 +113,28 @@ namespace SignalR.SQL
         private static List<Team> GetTeamsForCompetition(int competitionId, Entities context)
         {
             List<Team> teams;
-            if (!Teams.TryGetValue(competitionId, out teams))
+            if (!CompetitionTeams.TryGetValue(competitionId, out teams))
             {
                 teams = context.Teams.Where(x => x.IdCompetition == competitionId).OrderBy(x => x.Name).ToList();
-                Teams[competitionId] = teams;
+                CompetitionTeams[competitionId] = teams;
             }
             return teams;
+        }
+
+        public static bool TryGetTeamIdForCompetition(int competitionId, string teamName, out Team team)
+        {
+            var key = teamName + "-" + competitionId;
+            if (!TeamsValue.TryGetValue(key, out team))
+            {
+                using (var context = new Entities())
+                {
+                    team = context.Teams.FirstOrDefault(x => x.IdCompetition == competitionId && x.Name == teamName);
+                    if (team == null)
+                        return false;
+                    TeamsValue[key] = team;
+                }
+            }
+            return true;
         }
 
         public static bool TryGetUniverseCompetitionId(int universeId, int competitionId, out int id)

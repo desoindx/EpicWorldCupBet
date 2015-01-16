@@ -37,11 +37,11 @@ namespace SignalR.SQL
         private static void GetRankingForACompetition(UniverseCompetition competition, Dictionary<string, int> usersMoney, Entities context)
         {
             var teams = GetTeamsForCompetition(competition.IdCompetition, context);
-            var teamsValue = new Dictionary<string, int>();
+            var teamsValue = new Dictionary<int, int>();
             foreach (var team in teams)
             {
                 var value = GetTeamCurrentValue(context, team);
-                teamsValue.Add(team.Name, value);
+                teamsValue.Add(team.Id, value);
             }
 
             foreach (var trade in context.Trades.Where(x => x.IdUniverseCompetition == competition.Id))
@@ -60,7 +60,7 @@ namespace SignalR.SQL
             }
             else
             {
-                var allOrders = context.Orders.Where(x => x.Team == team.Name && x.Status == 0);
+                var allOrders = context.Orders.Where(x => x.Team == team.Id && x.Status == 0);
                 var bestAsk = allOrders.Where(x => x.Side.Trim() == "SELL").OrderBy(x => x.Price).FirstOrDefault();
                 if (bestAsk != null)
                     value += bestAsk.Price;
@@ -76,7 +76,7 @@ namespace SignalR.SQL
                 if (value == 0)
                 {
                     var lastTrade =
-                        context.Trades.Where(x => x.Team == team.Name).OrderByDescending(x => x.Date).FirstOrDefault();
+                        context.Trades.Where(x => x.Team == team.Id).OrderByDescending(x => x.Date).FirstOrDefault();
                     if (lastTrade != null)
                         value = lastTrade.Price;
                 }

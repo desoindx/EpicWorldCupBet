@@ -53,7 +53,7 @@ namespace SignalR
         {
             using (var context = new Entities())
             {
-                var teamsValue = new Dictionary<string, int>();
+                var teamsValue = new Dictionary<int, int>();
 
                 var userValue = context.Moneys.ToDictionary(money => money.User, money => money.Money1);
 
@@ -76,13 +76,13 @@ namespace SignalR
             }
         }
 
-        private List<string> _teams = new List<string>();
+        private List<int> _teams = new List<int>();
         public void GetPositions(string user, string connectionId)
         {
             using (var context = new Entities())
             {
                 var users = new List<string>();
-                var temp = new Dictionary<string, Dictionary<string, int>>();
+                var temp = new Dictionary<int, Dictionary<string, int>>();
                 foreach (var team in _teams)
                 {
                     var teamPositions =
@@ -124,7 +124,7 @@ namespace SignalR
                     }
                 }
 
-                var teamToRemove = new List<string>();
+                var teamToRemove = new List<int>();
                 foreach (var team in _teams)
                 {
                     var tmpTeam = temp[team];
@@ -136,7 +136,7 @@ namespace SignalR
                     }
                 }
 
-                var teams = new List<string>(_teams);
+                var teams = new List<int>(_teams);
                 foreach (var team in teamToRemove)
                 {
                     temp.Remove(team);
@@ -146,7 +146,7 @@ namespace SignalR
                 var pos = new List<int>();
                 foreach (var usr in users)
                 {
-                    foreach (string t in teams)
+                    foreach (int t in teams)
                     {
                         Dictionary<string, int> tmpTeam;
                         if (temp.TryGetValue(t, out tmpTeam))
@@ -165,14 +165,21 @@ namespace SignalR
         {
             if (string.IsNullOrEmpty(user))
             {
-                Clients.Client(connectionId).newMessage("Fail To cancel order", ErrorClass);
+                Clients.Client(connectionId).newMessage("Fail To cancel order, User not found", ErrorClass);
                 return;
             }
 
             int id;
             if (!Sql.TryGetUniverseCompetitionId(universeId, competitionId, out id))
             {
-                Clients.Client(connectionId).newMessage("Fail To cancel order", ErrorClass);
+                Clients.Client(connectionId).newMessage("Fail To cancel order, Competition not found", ErrorClass);
+                return;
+            }
+
+            Team teamValue;
+            if (!Sql.TryGetTeamIdForCompetition(competitionId, team, out teamValue))
+            {
+                Clients.Client(connectionId).newMessage("Fail To cancel order, Team not found", ErrorClass);
                 return;
             }
 
@@ -180,7 +187,7 @@ namespace SignalR
             {
                 using (var context = new Entities())
                 {
-                    var previousOrders = context.Orders.Where(x => x.User == user && x.Status == 0 && x.Team == team && x.Side.Trim() == side && x.IdUniverseCompetition == id);
+                    var previousOrders = context.Orders.Where(x => x.User == user && x.Status == 0 && x.Team == teamValue.Id && x.Side.Trim() == side && x.IdUniverseCompetition == id);
                     if (!previousOrders.Any())
                     {
                         Clients.Client(connectionId).newMessage("No order found to cancel", ErrorClass);
@@ -250,12 +257,13 @@ namespace SignalR
                         return;
                     }
 
-                    var choosedTeam = context.Teams.FirstOrDefault(x => x.Name == team && x.IdCompetition == competitionId);
-                    if (choosedTeam == null)
+                    Team choosedTeam;
+                    if (!Sql.TryGetTeamIdForCompetition(competitionId, team, out choosedTeam))
                     {
                         Clients.Client(connectionId).newMessage("Fail To add order because the team does not exist", ErrorClass);
                         return;
                     }
+
                     if (choosedTeam.Result.HasValue)
                     {
                         Clients.Client(connectionId).newMessage("Cannot place order on this team anymore", ErrorClass);
@@ -265,7 +273,7 @@ namespace SignalR
                     var otherOrder =
                         context.Orders.FirstOrDefault(
                             x =>
-                                x.User == user && x.Status == 0 && x.Team == team && x.Side != side &&
+                                x.User == user && x.Status == 0 && x.Team == choosedTeam.Id && x.Side != side &&
                                 x.IdUniverseCompetition == id);
                     if (otherOrder != null)
                     {
@@ -276,11 +284,11 @@ namespace SignalR
                         }
                     }
 
-                    if (UserHasEnough(context, user, team, quantity, price, side))
+                    if (UserHasEnough(context, user, choosedTeam.Id, quantity, price, side))
                     {
-                        var remainingQuantity = InsertTrade(context, user, team, quantity, price, side, id, connectionId, usersToNotify);
+                        var remainingQuantity = InsertTrade(context, user, choosedTeam.Id, quantity, price, side, id, connectionId, usersToNotify);
                         if (remainingQuantity > 0)
-                            InsertNewOrder(context, user, team, remainingQuantity, price, side, id, connectionId);
+                            InsertNewOrder(context, user, choosedTeam.Id, remainingQuantity, price, side, id, connectionId);
 
                         context.SaveChanges();
                         OnNewOrder(context, team, usersToNotify, universeId, competitionId, id);
@@ -297,7 +305,7 @@ namespace SignalR
             GetLastTrades();
         }
 
-        private bool UserHasEnough(Entities context, string user, string team, int quantity, int price, string side)
+        private bool UserHasEnough(Entities context, string user, int team, int quantity, int price, string side)
         {
             var positions = context.Trades.Where(x => (x.Seller == user || x.Buyer == user) && x.Team == team);
             var total = 0;
@@ -342,7 +350,7 @@ namespace SignalR
             return exposure <= userMoney.Money1;
         }
 
-        private int InsertTrade(Entities context, string user, string team, int quantity, int price, string side, int universeCompetitionId, string connectionId, HashSet<string> usersToNotify)
+        private int InsertTrade(Entities context, string user, int team, int quantity, int price, string side, int universeCompetitionId, string connectionId, HashSet<string> usersToNotify)
         {
             IQueryable<Order> matchingOrders = side == "BUY"
                 ? context.Orders.Where(
@@ -374,7 +382,7 @@ namespace SignalR
             return quantity;
         }
 
-        private void InsertNewTrade(Entities context, string buyer, string seller, string team, int quantity, int price, int universeCompetitionId)
+        private void InsertNewTrade(Entities context, string buyer, string seller, int team, int quantity, int price, int universeCompetitionId)
         {
             var trade = new Trade
             {
@@ -405,7 +413,7 @@ namespace SignalR
             sellerMoney.Money1 += price * quantity;
         }
 
-        private void InsertNewOrder(Entities context, string user, string team, int quantity, int price, string side, int idUniverseCompetition, string connectionId)
+        private void InsertNewOrder(Entities context, string user, int team, int quantity, int price, string side, int idUniverseCompetition, string connectionId)
         {
             var previousOrders =
                 context.Orders.Where(
@@ -462,7 +470,7 @@ namespace SignalR
             const int hour = 4;
             using (var context = new Entities())
             {
-                var teamsTrades = new Dictionary<string, TeamTrades>();
+                var teamsTrades = new Dictionary<int, TeamTrades>();
                 var currDate = new DateTime(2014, 6, 11, 7, 00, 00);
                 TradeR currentTradeHisto = null;
                 foreach (var trade in context.Trades.OrderBy(x => x.Team).ThenBy(x => x.Date))
@@ -472,7 +480,7 @@ namespace SignalR
                     if (!teamsTrades.TryGetValue(trade.Team, out teamTrade))
                     {
                         currDate = new DateTime(2014, 6, 11, 7, 00, 00);
-                        teamTrade = new TeamTrades { Team = trade.Team, Trades = new List<TradeR>() };
+                        teamTrade = new TeamTrades { Team = trade.Team.ToString(), Trades = new List<TradeR>() };
                         teamsTrades.Add(trade.Team, teamTrade);
                         while (currDate.AddHours(hour) < trade.Date)
                         {
@@ -534,16 +542,6 @@ namespace SignalR
                 }
                 Clients.Client(connectionId).newCharts(teamsTrades.Values.ToList());
             }
-        }
-
-        public void EliminateTeam(string connectionId, string team, int value)
-        {
-            using (var context = new Entities())
-            {
-                context.Results.Add(new Result { Team = team, Value = value });
-                context.SaveChanges();
-            }
-            Clients.Client(connectionId).newMessage("Team Eliminated");
         }
 
         public void Price(string connectionId,
@@ -710,15 +708,22 @@ namespace SignalR
                 Clients.Client(connectionId).showOrderBook(team, orderBook.Bids, orderBook.Asks);
             }
             else
+            {
+
+                Team choosedTeam;
+                if (!Sql.TryGetTeamIdForCompetition(competitionId, team, out choosedTeam))
+                    return;
+
                 using (var context = new Entities())
                 {
-                    var orders = context.Orders.Where(x => x.Team == team && x.Status == 0&& x.IdUniverseCompetition == id);
+                    var orders = context.Orders.Where(x => x.Team == choosedTeam.Id && x.Status == 0 && x.IdUniverseCompetition == id);
                     var asks = orders.Where(x => x.Side.Trim() == "SELL").GroupBy(x => x.Price).Select(x => new OrderBookInfo { Price = x.Key, Quantity = x.Sum(o => o.Quantity) }).OrderBy(x => x.Price).ToList();
                     var bids = orders.Where(x => x.Side.Trim() == "BUY").GroupBy(x => x.Price).Select(x => new OrderBookInfo { Price = x.Key, Quantity = x.Sum(o => o.Quantity) }).OrderByDescending(x => x.Price).ToList();
 
                     _orderBooks[key] = new OrderBook { Asks = asks, Bids = bids };
                     Clients.Client(connectionId).showOrderBook(team, bids, asks);
                 }
+            }
         }
 
         private class OrderBook

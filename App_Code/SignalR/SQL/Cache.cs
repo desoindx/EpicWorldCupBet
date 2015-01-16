@@ -6,8 +6,11 @@ namespace SignalR.SQL
 {
     public static partial class Sql
     { 
-        private static readonly ConcurrentDictionary<int, List<Team>> Teams =
+        private static readonly ConcurrentDictionary<int, List<Team>> CompetitionTeams =
             new ConcurrentDictionary<int, List<Team>>();
+
+        private static readonly ConcurrentDictionary<string, Team> TeamsValue =
+            new ConcurrentDictionary<string, Team>();
 
         private static readonly ConcurrentDictionary<string, bool> UserUniversesRights =
             new ConcurrentDictionary<string, bool>();

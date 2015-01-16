@@ -99,12 +99,6 @@ namespace SignalR
             _betClient.GetTrades(User, Context.ConnectionId);
         }
 
-        public void EliminateTeam(string password, string team, int value)
-        {
-            if (password == "yeah")
-                _betClient.EliminateTeam(Context.ConnectionId, team, value);
-        }
-
         public void Price(string password,
         int brazil,
         int croatia,
