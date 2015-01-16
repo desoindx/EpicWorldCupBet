@@ -69,7 +69,6 @@ namespace Datas.Entities
     
         public virtual DbSet<Money> Moneys { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
-        public virtual DbSet<Result> Results { get; set; }
         public virtual DbSet<Trade> Trades { get; set; }
         public virtual DbSet<Competition> Competitions { get; set; }
         public virtual DbSet<Team> Teams { get; set; }
