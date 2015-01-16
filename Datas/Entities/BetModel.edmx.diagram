@@ -7,7 +7,6 @@
       <Diagram DiagramId="77c108dcb4044c059adc5cc358eaafde" Name="Diagram1">
         <EntityTypeShape EntityType="BetModel.Money" Width="1.5" PointX="0.5" PointY="0.5" IsExpanded="true" />
         <EntityTypeShape EntityType="BetModel.Order" Width="1.5" PointX="2.25" PointY="0.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="BetModel.Result" Width="1.5" PointX="4" PointY="0.5" IsExpanded="true" />
         <EntityTypeShape EntityType="BetModel.Trade" Width="1.5" PointX="5.75" PointY="0.5" IsExpanded="true" />
         <EntityTypeShape EntityType="BetModel.Competition" Width="1.5" PointX="0.5" PointY="2.125" />
         <EntityTypeShape EntityType="BetModel.Team" Width="1.5" PointX="4" PointY="2.125" />

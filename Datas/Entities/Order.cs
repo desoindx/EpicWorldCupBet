@@ -17,7 +17,7 @@ namespace Datas.Entities
         public int Id { get; set; }
         public string User { get; set; }
         public System.DateTime Date { get; set; }
-        public string Team { get; set; }
+        public int Team { get; set; }
         public int Quantity { get; set; }
         public int Status { get; set; }
         public int Price { get; set; }

@@ -18,7 +18,7 @@ namespace Datas.Entities
         public string Buyer { get; set; }
         public string Seller { get; set; }
         public System.DateTime Date { get; set; }
-        public string Team { get; set; }
+        public int Team { get; set; }
         public int Quantity { get; set; }
         public int Price { get; set; }
         public int IdUniverseCompetition { get; set; }
