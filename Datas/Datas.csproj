@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FE984959-2AA8-4464-AEA2-5271BB39ADA0}</ProjectGuid>
+    <ProjectGuid>{C113A805-525F-43B6-9968-2F0C2E910C54}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Datas</RootNamespace>
@@ -31,131 +31,89 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer">
-      <HintPath>..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.Identity.Core">
-      <HintPath>..\Bin\Microsoft.AspNet.Identity.Core.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
-      <HintPath>..\Bin\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Owin">
-      <HintPath>..\Bin\Microsoft.Owin.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\bin\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
-    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp">
-      <Private>False</Private>
-    </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\BetModel1.Designer.cs">
+    <Compile Include="Competition.cs">
+      <DependentUpon>EpicBetModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EpicBetModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>BetModel.edmx</DependentUpon>
+      <DependentUpon>EpicBetModel.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\Competition.cs">
-      <DependentUpon>EntitiesModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\EntitiesModel.Context.cs">
+    <Compile Include="EpicBetModel.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>EntitiesModel.Context.tt</DependentUpon>
+      <DependentUpon>EpicBetModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\EntitiesModel.cs">
+    <Compile Include="EpicBetModel.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>EntitiesModel.tt</DependentUpon>
+      <DependentUpon>EpicBetModel.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Entities\Money.cs">
-      <DependentUpon>EntitiesModel.tt</DependentUpon>
+    <Compile Include="Money.cs">
+      <DependentUpon>EpicBetModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\Order.cs">
-      <DependentUpon>EntitiesModel.tt</DependentUpon>
+    <Compile Include="Order.cs">
+      <DependentUpon>EpicBetModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\Team.cs">
-      <DependentUpon>EntitiesModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\Trade.cs">
-      <DependentUpon>EntitiesModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\Universe.cs">
-      <DependentUpon>EntitiesModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\UniverseAvailable.cs">
-      <DependentUpon>EntitiesModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\UniverseCompetition.cs">
-      <DependentUpon>EntitiesModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201406052127461_InitialCreate.cs" />
-    <Compile Include="Migrations\201406052127461_InitialCreate.Designer.cs">
-      <DependentUpon>201406052127461_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201501091724006_firstTry.cs" />
-    <Compile Include="Migrations\201501091724006_firstTry.Designer.cs">
-      <DependentUpon>201501091724006_firstTry.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201501121848184_SuppressMoney.cs" />
-    <Compile Include="Migrations\201501121848184_SuppressMoney.Designer.cs">
-      <DependentUpon>201501121848184_SuppressMoney.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="User\IdentityModels.cs" />
+    <Compile Include="Team.cs">
+      <DependentUpon>EpicBetModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Trade.cs">
+      <DependentUpon>EpicBetModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Universe.cs">
+      <DependentUpon>EpicBetModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UniverseAvailable.cs">
+      <DependentUpon>EpicBetModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UniverseCompetition.cs">
+      <DependentUpon>EpicBetModel.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <EntityDeploy Include="Entities\BetModel.edmx">
+    <EntityDeploy Include="EpicBetModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>BetModel1.Designer.cs</LastGenOutput>
+      <LastGenOutput>EpicBetModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <None Include="Entities\BetModel.edmx.diagram">
-      <DependentUpon>BetModel.edmx</DependentUpon>
-    </None>
-    <None Include="Entities\EntitiesModel.Context.tt">
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config" />
+    <None Include="EpicBetModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>EntitiesModel.Context.cs</LastGenOutput>
+      <DependentUpon>EpicBetModel.edmx</DependentUpon>
+      <LastGenOutput>EpicBetModel.Context.cs</LastGenOutput>
     </None>
-    <None Include="Entities\EntitiesModel.tt">
+    <None Include="EpicBetModel.edmx.diagram">
+      <DependentUpon>EpicBetModel.edmx</DependentUpon>
+    </None>
+    <None Include="EpicBetModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>EntitiesModel.cs</LastGenOutput>
+      <DependentUpon>EpicBetModel.edmx</DependentUpon>
+      <LastGenOutput>EpicBetModel.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201406052127461_InitialCreate.resx">
-      <DependentUpon>201406052127461_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201501091724006_firstTry.resx">
-      <DependentUpon>201501091724006_firstTry.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201501121848184_SuppressMoney.resx">
-      <DependentUpon>201501121848184_SuppressMoney.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
