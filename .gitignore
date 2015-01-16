@@ -1,9 +1,9 @@
-Datas/bin/*
+
+App_Data/EpicBet.mdf
+App_Data/EpicBet_log.ldf
+EpicWorldCupBet.proj.DotSettings.user
 Datas/obj/*
-EpicBet/obj/*
-EpicBet/bin/*
-EpicBet/obj/*
-EpicBet/Web.Debug.config
-EpicBet/Web.config
-EpicBet.v12.suo
-EpicBet/EpicBet.csproj.user
+Datas/bin/*
+EpicWorldCupBet.sln.DotSettings.user
+EpicWorldCupBet.v12.suo
+packages/*
