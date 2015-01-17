@@ -12,41 +12,18 @@ public partial class _Default : Page
     {
     }
 
-    public List<Competition> UniverseCompetitions;
-    protected bool UniverseHasMultipleCompetition()
-    {
-        UniverseCompetitions = Sql.GetUniverseCompetitions(Master.SelectedUniverse);
-        return UniverseCompetitions.Count > 1;
-    }
-
-    protected string GetUniverseCompetition()
-    {
-        if (UniverseCompetitions != null && UniverseCompetitions.Count == 1)
-            return UniverseCompetitions[0].Name;
-
-        return string.Empty;
-    }
-
-    protected int GetCompetitionId()
-    {
-        if (UniverseCompetitions != null && UniverseCompetitions.Count == 1)
-            return UniverseCompetitions[0].Id;
-
-        return -1;
-    }
-
     protected IHtmlString GetOrders(int? id = null)
     {
         if (!id.HasValue)
-            id = GetCompetitionId();
+            id = Master.GetCompetitionId();
         return
             JavaScriptSerializer.SerializeObject(Sql.GetTeamsInformation(Context.User.Identity.Name,
                 Master.SelectedUniverseId, id.Value));
     }
 
-    protected List<string> GetLastTrade()
+    protected List<string> GetLastTrade(int competitionId)
     {
-        var trades = Sql.GetLastTradeForUniverse(Master.SelectedUniverseId);
+        var trades = Sql.GetLastTradeFor(competitionId, Master.SelectedUniverseId);
         return
             trades.Select(
                 x =>

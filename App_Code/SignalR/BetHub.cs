@@ -50,11 +50,6 @@ namespace SignalR
             _betClient = new BetClient(GlobalHost.ConnectionManager.GetHubContext<BetHub>().Clients, _userConnectionId);
         }
 
-        public void GetPosition()
-        {
-            _betClient.GetPositions(User, Context.ConnectionId);
-        }
-
         public void GetRanking()
         {
             _betClient.GetClassement(Context.ConnectionId);
@@ -90,13 +85,6 @@ namespace SignalR
         public void GetOrderBook(string team, int universeId, int competitionId)
         {
             _betClient.GetOrderBook(team.Split('(')[0].TrimEnd(), universeId, competitionId, Context.ConnectionId);
-        }
-
-        public void GetAllTrades()
-        {
-            if (string.IsNullOrEmpty(User))
-                return;
-            _betClient.GetTrades(User, Context.ConnectionId);
         }
 
         public void ClearCache(string cache)

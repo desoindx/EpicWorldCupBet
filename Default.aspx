@@ -26,7 +26,7 @@
     <div id="myAlert" class="alert hiddenAlert" role="alert">
         <label id="alertMessage">These is not the message you are looking for</label>
     </div>
-    <% if (UniverseHasMultipleCompetition())
+    <% if (Master.UniverseHasMultipleCompetition())
        {%>
     <div role="tabpanel">
         <ul class="nav nav-tabs" id="CompetitionTab" role="tablist" style="width: 600px;">
@@ -35,10 +35,10 @@
                 </a>
                 <ul class="dropdown-menu" role="menu" id="CompetitionTabMenu">
                     <% bool hasActive = false;
-                       foreach (var competition in UniverseCompetitions)
+                       foreach (var competition in Master.UniverseCompetitions)
                        {%>
                     <li role="presentation" class="<%: hasActive ? "" : "active" %>">
-                        <a title="<%: competition.Id %>" href="#<%: "BidAskDiv-" + competition.Id %>" aria-controls="<%: "BidAskDiv-" + competition.Id %>" role="tab" data-toggle="tab">
+                        <a title="<%: competition.Id %>" href="#<%: "Div-" + competition.Id %>" aria-controls="<%: "Div-" + competition.Id %>" role="tab" data-toggle="tab">
                             <%: competition.Name %>
                         </a>
                     </li>
@@ -56,17 +56,31 @@
         </ul>
         <div id="CompetitionTabContent" class="tab-content" style="width: 600px; height: 900px;">
             <% hasActive = false;
-               foreach (var competition in UniverseCompetitions)
+               foreach (var competition in Master.UniverseCompetitions)
                {%>
-            <div role="tabpanel" class="tab-pane <%: hasActive ? "" : "active" %>" id='<%: "BidAskDiv-" + competition.Id %>' style="width: 600px; height: 900px;">
+            <div role="tabpanel" class="tab-pane <%: hasActive ? "" : "active" %>" id='<%: "Div-" + competition.Id %>'>
+                <div id='<%: "BidAskDiv-" + competition.Id %>' style="width: 600px; height: 900px;"></div>
+                <div style="margin-top: -850px; margin-left: 650px; width: 500px;">
+                    <p>
+                        <label class="h4">Last Trades : </label>
+                    </p>
+                    <% var i = 1;
+                       foreach (var trade in GetLastTrade(competition.Id))
+                       { %>
+                    <p>
+                        <label id='<%: "Trade" + i + "-"+ competition.Id %>'><%: trade %></label>
+                    </p>
+                    <% i++;
+                       } %>
+                </div>
             </div>
             <%
-                   hasActive = true;
+                       hasActive = true;
                }%>
         </div>
     </div>
     <script type='text/javascript'> 
-        <% foreach (var competition in UniverseCompetitions)
+        <% foreach (var competition in Master.UniverseCompetitions)
            {%>
         drawOrdersGrid(<%: GetOrders(competition.Id)%>, <%:competition.Id%>);
         <%}%>
@@ -74,22 +88,15 @@
     <% }
        else
        { %>
-    <label class="h3" style="margin-top: 0;"><%: GetUniverseCompetition() %></label>
-    <div style="width: 600px; height: 900px;" id='<%: "BidAskDiv-" + GetCompetitionId() %>'>
-    </div>
-    <script type='text/javascript'>
-        drawOrdersGrid(<%: GetOrders()%>, <%: GetCompetitionId()%>);
-    </script>
-    <% } %>
-    <div style="margin-top: -900px; margin-left: 700px;">
-        <input style="margin-left: 10px" type="button" id="OpenPopUp" value="Place A New Order" class="btn btn-default" />
+    <label class="h3" style="margin-top: 0;"><%: Master.GetUniverseCompetition() %></label>
+    <div style="width: 600px; height: 900px;" id='<%: "BidAskDiv-" + Master.GetCompetitionId() %>'>
     </div>
     <div style="margin-top: 25px; margin-left: 650px; width: 500px;">
         <p>
             <label class="h4">Last Trades : </label>
         </p>
         <% var i = 1;
-           foreach (var trade in GetLastTrade())
+           foreach (var trade in GetLastTrade(Master.GetCompetitionId()))
            { %>
         <p>
             <label id='<%: "Trade" + i %>'><%: trade %></label>
@@ -97,7 +104,14 @@
         <% i++;
            } %>
     </div>
-    <div style="margin-top: 25px; margin-left: 650px; width: 500px;">
+    <script type='text/javascript'>
+        drawOrdersGrid(<%: GetOrders()%>, <%: Master.GetCompetitionId()%>);
+    </script>
+    <% } %>
+    <div style="margin-top: -900px; margin-left: 700px;">
+        <input style="margin-left: 10px" type="button" id="OpenPopUp" value="Place A New Order" class="btn btn-default" />
+    </div>
+    <div style="margin-top: 225px; margin-left: 650px; width: 500px;">
         <p>
             <label class="h4">Chat : </label>
         </p>
@@ -142,9 +156,9 @@
                                 <td>
                                     <label style="margin-top: 17px; margin-right: 30px;">Team : </label>
                                     <% var hasDisplayed = false;
-                                       foreach (var competition in UniverseCompetitions)
+                                       foreach (var competition in Master.UniverseCompetitions)
                                        {%>
-                                    <div class="teamSelectPicker" style="height: 0px; <%: hasDisplayed ? "display:none" : "" %>" id='<%:"TeamOrderDiv" + competition.Id%>'>
+                                    <div class="teamSelectPicker" style="height: 0; <%: hasDisplayed ? "display:none" : "" %>" id='<%:"TeamOrderDiv" + competition.Id%>'>
                                         <select class="selectpicker" id='<%:"TeamOrder-" + competition.Id%>'>
                                             <% foreach (var team in GetTeamFor(competition.Id))
                                                {%>

@@ -31,23 +31,6 @@ namespace SignalR
 
         private readonly Dictionary<string, string> _userConnectionId;
 
-        public void GetTrades(string user, string connectionId)
-        {
-            var tradesMessages = new List<string>();
-            using (var context = new Entities())
-            {
-                var trades = context.Trades.Where(x => x.Buyer == user || x.Seller == user).OrderByDescending(x => x.Date);
-                tradesMessages.AddRange(
-                    trades.Select(
-                        trade =>
-                            string.Format("{6} {2}, You traded {5}{0} {1} at {3} with {4}", trade.Quantity, trade.Team,
-                                trade.Date.ToLongTimeString(), trade.Price,
-                                trade.Seller == user ? trade.Buyer : trade.Seller, trade.Seller == user ? "-" : "",
-                                trade.Date.ToLongDateString())));
-            }
-            Clients.Client(connectionId).histoTrades(tradesMessages);
-        }
-
         public void GetClassement(string connectionId)
         {
             using (var context = new Entities())

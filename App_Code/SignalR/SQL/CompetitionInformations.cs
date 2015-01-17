@@ -5,6 +5,59 @@ namespace SignalR.SQL
 {
     public static partial class Sql
     {
+        public static Dictionary<string, int> GetPosition(string user, int universeId, int competitionId)
+        {
+            if (string.IsNullOrEmpty(user))
+                return null;
+
+            using (var context = new Entities())
+            {
+                int id;
+                if (!TryGetUniverseCompetitionId(universeId, competitionId, context, out id))
+                    return null;
+
+                var teams = GetTeamsForCompetition(competitionId, context);
+                var positions = new Dictionary<string, int>();
+                foreach (var team in teams)
+                {
+                    var trades =
+                        context.Trades.Where(
+                            x =>
+                                (x.Buyer == user || x.Seller == user) && x.IdUniverseCompetition == id &&
+                                x.Team == team.Id);
+                    int sum = 0;
+                    foreach (var trade in trades)
+                    {
+                        if (trade.Buyer == user)
+                            sum += trade.Quantity;
+                        else if (trade.Seller == user)
+                            sum -= trade.Quantity;
+                    }
+                    positions[team.Name] = sum;
+                }
+
+                return positions;
+            }
+        }
+
+        public static List<Trade> GetAllTrades(string user, int universeId, int competitionId)
+        {
+            if (string.IsNullOrEmpty(user))
+                return null;
+
+            using (var context = new Entities())
+            {
+                int id;
+                if (!TryGetUniverseCompetitionId(universeId, competitionId, context, out id))
+                    return null;
+
+                return
+                    context.Trades.Where(x => x.Buyer == user || x.Seller == user)
+                        .OrderByDescending(x => x.Date)
+                        .ToList();
+            }
+        }
+
         public static List<OrderR> GetTeamsInformation(string user, int universeId, int competitionId)
         {
             if (string.IsNullOrEmpty(user))

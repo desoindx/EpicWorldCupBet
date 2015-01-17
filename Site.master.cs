@@ -94,4 +94,28 @@ public partial class SiteMaster : MasterPage
 
         return string.Empty;
     }
+
+    public List<Competition> UniverseCompetitions;
+
+    public bool UniverseHasMultipleCompetition()
+    {
+        UniverseCompetitions = Sql.GetUniverseCompetitions(SelectedUniverse);
+        return UniverseCompetitions.Count > 1;
+    }
+
+    public string GetUniverseCompetition()
+    {
+        if (UniverseCompetitions != null && UniverseCompetitions.Count == 1)
+            return UniverseCompetitions[0].Name;
+
+        return string.Empty;
+    }
+
+    public int GetCompetitionId()
+    {
+        if (UniverseCompetitions != null && UniverseCompetitions.Count == 1)
+            return UniverseCompetitions[0].Id;
+
+        return -1;
+    }
 }
