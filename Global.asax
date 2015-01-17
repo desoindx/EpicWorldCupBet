@@ -1,6 +1,4 @@
 ﻿<%@ Application Language="C#" %>
-<%@ Import Namespace="WorldCupBetting" %>
-<%@ Import Namespace="System.Web.Optimization" %>
 <%@ Import Namespace="System.Web.Routing" %>
 
 <script runat="server">

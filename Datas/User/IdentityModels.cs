@@ -28,6 +28,36 @@ namespace WorldCupBetting
         public ApplicationDbContext()
             : base("DefaultConnection")
         {
+            Database.SetInitializer<ApplicationDbContext>(new UserDatabaseInitializer());
+        }
+    }
+    public class UserDatabaseInitializer : DropCreateDatabaseIfModelChanges<ApplicationDbContext>
+    {
+        protected override void Seed(ApplicationDbContext context)
+        {
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+
+            const string name = "Admin";
+            const string password = "123456";
+
+            //Create Role Admin if it does not exist
+            if (!roleManager.RoleExists(name))
+            {
+                roleManager.Create(new IdentityRole(name));
+            }
+
+            //Create User=Admin with password=123456
+            var user = new ApplicationUser {UserName = name};
+            var adminresult = userManager.Create(user, password);
+
+            //Add User Admin to Role Admin
+            if (adminresult.Succeeded)
+            {
+                userManager.AddToRole(user.Id, name);
+            }
+
+            base.Seed(context);
         }
     }
 
