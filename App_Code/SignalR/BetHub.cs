@@ -99,6 +99,11 @@ namespace SignalR
             _betClient.GetTrades(User, Context.ConnectionId);
         }
 
+        public void ClearCache(string cache)
+        {
+            Sql.ClearCache(cache);
+        }
+
         public void Price(string password,
         int brazil,
         int croatia,

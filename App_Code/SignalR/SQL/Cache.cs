@@ -8,6 +8,9 @@ namespace SignalR.SQL
         private static readonly ConcurrentDictionary<int, List<Team>> CompetitionTeams =
             new ConcurrentDictionary<int, List<Team>>();
 
+        private static readonly ConcurrentDictionary<int, string> TeamsName =
+            new ConcurrentDictionary<int, string>();
+
         private static readonly ConcurrentDictionary<string, Team> TeamsValue =
             new ConcurrentDictionary<string, Team>();
 

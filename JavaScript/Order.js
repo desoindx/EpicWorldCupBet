@@ -243,28 +243,36 @@ function drawOrdersGrid(orders, competitionId) {
         else if (cell.cell == 1) {
             $("#CancelOrder").hide();
             clickSellSide();
-            $("#PriceOrder").val(item.BestBid);
-            $("#QuantityOrder").val(item.BestBidQuantity);
+            if (item.BestBid != 0)
+                $("#PriceOrder").val(item.BestBid);
+            if (item.BesBestBidQuantitytBid != 0)
+                $("#QuantityOrder").val(item.BestBidQuantity);
         }
         else if (cell.cell == 2) {
             $("#CancelOrder").hide();
             clickBuySide();
-            $("#PriceOrder").val(item.BestAsk);
-            $("#QuantityOrder").val(item.BestAskQuantity);
+            if (item.BestAsk != 0)
+                $("#PriceOrder").val(item.BestAsk);
+            if (item.BestAskQuantity != 0)
+                $("#QuantityOrder").val(item.BestAskQuantity);
         }
         else if (cell.cell == 3) {
             $("#CancelOrder").show();
             $("#CancelOrder").prop('value', 'Cancel Existing Order');
             clickBuySide();
-            $("#PriceOrder").val(item.MyBid);
-            $("#QuantityOrder").val(item.MyBidQuantity);
+            if (item.MyBid != 0)
+                $("#PriceOrder").val(item.MyBid);
+            if (item.MyBidQuantity != 0)
+                $("#QuantityOrder").val(item.MyBidQuantity);
         }
         else if (cell.cell == 4) {
             $("#CancelOrder").show();
             $("#CancelOrder").prop('value', 'Cancel Existing Order');
             clickSellSide();
-            $("#PriceOrder").val(item.MyAsk);
-            $("#QuantityOrder").val(item.MyAskQuantity);
+            if (item.MyAsk != 0)
+                $("#PriceOrder").val(item.MyAsk);
+            if (item.MyAskQuantity != 0)
+                $("#QuantityOrder").val(item.MyAskQuantity);
         }
         popup('newOrderDiv');
         $("#PriceOrder").focus();

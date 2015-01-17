@@ -119,6 +119,22 @@ namespace SignalR.SQL
             return teams;
         }
 
+        public static string GetTeamName(int teamId)
+        {
+            string teamName;
+            if (!TeamsName.TryGetValue(teamId, out teamName))
+            {
+                using (var context = new Entities())
+                {
+                    var team = context.Teams.FirstOrDefault(x => x.Id == teamId);
+                    if (team == null)
+                        return null;
+                    teamName = team.Name;
+                    TeamsName[teamId] = team.Name;
+                }
+            }
+            return teamName;
+        }
         public static bool TryGetTeamIdForCompetition(int competitionId, string teamName, out Team team)
         {
             var key = teamName + "-" + competitionId;

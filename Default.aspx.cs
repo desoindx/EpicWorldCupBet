@@ -50,7 +50,7 @@ public partial class _Default : Page
         return
             trades.Select(
                 x =>
-                    string.Format("At {0}, {1} {2} traded at {3}", x.Date.ToShortTimeString(), x.Quantity, x.Team,
+                    string.Format("At {0}, {1} {2} traded at {3}", x.Date.ToShortTimeString(), x.Quantity, Sql.GetTeamName(x.Team),
                         x.Price)).ToList();
     }
     protected List<string[]> GetMessages()
