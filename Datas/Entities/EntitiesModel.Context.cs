@@ -55,7 +55,7 @@ public partial class Entities : DbContext
         entityBuilder.ProviderConnectionString = providerString;
 
         // Set the Metadata location.
-        entityBuilder.Metadata = @"res://*/EpicBetModel.csdl|res://*/EpicBetModel.ssdl|res://*/EpicBetModel.msl";
+        entityBuilder.Metadata = @"res://*/Entities.BetModel.csdl|res://*/Entities.BetModel.ssdl|res://*/Entities.BetModel.msl";
         return entityBuilder.ToString();
     }
 
