@@ -24,7 +24,7 @@ namespace SignalR.SQL
                 foreach (var competition in competitions)
                     GetRankingForACompetition(competition, moneys, context);
 
-                var currentMoney = context.Moneys.Where(x => moneys.ContainsKey(x.User));
+                var currentMoney = context.Moneys.Where(x => moneys.Keys.Contains<string>(x.User));
                 foreach (var money in currentMoney)
                 {
                     moneys.UpdateOrSet(money.User, money.Money1, (x, y) => x + y);
