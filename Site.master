@@ -108,6 +108,18 @@
                                     </section>
                                 </li>
                             </ul>
+                            <script type='text/javascript'>window.onload = function () {
+    setTimeout(function () {
+        if ($("#UserName").val().length == 0) {
+            $("#UserName").val('User');
+        }
+        if ($("#Password").val().length == 0) {
+            $("#Password").val('Password');
+        }
+    }, 100);
+}
+
+                            </script>
                         </AnonymousTemplate>
                         <LoggedInTemplate>
                             <ul class="nav navbar-nav navbar-right">
@@ -136,15 +148,3 @@
     </form>
 </body>
 </html>
-<script type='text/javascript'>window.onload = function () {
-    $(function () {
-        setTimeout(function () {
-            if ($("#UserName").val().length == 0) {
-                $("#UserName").val('User');
-            }
-            if ($("#Password").val().length == 0) {
-                $("#Password").val('Password');
-            }
-        }, 100);
-    });
-}</script>

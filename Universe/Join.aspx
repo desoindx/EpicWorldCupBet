@@ -1,6 +1,8 @@
 ﻿<%@ Page Title="Join Universe" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeFile="Join.aspx.cs" Inherits="Universe_Join" Async="true" %>
 
 <asp:Content runat="server" ID="BodyContent" ContentPlaceHolderID="MainContent">
+    <% if (Context.User.Identity.IsAuthenticated)
+       { %>
     <div style="text-align: center">
         <p>
             <label class="h2">Join your friends universe !</label>
@@ -39,5 +41,6 @@
             </div>
         </div>
     </div>
+    <% }%>
 </asp:Content>
 
