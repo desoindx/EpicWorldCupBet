@@ -20,24 +20,36 @@ namespace SignalR.SQL
                 var positions = new Dictionary<string, int>();
                 foreach (var team in teams)
                 {
-                    var trades =
-                        context.Trades.Where(
-                            x =>
-                                (x.Buyer == user || x.Seller == user) && x.IdUniverseCompetition == id &&
-                                x.Team == team.Id);
-                    int sum = 0;
-                    foreach (var trade in trades)
-                    {
-                        if (trade.Buyer == user)
-                            sum += trade.Quantity;
-                        else if (trade.Seller == user)
-                            sum -= trade.Quantity;
-                    }
-                    positions[team.Name] = sum;
+                    var position = GetUserPositionOnTeam(context, user, team, id);
+                    positions[team.Name] = position;
                 }
 
                 return positions;
             }
+        }
+
+        public static int GetUserPositionOnTeam(string user, Team team, int id)
+        {
+            using (var context = new Entities())
+                return GetUserPositionOnTeam(context, user, team, id);
+        }
+
+        private static int GetUserPositionOnTeam(Entities context, string user, Team team, int id)
+        {
+            var trades =
+                context.Trades.Where(
+                    x =>
+                        (x.Buyer == user || x.Seller == user) && x.IdUniverseCompetition == id &&
+                        x.Team == team.Id);
+            int sum = 0;
+            foreach (var trade in trades)
+            {
+                if (trade.Buyer == user)
+                    sum += trade.Quantity;
+                else if (trade.Seller == user)
+                    sum -= trade.Quantity;
+            }
+            return sum;
         }
 
         public static List<Trade> GetAllTrades(string user, int universeId, int competitionId)
@@ -188,6 +200,7 @@ namespace SignalR.SQL
             }
             return teamName;
         }
+
         public static bool TryGetTeamIdForCompetition(int competitionId, string teamName, out Team team)
         {
             var key = teamName + "-" + competitionId;

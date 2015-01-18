@@ -84,7 +84,8 @@ namespace SignalR
 
         public void GetOrderBook(string team, int universeId, int competitionId)
         {
-            _betClient.GetOrderBook(team.Split('(')[0].TrimEnd(), universeId, competitionId, Context.ConnectionId);
+            var teamsInfo = team.Split('(');
+            _betClient.GetOrderBook(User, teamsInfo[0].Trim(), teamsInfo[1].Split(')')[0].Trim(), universeId, competitionId, Context.ConnectionId);
         }
 
         public void ClearCache(string cache)

@@ -277,7 +277,7 @@ namespace SignalR
                     }
                     else
                     {
-                        Clients.Client(connectionId).newMessage("You already have too much exposure", InfoClass);
+                        Clients.Client(connectionId).newMessage("You already have too much exposure", ErrorClass);
                         return;
                     }
                 }
@@ -677,25 +677,31 @@ namespace SignalR
             Clients.Client(connectionId).pricingFinished(teams, price);
         }
 
-        public void GetOrderBook(string team, int universeId, int competitionId, string connectionId)
+        public void GetOrderBook(string user, string team, string lastTradedPrice, int universeId, int competitionId, string connectionId)
         {
+            int lastTradedPriceValue;
+            if (!Int32.TryParse(lastTradedPrice, out lastTradedPriceValue))
+                lastTradedPriceValue = 0;
+
             int id;
             if (!Sql.TryGetUniverseCompetitionId(universeId, competitionId, out id))
                 return;
 
+            Team choosedTeam;
+            if (!Sql.TryGetTeamIdForCompetition(competitionId, team, out choosedTeam))
+                return;
+
             OrderBook orderBook;
             var key = team + "-" + id;
+
+            var midPrice = Sql.GetTeamCurrentValue(choosedTeam, id);
+            var position = Sql.GetUserPositionOnTeam(user, choosedTeam, id);
             if (_orderBooks.TryGetValue(key, out orderBook))
             {
-                Clients.Client(connectionId).showOrderBook(team, orderBook.Bids, orderBook.Asks);
+                Clients.Client(connectionId).showOrderBook(team, orderBook.Bids, orderBook.Asks, lastTradedPriceValue, midPrice, position);
             }
             else
             {
-
-                Team choosedTeam;
-                if (!Sql.TryGetTeamIdForCompetition(competitionId, team, out choosedTeam))
-                    return;
-
                 using (var context = new Entities())
                 {
                     var orders = context.Orders.Where(x => x.Team == choosedTeam.Id && x.Status == 0 && x.IdUniverseCompetition == id);
@@ -703,7 +709,7 @@ namespace SignalR
                     var bids = orders.Where(x => x.Side.Trim() == "BUY").GroupBy(x => x.Price).Select(x => new OrderBookInfo { Price = x.Key, Quantity = x.Sum(o => o.Quantity) }).OrderByDescending(x => x.Price).ToList();
 
                     _orderBooks[key] = new OrderBook { Asks = asks, Bids = bids };
-                    Clients.Client(connectionId).showOrderBook(team, bids, asks);
+                    Clients.Client(connectionId).showOrderBook(team, bids, asks, lastTradedPriceValue, midPrice, position);
                 }
             }
         }

@@ -3,8 +3,16 @@
 
     // Add client-side hub methods that the server will call
     $.extend(betHub.client, {
-        showOrderBook: function (team, bids, asks) {
+        showOrderBook: function (team, bids, asks, lastTradedPriceValue, midPrice, position) {
             drawOrderBook(team, bids, asks);
+            $("#LastTradedPrice")[0].innerHTML = "Last traded price : " + lastTradedPriceValue;
+            $("#MidPrice")[0].innerHTML = "Current price : " + midPrice;
+            if (position > 0)
+                $("#Position")[0].innerHTML = "Your position : <span class='glyphicon glyphicon-plus' aria-hidden='true' style='color: green;'>" + position + "</span>";
+            else if (position < 0)
+                $("#Position")[0].innerHTML = "Your position : <span class='glyphicon glyphicon-minus' aria-hidden='true' style='color: red;'>" + -position + "</span>";
+            else
+                $("#Position")[0].innerHTML = "Your position : <span style='color: blue;'>" + position + "</span>";
         },
         newPrice: function (order, isMine, competitionId) {
             if ($.grids[competitionId] == null)

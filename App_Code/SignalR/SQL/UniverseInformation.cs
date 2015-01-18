@@ -39,18 +39,25 @@ namespace SignalR.SQL
             var teamsValue = new Dictionary<int, int>();
             foreach (var team in teams)
             {
-                var value = GetTeamCurrentValue(context, team);
+                var value = GetTeamCurrentValue(context, team, competition.Id);
                 teamsValue.Add(team.Id, value);
             }
 
             foreach (var trade in context.Trades.Where(x => x.IdUniverseCompetition == competition.Id))
             {
-                usersMoney.UpdateOrSet(trade.Buyer, teamsValue[trade.Team] * trade.Quantity, (x, y) => x + y);
-                usersMoney.UpdateOrSet(trade.Seller, teamsValue[trade.Team] * trade.Quantity, (x, y) => x - y);
+                var value = teamsValue[trade.Team] * trade.Quantity;
+                usersMoney.UpdateOrSet(trade.Buyer, value, (x, y) => x + y);
+                usersMoney.UpdateOrSet(trade.Seller, value, (x, y) => x - y);
             }
         }
 
-        private static int GetTeamCurrentValue(Entities context, Team team)
+        public static int GetTeamCurrentValue(Team team, int id)
+        {
+            using (var context = new Entities())
+                return GetTeamCurrentValue(context, team, id);
+        }
+
+        private static int GetTeamCurrentValue(Entities context, Team team, int id)
         {
             var value = 0;
             if (team.Result.HasValue)
@@ -59,7 +66,7 @@ namespace SignalR.SQL
             }
             else
             {
-                var allOrders = context.Orders.Where(x => x.Team == team.Id && x.Status == 0);
+                var allOrders = context.Orders.Where(x => x.Team == team.Id && x.Status == 0 && x.IdUniverseCompetition == id);
                 var bestAsk = allOrders.Where(x => x.Side.Trim() == "SELL").OrderBy(x => x.Price).FirstOrDefault();
                 if (bestAsk != null)
                     value += bestAsk.Price;
@@ -75,7 +82,7 @@ namespace SignalR.SQL
                 if (value == 0)
                 {
                     var lastTrade =
-                        context.Trades.Where(x => x.Team == team.Id).OrderByDescending(x => x.Date).FirstOrDefault();
+                        context.Trades.Where(x => x.Team == team.Id && x.IdUniverseCompetition == id).OrderByDescending(x => x.Date).FirstOrDefault();
                     if (lastTrade != null)
                         value = lastTrade.Price;
                 }

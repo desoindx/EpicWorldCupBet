@@ -111,7 +111,7 @@
     <div style="margin-top: -900px; margin-left: 700px;">
         <input style="margin-left: 10px" type="button" id="OpenPopUp" value="Place A New Order" class="btn btn-default" />
     </div>
-    <div style="margin-top: 225px; margin-left: 650px; width: 500px;">
+    <div style="margin-top: 210px; margin-left: 650px; width: 500px;">
         <p>
             <label class="h4">Chat : </label>
         </p>
@@ -199,6 +199,11 @@
     <div id="orderBookDiv" style="text-align: center; display: none">
         <span class="glyphicon glyphicon-remove" aria-hidden="true" id="ClosePopOrderBook" style="color: red; position: absolute; top: 5px; right: 5px;"></span>
         <label class="h4" id="orderBookTeamName"></label>
+        <p>
+            <label style="margin-right: 15px" id="LastTradedPrice">Last traded price : </label>
+            <label style="margin-right: 15px" id="MidPrice">Current price : </label>
+            <label id="Position">Your position : </label>
+        </p>
         <p>
             <label>Bids</label>
             <label style="margin-left: 220px;">Asks</label>
