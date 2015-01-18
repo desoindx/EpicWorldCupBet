@@ -40,3 +40,9 @@ function drawPositionGrid(competitionId, positions) {
         this.render();
     });
 }
+
+$('#CompetitionTabMenu a').click(function (e) {
+    $("#CompetitionDropDownButton")[0].innerHTML = this.innerText + " <span class='caret'></span>";
+    currentCompetitionId = this.title;
+    showTeamSelectPicker(currentCompetitionId);
+});
