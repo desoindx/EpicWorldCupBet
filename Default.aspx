@@ -23,6 +23,8 @@
     <script src="JavaScript/SignalROrder.js"></script>
     <script src="JavaScript/PopUp.js"></script>
 
+    <% if (Master.UserHasUniverse)
+       { %>
     <div id="myAlert" class="alert hiddenAlert" role="alert">
         <label id="alertMessage">These is not the message you are looking for</label>
     </div>
@@ -216,5 +218,22 @@
     <script type='text/javascript'>
         universeId = <%: Master.SelectedUniverseId%>;
     </script>
+    <% }
+       else
+       {%>
+    <div style="text-align: center">
+        <p>
+            <label class="h2">It appears that you don't have any universe configurated !</label>
+        </p>
+        <p>
+            <a runat="server" href="~/Universe/Create">
+                <input style="margin-left: 10px; margin-top: 30px" type="button" id="CreateUniverse" class="btn btn-default" value="I want to create my own" />
+            </a>
+            <a runat="server" href="~/Universe/Join">
+                <input style="margin-left: 80px; margin-top: 30px;" type="button" class="btn btn-default" id="JoinUniverse" value="I want to join an existing universe" />
+            </a>
+        </p>
+    </div>
+    <% } %>
     <% } %>
 </asp:Content>

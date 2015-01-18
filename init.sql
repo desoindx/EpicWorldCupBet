@@ -1,6 +1,6 @@
 ﻿insert into Competitions values ('Cup', '2015-01-01', '2015-02-01', 'Football World Cup 2014')
 insert into Competitions values ('Cup', '2015-01-01', '2015-02-01', 'Football World Cup 2015')
-insert into Universes values ('Test', 'Xavier')
+insert into Universes values ('Test', 'Xavier', '123456')
 insert into UniverseAvailables values (1, 'Xavier')
 insert into UniverseCompetitions values (1,1)
 insert into UniverseCompetitions values (1,2)

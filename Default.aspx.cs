@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
+using Microsoft.AspNet.Identity;
 using SignalR;
 using SignalR.SQL;
+using WorldCupBetting;
 
 public partial class _Default : Page
 {

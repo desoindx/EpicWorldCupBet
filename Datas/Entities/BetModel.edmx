@@ -77,6 +77,7 @@
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
     <Property Name="AdminUser" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
   <EntityType Name="UniverseCompetitions">
     <Key>
@@ -187,6 +188,7 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" Nullable="false" />
           <Property Name="AdminUser" Type="String" Nullable="false" />
+          <Property Name="Password" Type="String" Nullable="false" />
         </EntityType>
         <EntityType Name="UniverseCompetition">
           <Key>
@@ -291,6 +293,7 @@
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="AdminUser" ColumnName="AdminUser" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

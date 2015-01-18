@@ -4,7 +4,9 @@ using System.Web;
 using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Microsoft.AspNet.Identity;
 using SignalR.SQL;
+using WorldCupBetting;
 
 public partial class SiteMaster : MasterPage
 {
@@ -73,9 +75,18 @@ public partial class SiteMaster : MasterPage
         Context.GetOwinContext().Authentication.SignOut();
     }
 
-    public string SelectedUniverse { get { return _userUniverses[0].Name; }}
-    public int SelectedUniverseId { get { return _userUniverses[0].Id; }}
+    public string SelectedUniverse { get { return UserHasUniverse ? UserUniverses[0].Name : string.Empty; } }
+    public int SelectedUniverseId { get { return UserUniverses[0].Id; } }
     private List<Universe> _userUniverses;
+    public List<Universe> UserUniverses
+    {
+        get
+        {
+            if (_userUniverses == null)
+                _userUniverses = Sql.GetUserUniverses(Context.User.Identity.Name);
+            return _userUniverses;
+        }
+    }
 
     protected bool UserHasMultipleUniverse()
     {
@@ -83,23 +94,31 @@ public partial class SiteMaster : MasterPage
         if (string.IsNullOrEmpty(user))
             return false;
 
-        _userUniverses = Sql.GetUserUniverses(user);
-        return _userUniverses.Count > 1;
+        return UserUniverses.Count > 1;
     }
 
     protected string GetUserUniverse()
     {
-        if (_userUniverses != null && _userUniverses.Count == 1)
-            return _userUniverses[0].Name;
+        if (UserUniverses.Count == 1)
+            return UserUniverses[0].Name;
 
         return string.Empty;
     }
 
-    public List<Competition> UniverseCompetitions;
+    private List<Competition> _universeCompetitions;
+
+    public List<Competition> UniverseCompetitions
+    {
+        get
+        {
+            if (_universeCompetitions == null)
+                _universeCompetitions = Sql.GetUniverseCompetitions(SelectedUniverse);
+            return _universeCompetitions;
+        }
+    }
 
     public bool UniverseHasMultipleCompetition()
     {
-        UniverseCompetitions = Sql.GetUniverseCompetitions(SelectedUniverse);
         return UniverseCompetitions.Count > 1;
     }
 
@@ -118,4 +137,23 @@ public partial class SiteMaster : MasterPage
 
         return -1;
     }
+
+    public bool UserHasUniverse { get { return UserUniverses.Count > 0; } }
+
+    protected void LogIn(object sender, EventArgs e)
+    {
+        // so dirty
+        var control = Controls[3].Controls[6].Controls[0];
+            var manager = new UserManager();
+            ApplicationUser user = manager.Find(((TextBox)control.FindControl("UserName")).Text,
+            ((TextBox)control.FindControl("Password")).Text);
+        if (user != null)
+            IdentityHelper.SignIn(manager, user, false);//RememberMe.Checked);
+            IdentityHelper.RedirectToReturnUrl(Request.QueryString["ReturnUrl"], Response);
+        }
+//        else
+//        {
+//            FailureText.Text = "Invalid username or password.";
+//            ErrorMessage.Visible = true;
+//        }
 }

@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 01/18/2015 16:47:12
+-- Date Created: 01/18/2015 17:50:20
 -- Generated from EDMX file: C:\Users\Xav\Desktop\EpicWorldCupBet\EpicWorldCupBet\Datas\Entities\BetModel.edmx
 -- --------------------------------------------------
 
@@ -46,8 +46,8 @@ GO
 IF OBJECT_ID(N'[dbo].[UniverseAvailables]', 'U') IS NOT NULL
     DROP TABLE [dbo].[UniverseAvailables];
 GO
-IF OBJECT_ID(N'[dbo].[ResultNames]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[ResultNames];
+IF OBJECT_ID(N'[dbo].[Results]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Results];
 GO
 IF OBJECT_ID(N'[dbo].[ResultOverridedValues]', 'U') IS NOT NULL
     DROP TABLE [dbo].[ResultOverridedValues];
@@ -114,7 +114,8 @@ GO
 CREATE TABLE [dbo].[Universes] (
     [Id] int IDENTITY(1,1) NOT NULL,
     [Name] nvarchar(max)  NOT NULL,
-    [AdminUser] nvarchar(max)  NOT NULL
+    [AdminUser] nvarchar(max)  NOT NULL,
+    [Password] nvarchar(max)  NOT NULL
 );
 GO
 

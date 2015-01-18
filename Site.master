@@ -64,7 +64,7 @@
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li><a runat="server" href="~/">Home</a></li>
-                        <% if (Context.User.Identity.IsAuthenticated)
+                        <% if (Context.User.Identity.IsAuthenticated && UserHasMultipleUniverse())
                            { %>
                         <li><a runat="server" href="~/Positions">Positions</a></li>
                         <li><a runat="server" href="~/Ranking">Ranking</a></li>
@@ -75,7 +75,38 @@
                     <asp:LoginView runat="server" ViewStateMode="Disabled">
                         <AnonymousTemplate>
                             <ul class="nav navbar-nav navbar-right">
-                                <li><a runat="server" href="~/Account/Login">Log in</a></li>
+                                <li>
+                                    <section id="loginForm">
+                                        <asp:PlaceHolder runat="server" ID="ErrorMessage" Visible="false">
+                                            <p class="text-danger">
+                                                <asp:Literal runat="server" ID="FailureText" />
+                                            </p>
+                                        </asp:PlaceHolder>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <asp:TextBox runat="server" ClientIDMode="Static" ID="UserName" CssClass="form-control-master" Style="margin-left: -250px; margin-top: -10px; font-size: 10px;"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <asp:TextBox runat="server" ClientIDMode="Static" ID="Password" TextMode="Password" CssClass="form-control-master" Style="margin-left: -75px; margin-top: -19px; font-size: 10px;"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-offset-2 col-md-10">
+                                                <div class="checkbox" style="margin-left: -225px; margin-top: -1px; color: #F1CB65;">
+                                                    <asp:CheckBox runat="server" ID="RememberMe" />
+                                                    <asp:Label ID="Label3" runat="server" AssociatedControlID="RememberMe">Remember me?</asp:Label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-offset-2 col-md-10">
+                                                <asp:Button ID="Button1" runat="server" OnClick="LogIn" Text="Log in" CssClass="btn btn-default" Style="margin-top: -85px; margin-left: 60px;" />
+                                            </div>
+                                        </div>
+                                    </section>
+                                </li>
                             </ul>
                         </AnonymousTemplate>
                         <LoggedInTemplate>
@@ -105,3 +136,15 @@
     </form>
 </body>
 </html>
+<script type='text/javascript'>window.onload = function () {
+    $(function () {
+        setTimeout(function () {
+            if ($("#UserName").val().length == 0) {
+                $("#UserName").val('User');
+            }
+            if ($("#Password").val().length == 0) {
+                $("#Password").val('Password');
+            }
+        }, 100);
+    });
+}</script>
