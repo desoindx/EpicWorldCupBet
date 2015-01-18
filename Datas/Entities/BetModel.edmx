@@ -14,6 +14,8 @@
     <EntitySet Name="Universes" EntityType="BetModel.Store.Universes" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="UniverseCompetitions" EntityType="BetModel.Store.UniverseCompetitions" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="UniverseAvailables" EntityType="BetModel.Store.UniverseAvailables" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Results" EntityType="BetModel.Store.Results" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="ResultOverridedValues" EntityType="BetModel.Store.ResultOverridedValues" store:Type="Tables" Schema="dbo" />
   </EntityContainer>
   <EntityType Name="Moneys">
     <Key>
@@ -92,6 +94,23 @@
     <Property Name="IdUniverse" Type="int" Nullable="false" />
     <Property Name="UserName" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
+  <EntityType Name="Results">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DefaultValue" Type="int" Nullable="false" DefaultValue="0" />
+  </EntityType>
+  <EntityType Name="ResultOverridedValues">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="IdUniverseCompetition" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="Value" Type="int" Nullable="false" />
+    <Property Name="IdUniverseCompetition" Type="int" Nullable="false" />
+  </EntityType>
 </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -139,6 +158,8 @@
           <EntitySet Name="Universes" EntityType="BetModel.Universe" />
           <EntitySet Name="UniverseCompetitions" EntityType="BetModel.UniverseCompetition" />
           <EntitySet Name="UniverseAvailables" EntityType="BetModel.UniverseAvailable" />
+          <EntitySet Name="Results" EntityType="BetModel.Results" />
+          <EntitySet Name="ResultOverridedValues" EntityType="BetModel.ResultOverridedValue" />
         </EntityContainer>
         <EntityType Name="Competition">
           <Key>
@@ -182,6 +203,23 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="IdUniverse" Type="Int32" Nullable="false" />
           <Property Name="UserName" Type="String" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Results">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <Property Name="DefaultValue" Type="Int32" Nullable="false" DefaultValue="0" />
+        </EntityType>
+        <EntityType Name="ResultOverridedValue">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="IdUniverseCompetition" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="Value" Type="Int32" Nullable="false" />
+          <Property Name="IdUniverseCompetition" Type="Int32" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -271,6 +309,24 @@
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="IdUniverse" ColumnName="IdUniverse" />
           <ScalarProperty Name="UserName" ColumnName="UserName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Results">
+      <EntityTypeMapping TypeName="IsTypeOf(BetModel.Results)">
+        <MappingFragment StoreEntitySet="Results">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="DefaultValue" ColumnName="DefaultValue" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ResultOverridedValues">
+      <EntityTypeMapping TypeName="IsTypeOf(BetModel.ResultOverridedValue)">
+        <MappingFragment StoreEntitySet="ResultOverridedValues">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="IdUniverseCompetition" ColumnName="IdUniverseCompetition" />
+          <ScalarProperty Name="Value" ColumnName="Value" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

@@ -2,11 +2,13 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 01/16/2015 14:58:59
+-- Date Created: 01/18/2015 16:47:12
 -- Generated from EDMX file: C:\Users\Xav\Desktop\EpicWorldCupBet\EpicWorldCupBet\Datas\Entities\BetModel.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
+GO
+USE [dbd533926a738d422481bda34000eb626c];
 GO
 IF SCHEMA_ID(N'dbo') IS NULL EXECUTE(N'CREATE SCHEMA [dbo]');
 GO
@@ -43,6 +45,12 @@ IF OBJECT_ID(N'[dbo].[UniverseCompetitions]', 'U') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[UniverseAvailables]', 'U') IS NOT NULL
     DROP TABLE [dbo].[UniverseAvailables];
+GO
+IF OBJECT_ID(N'[dbo].[ResultNames]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[ResultNames];
+GO
+IF OBJECT_ID(N'[dbo].[ResultOverridedValues]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[ResultOverridedValues];
 GO
 
 -- --------------------------------------------------
@@ -126,6 +134,22 @@ CREATE TABLE [dbo].[UniverseAvailables] (
 );
 GO
 
+-- Creating table 'Results'
+CREATE TABLE [dbo].[Results] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [Name] nvarchar(max)  NOT NULL,
+    [DefaultValue] int  NOT NULL
+);
+GO
+
+-- Creating table 'ResultOverridedValues'
+CREATE TABLE [dbo].[ResultOverridedValues] (
+    [Id] int  NOT NULL,
+    [Value] int  NOT NULL,
+    [IdUniverseCompetition] int  NOT NULL
+);
+GO
+
 -- --------------------------------------------------
 -- Creating all PRIMARY KEY constraints
 -- --------------------------------------------------
@@ -176,6 +200,18 @@ GO
 ALTER TABLE [dbo].[UniverseAvailables]
 ADD CONSTRAINT [PK_UniverseAvailables]
     PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'Results'
+ALTER TABLE [dbo].[Results]
+ADD CONSTRAINT [PK_Results]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id], [IdUniverseCompetition] in table 'ResultOverridedValues'
+ALTER TABLE [dbo].[ResultOverridedValues]
+ADD CONSTRAINT [PK_ResultOverridedValues]
+    PRIMARY KEY CLUSTERED ([Id], [IdUniverseCompetition] ASC);
 GO
 
 -- --------------------------------------------------

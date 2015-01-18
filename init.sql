@@ -70,3 +70,5 @@ insert into Teams (Name, IdCompetition) values ('NewBrazil', 2),
             ('NewSouth Korea', 2);
 insert into Orders ([User], Date, Team, Quantity, Status, Price, Side, IdUniverseCompetition) select [User], o.Date, t.Id, o.Quantity, o.Status, o.Price, o.Side, 1 from [dbo].[Order] o, Teams t where o.Team = t.Name;
 insert into Trades (Buyer, Seller, Date, Team, Quantity, Price, IdUniverseCompetition) select Buyer, Seller, o.Date, t.Id, o.Quantity, o.Price, 1 from [dbo].[Trade] o, Teams t where o.Team = t.Name;
+
+insert into Results values ('Winner', 1000),('Finalist', 750),('Third Place', 500), ('Semi Finalist', 450), ('Quarter Finalist', 250), ('Eight Finalist', 100), ('Sixteenth Finalist', 0)

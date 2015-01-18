@@ -72,4 +72,6 @@ public partial class Entities : DbContext
     public virtual DbSet<Universe> Universes { get; set; }
     public virtual DbSet<UniverseCompetition> UniverseCompetitions { get; set; }
     public virtual DbSet<UniverseAvailable> UniverseAvailables { get; set; }
+    public virtual DbSet<Results> Results { get; set; }
+    public virtual DbSet<ResultOverridedValue> ResultOverridedValues { get; set; }
 }

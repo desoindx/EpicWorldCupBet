@@ -93,6 +93,12 @@
     <Compile Include="Entities\Order.cs">
       <DependentUpon>EntitiesModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\ResultOverridedValue.cs">
+      <DependentUpon>EntitiesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Results.cs">
+      <DependentUpon>EntitiesModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\Team.cs">
       <DependentUpon>EntitiesModel.tt</DependentUpon>
     </Compile>

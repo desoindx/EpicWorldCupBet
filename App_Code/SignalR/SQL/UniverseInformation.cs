@@ -62,7 +62,16 @@ namespace SignalR.SQL
             var value = 0;
             if (team.Result.HasValue)
             {
-                value = team.Result.Value;
+                var overridedValue =
+                    context.ResultOverridedValues.FirstOrDefault(
+                        x => x.IdUniverseCompetition == id && x.Id == team.Result.Value);
+                if (overridedValue != null)
+                    value = overridedValue.Value;
+                else
+                {
+                    var defaultValue = context.Results.First(x => x.Id == team.Result.Value);
+                    value = defaultValue.DefaultValue;
+                }
             }
             else
             {
