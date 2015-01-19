@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Web;
 using System.Web.Security;
 using System.Web.UI;
@@ -65,9 +66,10 @@ public partial class SiteMaster : MasterPage
         }
     }
 
+    private Universe _currentUniverse;
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        _currentUniverse = Sql.GetUserSelectedUniverse(Context.User.Identity.Name);
     }
 
     protected void Unnamed_LoggingOut(object sender, LoginCancelEventArgs e)
@@ -75,8 +77,8 @@ public partial class SiteMaster : MasterPage
         Context.GetOwinContext().Authentication.SignOut();
     }
 
-    public string SelectedUniverse { get { return UserHasUniverse ? UserUniverses[0].Name : string.Empty; } }
-    public int SelectedUniverseId { get { return UserUniverses[0].Id; } }
+    public string SelectedUniverse { get { return _currentUniverse.Name; } }
+    public int SelectedUniverseId { get { return _currentUniverse.Id; } }
     private List<Universe> _userUniverses;
     public List<Universe> UserUniverses
     {
@@ -143,19 +145,30 @@ public partial class SiteMaster : MasterPage
     protected void LogIn(object sender, EventArgs e)
     {
         // so dirty
-        var control = Controls[3].Controls[6].Controls[0];
+        var control = Controls[3].Controls[8].Controls[0];
         var manager = new UserManager();
-        ApplicationUser user = manager.Find(((TextBox) control.FindControl("UserName")).Text,
-            ((TextBox) control.FindControl("Password")).Text);
+        ApplicationUser user = manager.Find(((TextBox)control.FindControl("UserName")).Text,
+            ((TextBox)control.FindControl("Password")).Text);
         if (user != null)
         {
-            IdentityHelper.SignIn(manager, user, ((CheckBox) control.FindControl("RememberMe")).Checked);
+            IdentityHelper.SignIn(manager, user, ((CheckBox)control.FindControl("RememberMe")).Checked);
             IdentityHelper.RedirectToReturnUrl(Request.QueryString["ReturnUrl"], Response);
         }
         else
         {
-            ((Literal) control.FindControl("FailureText")).Text = "Invalid username or password.";
-            ((PlaceHolder) control.FindControl("ErrorMessage")).Visible = true;
+            ((Literal)control.FindControl("FailureText")).Text = "Invalid username or password.";
+            ((PlaceHolder)control.FindControl("ErrorMessage")).Visible = true;
         }
+    }
+
+    protected void SelectNewUniverse(object sender, EventArgs e)
+    {
+        foreach (var universe in UserUniverses)
+            if (universe.Id.ToString(CultureInfo.InvariantCulture) == UniverseId.Text)
+            {
+                Sql.SetUserUniverse(Context.User.Identity.Name, universe);
+                IdentityHelper.RedirectToReturnUrl(Request.QueryString["ReturnUrl"], Response);
+                return;
+            }
     }
 }

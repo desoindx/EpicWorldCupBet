@@ -1,10 +1,36 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SignalR.SQL
 {
     public static partial class Sql
     {
+        private static readonly ConcurrentDictionary<string, Universe> UserDefaultUniverse =
+            new ConcurrentDictionary<string, Universe>();
+
+        public static Universe GetUserSelectedUniverse(string user)
+        {
+            Universe universe;
+            if (UserDefaultUniverse.TryGetValue(user, out universe))
+                return universe;
+
+            var universes = GetUserUniverses(user);
+            if (universes.Count > 0)
+            {
+                universe = universes[0];
+                UserDefaultUniverse[user] = universe;
+                return universe;
+            }
+            return null;
+        }
+
+        public static void SetUserUniverse(string user, Universe universe)
+        {
+            if (IsUserAuthorizedOn(user, universe.Id))
+                UserDefaultUniverse[user] = universe;
+        }
+
         public static int GetMoney(string user)
         {
             using (var context = new Entities())
@@ -34,8 +60,8 @@ namespace SignalR.SQL
             using (var context = new Entities())
             {
                 var universes = from a in context.UniverseAvailables.Where(x => x.UserName == user)
-                    from u in context.Universes.Where(x => x.Id == a.IdUniverse)
-                    select u;
+                                from u in context.Universes.Where(x => x.Id == a.IdUniverse)
+                                select u;
                 return universes.ToList();
             }
         }
@@ -45,9 +71,9 @@ namespace SignalR.SQL
             using (var context = new Entities())
             {
                 var competitions = from u in context.Universes.Where(x => x.Name == universe)
-                    from uc in context.UniverseCompetitions.Where(x => x.IdUniverse == u.Id)
-                    from c in context.Competitions.Where(x => x.Id == uc.IdCompetition)
-                    select c;
+                                   from uc in context.UniverseCompetitions.Where(x => x.IdUniverse == u.Id)
+                                   from c in context.Competitions.Where(x => x.Id == uc.IdCompetition)
+                                   select c;
                 return competitions.ToList();
             }
         }

@@ -113,7 +113,7 @@ namespace SignalR.SQL
                             .ToList();
                 }
             }
-            return null;
+            return new List<Trade>();
         }
     }
 }

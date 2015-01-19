@@ -44,22 +44,52 @@
         <div class="navbar navbar-inverse navbar-fixed-top">
             <div class="container">
                 <div id="header" class="navbar-header">
+                    <asp:TextBox runat="server" ClientIDMode="Static" ID="UniverseId" Style="display: none"></asp:TextBox>
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <label style="width: 255px" class="navbar-brand">
-                        Epic World Cup Betting
-                    <% if (UserHasMultipleUniverse())
-                       {%>
-                        <label class="navbar-brand">Test</label>
+                    <div class="navbar-brand">
+                        <label style="width: 255px; margin-top: -35px;">
+                            Epic World Cup Betting
+                        </label>
+                        <% if (UserHasMultipleUniverse())
+                           {%>
+                        <div class="dropdown" style="width: 150px;">
+                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true" style="height: 19px; font-size: 10px; line-height: 0.8; width: 150px;">
+                                Dropdown
+    <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                <%
+                               foreach (var universe in UserUniverses)
+                               {
+                                   bool hasActive = universe.Id == SelectedUniverseId;%>
+                                <li role="presentation" class="<%: hasActive ? "active" : "" %>"><a class="UniverseLink" role="menuitem" tabindex="-1" title="<%: universe.Id %>" href="#"><%: universe.Name %></a></li>
+                                <% if (hasActive)
+                                   {%>
+                                <script type='text/javascript'>
+                                    $("#dropdownMenu1")[0].innerHTML = '<%: universe.Name %>' + " <span class='caret'></span>";
+                                    $("#UniverseId").val(<%: universe.Id %>);
+                                </script>
+                                <%}
+                                  }%>
+                            </ul>
+                            <script type='text/javascript'>
+                                $('.UniverseLink').click(function (e) {
+                                    $("#dropdownMenu1")[0].innerHTML = this.innerText + " <span class='caret'></span>";
+                                    $("#UniverseId").val(this.title);
+                                });
+                            </script>
+                        </div>
+                        <asp:Button ID="Button1" runat="server" OnClick="SelectNewUniverse" Text="Go" CssClass="btn btn-default" Style="margin-left: 163px; height: 19px; font-size: 10px; line-height: 0.6; margin-top: -42px;" />
                         <% }
-                       else
-                       { %>
-                        <p id="universe" style="margin-top: 5px; font-size: 12px;"><%: GetUserUniverse() %></p>
+                           else
+                           { %>
+                        <p id="universe" style="font-size: 12px;"><%: GetUserUniverse() %></p>
                         <% } %>
-                    </label>
+                    </div>
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">

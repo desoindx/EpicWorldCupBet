@@ -1,7 +1,10 @@
 ﻿insert into Competitions values ('Cup', '2015-01-01', '2015-02-01', 'Football World Cup 2014')
 insert into Competitions values ('Cup', '2015-01-01', '2015-02-01', 'Football World Cup 2015')
 insert into Universes values ('Test', 'Xavier', '123456')
+insert into Universes values ('Compet De Ouf!', 'Bebeto69', '123456')
 insert into UniverseAvailables values (1, 'Xavier')
+insert into UniverseAvailables values (2, 'Xavier')
+insert into UniverseAvailables values (2, 'Bebeto69')
 insert into UniverseCompetitions values (1,1)
 insert into UniverseCompetitions values (1,2)
 insert into Teams (Name, IdCompetition) values ('Brazil', 1),
@@ -70,5 +73,6 @@ insert into Teams (Name, IdCompetition) values ('NewBrazil', 2),
             ('NewSouth Korea', 2);
 insert into Orders ([User], Date, Team, Quantity, Status, Price, Side, IdUniverseCompetition) select [User], o.Date, t.Id, o.Quantity, o.Status, o.Price, o.Side, 1 from [dbo].[Order] o, Teams t where o.Team = t.Name;
 insert into Trades (Buyer, Seller, Date, Team, Quantity, Price, IdUniverseCompetition) select Buyer, Seller, o.Date, t.Id, o.Quantity, o.Price, 1 from [dbo].[Trade] o, Teams t where o.Team = t.Name;
-
 insert into Results values ('Winner', 1000),('Finalist', 750),('Third Place', 500), ('Semi Finalist', 450), ('Quarter Finalist', 250), ('Eight Finalist', 100), ('Sixteenth Finalist', 0)
+INSERT INTO [dbo].[AspNetRoles] ([Id], [Name]) VALUES (N'de25f5cb-a425-4718-b4d8-e4e88dcf9f23', N'Admin')
+INSERT INTO [dbo].[AspNetUserRoles] ([UserId], [RoleId]) VALUES (N'6921d974-47ed-4487-8805-d368b63ac242', N'de25f5cb-a425-4718-b4d8-e4e88dcf9f23')
