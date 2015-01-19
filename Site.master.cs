@@ -144,16 +144,18 @@ public partial class SiteMaster : MasterPage
     {
         // so dirty
         var control = Controls[3].Controls[6].Controls[0];
-            var manager = new UserManager();
-            ApplicationUser user = manager.Find(((TextBox)control.FindControl("UserName")).Text,
-            ((TextBox)control.FindControl("Password")).Text);
+        var manager = new UserManager();
+        ApplicationUser user = manager.Find(((TextBox) control.FindControl("UserName")).Text,
+            ((TextBox) control.FindControl("Password")).Text);
         if (user != null)
-            IdentityHelper.SignIn(manager, user, false);//RememberMe.Checked);
+        {
+            IdentityHelper.SignIn(manager, user, ((CheckBox) control.FindControl("RememberMe")).Checked);
             IdentityHelper.RedirectToReturnUrl(Request.QueryString["ReturnUrl"], Response);
         }
-//        else
-//        {
-//            FailureText.Text = "Invalid username or password.";
-//            ErrorMessage.Visible = true;
-//        }
+        else
+        {
+            ((Literal) control.FindControl("FailureText")).Text = "Invalid username or password.";
+            ((PlaceHolder) control.FindControl("ErrorMessage")).Visible = true;
+        }
+    }
 }

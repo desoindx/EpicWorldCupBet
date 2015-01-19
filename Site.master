@@ -78,9 +78,9 @@
                                 <li>
                                     <section id="loginForm">
                                         <asp:PlaceHolder runat="server" ID="ErrorMessage" Visible="false">
-                                            <p class="text-danger">
+                                            <div class="text-danger" style="margin-bottom: 15px; margin-top: -10px; margin-left: -150px;">
                                                 <asp:Literal runat="server" ID="FailureText" />
-                                            </p>
+                                            </div>
                                         </asp:PlaceHolder>
                                         <div class="form-group">
                                             <div class="col-md-10">
@@ -102,7 +102,7 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-offset-2 col-md-10">
-                                                <asp:Button ID="Button1" runat="server" OnClick="LogIn" Text="Log in" CssClass="btn btn-default" Style="margin-top: -85px; margin-left: 60px;" />
+                                                <asp:Button ID="Button1" runat="server" OnClick="LogIn" Text="Log in" CssClass="btn btn-default" Style="margin-top: -93px; margin-left: 70px;" />
                                             </div>
                                         </div>
                                     </section>
@@ -112,8 +112,6 @@
     setTimeout(function () {
         if ($("#UserName").val().length == 0) {
             $("#UserName").val('User');
-        }
-        if ($("#Password").val().length == 0) {
             $("#Password").val('Password');
         }
     }, 100);
