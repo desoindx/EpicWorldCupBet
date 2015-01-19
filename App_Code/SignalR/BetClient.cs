@@ -442,8 +442,7 @@ namespace SignalR
             }
 
             if (order != null)
-                Clients.Group(universeId.ToString(CultureInfo.InvariantCulture))
-                    .AllExcept(connectionIdToIgnore)
+                Clients.Group(competitionId.ToString(CultureInfo.InvariantCulture), connectionIdToIgnore)
                     .newPrice(order, false, competitionId);
         }
 

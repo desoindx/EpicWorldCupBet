@@ -17,8 +17,9 @@
         newPrice: function (order, isMine, competitionId) {
             if ($.grids[competitionId] == null)
                 return;
-            for (var i = 0; i < $.bidasks.length; i++) {
-                if ($.bidasks[competitionId][i].TeamName == order.Team) {
+            var datas = $.bidasks[competitionId];
+            for (var i = 0; i < datas.length; i++) {
+                if (datas[i].TeamName == order.Team) {
                     var cellToFlash = [];
                     $.grids[competitionId].invalidateRow(i);
                     setUpOrder(order, isMine, i, true, cellToFlash, competitionId);
