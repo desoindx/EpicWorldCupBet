@@ -11,14 +11,6 @@
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <% if (Context.User.Identity.IsAuthenticated)
        { %>
-    <script src="Scripts/jquery-1.7.2.min.js"></script>
-    <script src="Scripts/jquery.event.drag.js"></script>
-    <script src="Scripts/SlickGrid/slick.core.js"></script>
-    <script src="Scripts/SlickGrid/slick.grid.js"></script>
-    <script src="Scripts/bootstrap-select.js"></script>
-    <script src="Scripts/hoverIntent.js"></script>
-    <script type="text/javascript" src="Scripts/jquery.signalR-2.0.3.js"></script>
-    <script type="text/javascript" src="../signalr/hubs"></script>
     <script src="JavaScript/Order.js"></script>
     <script src="JavaScript/SignalROrder.js"></script>
     <script src="JavaScript/PopUp.js"></script>

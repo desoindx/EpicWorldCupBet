@@ -3,12 +3,6 @@
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
     <link rel="stylesheet" href="Content/slick.grid.css" type="text/css" />
-    <script src="Scripts/jquery-1.7.2.min.js"></script>
-    <script src="Scripts/jquery.event.drag.js"></script>
-    <script src="Scripts/SlickGrid/slick.core.js"></script>
-    <script src="Scripts/SlickGrid/slick.grid.js"></script>
-    <script type="text/javascript" src="Scripts/jquery.signalR-2.0.3.js"></script>
-    <script type="text/javascript" src="../signalr/hubs"></script>
     <script src="JavaScript/SignalRPricer.js"></script>
 
     <div style="height: 600px;">

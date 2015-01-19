@@ -5,21 +5,13 @@
     <link rel="stylesheet" type="text/css" href="Scripts/Chart/css/jquery.jqChart.css" />
     <link rel="stylesheet" type="text/css" href="Scripts/Chart/css/jquery.jqRangeSlider.css" />
     <link rel="stylesheet" type="text/css" href="Scripts/Chart/themes/smoothness/jquery-ui-1.10.4.css" />
-    <script src="Scripts/Chart/js/jquery-1.11.1.min.js" type="text/javascript"></script>
     <script src="Scripts/Chart/js/jquery.mousewheel.js" type="text/javascript"></script>
     <script src="Scripts/Chart/js/jquery.jqChart.min.js" type="text/javascript"></script>
     <script src="Scripts/Chart/js/jquery.jqRangeSlider.min.js" type="text/javascript"></script>
 
     <link rel="stylesheet" href="Content/slick.grid.css" type="text/css" />
-    <script src="Scripts/jquery.event.drag.js"></script>
-    <script src="Scripts/SlickGrid/slick.core.js"></script>
-    <script src="Scripts/SlickGrid/slick.grid.js"></script>
-    <script type="text/javascript" src="Scripts/jquery.signalR-2.0.3.js"></script>
-
     <link href="Scripts/listbox.css" rel="stylesheet">
     <script src="Scripts/listbox.js"></script>
-
-    <script type="text/javascript" src="../signalr/hubs"></script>
     <script src="JavaScript/Charts.js"></script>
     <script src="JavaScript/SignalRCharts.js"></script>
 
