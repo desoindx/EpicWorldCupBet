@@ -7,26 +7,25 @@ using WorldCupBetting;
 
 public partial class Account_Register : Page
 {
-    protected void CreateUser_Click(object sender, EventArgs e)
+    protected async void CreateUser_Click(object sender, EventArgs e)
     {
         if (ModelState.IsValid)
         {
             var manager = new UserManager();
-            var user = new ApplicationUser { UserName = UserName.Text };
+            var user = new ApplicationUser { UserName = UserName.Text, Email = Email.Text};
             IdentityResult result = manager.Create(user, Password.Text);
             if (result.Succeeded)
             {
                 IdentityHelper.SignIn(manager, user, false);
 //                var code = await manager.GenerateEmailConfirmationTokenAsync(user.Id);
-//
-//                var url = new UrlHelper();
-//                var callbackUrl = url.Action("ConfirmEmail", "Account", new {userId = user.Id, code}, Request.Url.Scheme);
-//
-//                await manager.SendEmailAsync(user.Id,
-//                   "Confirm your account",
-//                   "Please confirm your account by clicking this link: <a href=\""
-//                                                   + callbackUrl + "\">link</a>");
-//                EmailService.SendSimpleMessage();
+
+                var url = new UrlHelper();
+               // var callbackUrl = url.Action("ConfirmEmail", "Account", new {userId = user.Id, code}, Request.Url.Scheme);
+
+                await manager.SendEmailAsync(user.Id,
+                   "Confirm your account",
+                   "Please confirm your account by clicking this link: <a href=\""
+                                                   + "callbackUrl" + "\">link</a>");
                 IdentityHelper.RedirectToReturnUrl(Request.QueryString["ReturnUrl"], Response);
             }
             else

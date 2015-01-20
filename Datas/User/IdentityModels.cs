@@ -65,6 +65,12 @@ namespace WorldCupBetting
         public UserManager()
             : base(new UserStore<ApplicationUser>(new ApplicationDbContext()))
         {
+            RegisterTwoFactorProvider("EmailCode", new EmailTokenProvider<ApplicationUser>
+            {
+                Subject = "SecurityCode",
+                BodyFormat = "Your security code is {0}"
+            });
+            EmailService = new EmailService();
         }
     }
 }
