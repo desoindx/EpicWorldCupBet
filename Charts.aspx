@@ -10,7 +10,6 @@
     <script src="Scripts/Chart/js/jquery.jqRangeSlider.min.js" type="text/javascript"></script>
 
     <link rel="stylesheet" href="Content/slick.grid.css" type="text/css" />
-    <link href="Scripts/listbox.css" rel="stylesheet">
     <script src="Scripts/listbox.js"></script>
     <script src="JavaScript/Charts.js"></script>
     <script src="JavaScript/SignalRCharts.js"></script>

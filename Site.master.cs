@@ -145,7 +145,7 @@ public partial class SiteMaster : MasterPage
     protected void LogIn(object sender, EventArgs e)
     {
         // so dirty
-        var control = Controls[3].Controls[8].Controls[0];
+        var control = Controls[3].Controls[7].Controls[0];
         var manager = new UserManager();
         ApplicationUser user = manager.Find(((TextBox)control.FindControl("UserName")).Text,
             ((TextBox)control.FindControl("Password")).Text);

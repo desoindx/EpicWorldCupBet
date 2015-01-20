@@ -1,9 +1,9 @@
-﻿using Microsoft.Owin.Security;
+﻿using System.Linq;
 using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Web;
 using WorldCupBetting;
 

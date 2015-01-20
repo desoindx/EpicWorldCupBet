@@ -74,5 +74,6 @@ insert into Teams (Name, IdCompetition) values ('NewBrazil', 2),
 insert into Orders ([User], Date, Team, Quantity, Status, Price, Side, IdUniverseCompetition) select [User], o.Date, t.Id, o.Quantity, o.Status, o.Price, o.Side, 1 from [dbo].[Order] o, Teams t where o.Team = t.Name;
 insert into Trades (Buyer, Seller, Date, Team, Quantity, Price, IdUniverseCompetition) select Buyer, Seller, o.Date, t.Id, o.Quantity, o.Price, 1 from [dbo].[Trade] o, Teams t where o.Team = t.Name;
 insert into Results values ('Winner', 1000),('Finalist', 750),('Third Place', 500), ('Semi Finalist', 450), ('Quarter Finalist', 250), ('Eight Finalist', 100), ('Sixteenth Finalist', 0)
+INSERT INTO [dbo].[AspNetUsers] ([Id], [UserName], [PasswordHash], [SecurityStamp], [Email], [EmailConfirmed], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEndDateUtc], [LockoutEnabled], [AccessFailedCount]) VALUES (N'656ca35d-4002-4cbb-96f7-5c327ea2ed4f', N'Xavier', N'APh1j6ishLBkzYmoeWX3C+lXTtvMGFlrGGG1E+qxC8q6CwmCf+KCHntIl0jqN3wV6g==', N'e108308a-761d-4a84-9ee7-0a491f1861a7', NULL, 0, NULL, 0, 0, NULL, 0, 0)
 INSERT INTO [dbo].[AspNetRoles] ([Id], [Name]) VALUES (N'de25f5cb-a425-4718-b4d8-e4e88dcf9f23', N'Admin')
-INSERT INTO [dbo].[AspNetUserRoles] ([UserId], [RoleId]) VALUES (N'6921d974-47ed-4487-8805-d368b63ac242', N'de25f5cb-a425-4718-b4d8-e4e88dcf9f23')
+INSERT INTO [dbo].[AspNetUserRoles] ([UserId], [RoleId]) VALUES (N'656ca35d-4002-4cbb-96f7-5c327ea2ed4f', N'de25f5cb-a425-4718-b4d8-e4e88dcf9f23')

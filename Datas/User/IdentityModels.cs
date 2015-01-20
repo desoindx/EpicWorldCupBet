@@ -19,14 +19,12 @@ namespace WorldCupBetting
                     DefaultAuthenticationTypes.ApplicationCookie);
             return userIdentity;
         }
-
-        public string Email { get; set; }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("DefaultConnection")
+            : base("DefaultConnection", false)
         {
             Database.SetInitializer<ApplicationDbContext>(new UserDatabaseInitializer());
         }

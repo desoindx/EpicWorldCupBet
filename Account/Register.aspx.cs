@@ -9,10 +9,10 @@ public partial class Account_Register : Page
 {
     protected void CreateUser_Click(object sender, EventArgs e)
     {
-        if (User.IsInRole("Admin") && ModelState.IsValid)
+        if (ModelState.IsValid)
         {
             var manager = new UserManager();
-            var user = new ApplicationUser {UserName = UserName.Text, Email = Email.Text};
+            var user = new ApplicationUser {UserName = UserName.Text};
             IdentityResult result = manager.Create(user, Password.Text);
             if (result.Succeeded)
             {

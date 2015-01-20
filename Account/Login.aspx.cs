@@ -1,9 +1,5 @@
-﻿using System.Web.Security;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.Owin.Security;
+﻿using Microsoft.AspNet.Identity;
 using System;
-using System.Web;
 using System.Web.UI;
 using WorldCupBetting;
 
