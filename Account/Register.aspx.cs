@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Linq;
 using System.Web.UI;
-using SignalR.SQL;
 using WorldCupBetting;
 
 public partial class Account_Register : Page
 {
-    protected void CreateUser_Click(object sender, EventArgs e)
+    protected async void CreateUser_Click(object sender, EventArgs e)
     {
         if (ModelState.IsValid)
         {
@@ -17,8 +17,18 @@ public partial class Account_Register : Page
             if (result.Succeeded)
             {
                 IdentityHelper.SignIn(manager, user, isPersistent: false);
+//                var code = await manager.GenerateEmailConfirmationTokenAsync(user.Id);
+//
+//                var url = new UrlHelper();
+//                var callbackUrl = url.Action("ConfirmEmail", "Account", new {userId = user.Id, code = code},
+//                    protocol: Request.Url.Scheme);
+//
+//                await manager.SendEmailAsync(user.Id,
+//                   "Confirm your account",
+//                   "Please confirm your account by clicking this link: <a href=\""
+//                                                   + callbackUrl + "\">link</a>");
+                EmailService.SendSimpleMessage();
                 IdentityHelper.RedirectToReturnUrl(Request.QueryString["ReturnUrl"], Response);
-                Sql.SetUserMoney(user.UserName, 10000);
             }
             else
             {
