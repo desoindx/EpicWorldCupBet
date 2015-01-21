@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using Datas.User;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ public partial class Account_Manage : System.Web.UI.Page
         private set;
     }
 
-    private bool HasPassword(UserManager manager)
+    private bool HasPassword(ApplicationUserManager manager)
     {
         var user = manager.FindById(User.Identity.GetUserId());
         return (user != null && user.PasswordHash != null);
@@ -29,8 +30,7 @@ public partial class Account_Manage : System.Web.UI.Page
         if (!IsPostBack)
         {
             // Determine the sections to render
-            UserManager manager = new UserManager();
-            if (HasPassword(manager))
+            if (HasPassword(Master.UserManager))
             {
                 changePasswordHolder.Visible = true;
             }
@@ -39,7 +39,7 @@ public partial class Account_Manage : System.Web.UI.Page
                 setPassword.Visible = true;
                 changePasswordHolder.Visible = false;
             }
-            CanRemoveExternalLogins = manager.GetLogins(User.Identity.GetUserId()).Count() > 1;
+            CanRemoveExternalLogins = Master.UserManager.GetLogins(User.Identity.GetUserId()).Count() > 1;
 
             // Render success message
             var message = Request.QueryString["m"];
@@ -62,8 +62,7 @@ public partial class Account_Manage : System.Web.UI.Page
     {
         if (IsValid)
         {
-            UserManager manager = new UserManager();
-            IdentityResult result = manager.ChangePassword(User.Identity.GetUserId(), CurrentPassword.Text, NewPassword.Text);
+            IdentityResult result = Master.UserManager.ChangePassword(User.Identity.GetUserId(), CurrentPassword.Text, NewPassword.Text);
             if (result.Succeeded)
             {
                 Response.Redirect("~/Account/Manage?m=ChangePwdSuccess");
@@ -80,8 +79,7 @@ public partial class Account_Manage : System.Web.UI.Page
         if (IsValid)
         {
             // Create the local login info and link the local account to the user
-            UserManager manager = new UserManager();
-            IdentityResult result = manager.AddPassword(User.Identity.GetUserId(), password.Text);
+            IdentityResult result = Master.UserManager.AddPassword(User.Identity.GetUserId(), password.Text);
             if (result.Succeeded)
             {
                 Response.Redirect("~/Account/Manage?m=SetPwdSuccess");
@@ -95,16 +93,14 @@ public partial class Account_Manage : System.Web.UI.Page
 
     public IEnumerable<UserLoginInfo> GetLogins()
     {
-        UserManager manager = new UserManager();
-        var accounts = manager.GetLogins(User.Identity.GetUserId());
-        CanRemoveExternalLogins = accounts.Count() > 1 || HasPassword(manager);
+        var accounts = Master.UserManager.GetLogins(User.Identity.GetUserId());
+        CanRemoveExternalLogins = accounts.Count() > 1 || HasPassword(Master.UserManager);
         return accounts;
     }
 
     public void RemoveLogin(string loginProvider, string providerKey)
     {
-        UserManager manager = new UserManager();
-        var result = manager.RemoveLogin(User.Identity.GetUserId(), new UserLoginInfo(loginProvider, providerKey));
+        var result = Master.UserManager.RemoveLogin(User.Identity.GetUserId(), new UserLoginInfo(loginProvider, providerKey));
         var msg = result.Succeeded
             ? "?m=RemoveLoginSuccess"
             : String.Empty;

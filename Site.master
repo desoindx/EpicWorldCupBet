@@ -82,7 +82,7 @@
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li><a runat="server" href="~/">Home</a></li>
-                        <% if (Context.User.Identity.IsAuthenticated && UserHasMultipleUniverse())
+                        <% if (Context.User.Identity.IsAuthenticated)
                            { %>
                         <li><a runat="server" href="~/Positions">Positions</a></li>
                         <li><a runat="server" href="~/Ranking">Ranking</a></li>
@@ -92,6 +92,8 @@
                     </ul>
                     <asp:LoginView runat="server" ViewStateMode="Disabled">
                         <AnonymousTemplate>
+                            <% if (ShowLogin)
+                               { %>
                             <ul class="nav navbar-nav navbar-right">
                                 <li>
                                     <section id="loginForm">
@@ -134,8 +136,8 @@
         }
     }, 100);
 }
-
                             </script>
+                            <% } %>
                         </AnonymousTemplate>
                         <LoggedInTemplate>
                             <ul class="nav navbar-nav navbar-right">

@@ -5,12 +5,30 @@ using System.Web;
 using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Datas.User;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using SignalR.SQL;
 using WorldCupBetting;
 
 public partial class SiteMaster : MasterPage
 {
+    public bool ShowLogin = true;
+    public ApplicationUserManager UserManager
+    {
+        get
+        {
+            return Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
+        }
+    }
+    public ApplicationSignInManager SignInManager
+    {
+        get
+        {
+            return Context.GetOwinContext().Get<ApplicationSignInManager>();
+        }
+    }
+
     private const string AntiXsrfTokenKey = "__AntiXsrfToken";
     private const string AntiXsrfUserNameKey = "__AntiXsrfUserName";
     private string _antiXsrfTokenValue;
@@ -146,12 +164,13 @@ public partial class SiteMaster : MasterPage
     {
         // so dirty
         var control = Controls[3].Controls[7].Controls[0];
-        var manager = new UserManager();
-        ApplicationUser user = manager.Find(((TextBox)control.FindControl("UserName")).Text,
+        ApplicationUser user = UserManager.Find(((TextBox)control.FindControl("UserName")).Text,
             ((TextBox)control.FindControl("Password")).Text);
         if (user != null)
         {
-            IdentityHelper.SignIn(manager, user, ((CheckBox)control.FindControl("RememberMe")).Checked);
+
+            SignInManager.SignIn(user, ((CheckBox)control.FindControl("RememberMe")).Checked, true);
+            Response.Redirect("~/Default.aspx");
             IdentityHelper.RedirectToReturnUrl(Request.QueryString["ReturnUrl"], Response);
         }
         else

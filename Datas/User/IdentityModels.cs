@@ -1,6 +1,7 @@
 ﻿﻿using System.Data.Entity;
 ﻿using System.Security.Claims;
 ﻿using System.Threading.Tasks;
+﻿using Datas.User;
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
@@ -26,51 +27,18 @@ namespace WorldCupBetting
         public ApplicationDbContext()
             : base("DefaultConnection", false)
         {
-            Database.SetInitializer<ApplicationDbContext>(new UserDatabaseInitializer());
         }
-    }
-    public class UserDatabaseInitializer : DropCreateDatabaseIfModelChanges<ApplicationDbContext>
-    {
-        protected override void Seed(ApplicationDbContext context)
+
+        static ApplicationDbContext()
         {
-            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
-
-            const string name = "Admin";
-            const string password = "123456";
-
-            //Create Role Admin if it does not exist
-            if (!roleManager.RoleExists(name))
-            {
-                roleManager.Create(new IdentityRole(name));
-            }
-
-            //Create User=Admin with password=123456
-            var user = new ApplicationUser {UserName = name};
-            var adminresult = userManager.Create(user, password);
-
-            //Add User Admin to Role Admin
-            if (adminresult.Succeeded)
-            {
-                userManager.AddToRole(user.Id, name);
-            }
-
-            base.Seed(context);
+            // Set the database intializer which is run once during application start
+            // This seeds the database with admin user credentials and admin role
+            Database.SetInitializer<ApplicationDbContext>(new ApplicationDbInitializer());
         }
-    }
 
-    #region Helpers
-    public class UserManager : UserManager<ApplicationUser>
-    {
-        public UserManager()
-            : base(new UserStore<ApplicationUser>(new ApplicationDbContext()))
+        public static ApplicationDbContext Create()
         {
-            RegisterTwoFactorProvider("EmailCode", new EmailTokenProvider<ApplicationUser>
-            {
-                Subject = "SecurityCode",
-                BodyFormat = "Your security code is {0}"
-            });
-            EmailService = new EmailService();
+            return new ApplicationDbContext();
         }
     }
 }
@@ -82,7 +50,7 @@ namespace WorldCupBetting
         // Used for XSRF when linking external logins
         public const string XsrfKey = "XsrfId";
 
-        public static void SignIn(UserManager manager, ApplicationUser user, bool isPersistent)
+        public static void SignIn(ApplicationUserManager manager, ApplicationUser user, bool isPersistent)
         {
             IAuthenticationManager authenticationManager = HttpContext.Current.GetOwinContext().Authentication;
             authenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
@@ -118,5 +86,4 @@ namespace WorldCupBetting
             }
         }
     }
-    #endregion
 }

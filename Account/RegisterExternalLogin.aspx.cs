@@ -28,16 +28,15 @@ public partial class Account_RegisterExternalLogin : System.Web.UI.Page
         }
         if (!IsPostBack)
         {
-            var manager = new UserManager();
             var loginInfo = Context.GetOwinContext().Authentication.GetExternalLoginInfo();
             if (loginInfo == null)
             {
                 Response.Redirect("~/Account/Login");
             }
-            var user = manager.Find(loginInfo.Login);
+            var user = Master.UserManager.Find(loginInfo.Login);
             if (user != null)
             {
-                IdentityHelper.SignIn(manager, user, isPersistent: false);
+                IdentityHelper.SignIn(Master.UserManager, user, isPersistent: false);
                 IdentityHelper.RedirectToReturnUrl(Request.QueryString["ReturnUrl"], Response);
             }
             else if (User.Identity.IsAuthenticated)
@@ -49,7 +48,7 @@ public partial class Account_RegisterExternalLogin : System.Web.UI.Page
                     Response.Redirect("~/Account/Login");
                 }
 
-                var result = manager.AddLogin(User.Identity.GetUserId(), verifiedloginInfo.Login);
+                var result = Master.UserManager.AddLogin(User.Identity.GetUserId(), verifiedloginInfo.Login);
                 if (result.Succeeded)
                 {
                     IdentityHelper.RedirectToReturnUrl(Request.QueryString["ReturnUrl"], Response);
@@ -78,9 +77,8 @@ public partial class Account_RegisterExternalLogin : System.Web.UI.Page
         {
             return;
         }
-        var manager = new UserManager();
         var user = new ApplicationUser() { UserName = userName.Text };
-        IdentityResult result = manager.Create(user);
+        IdentityResult result = Master.UserManager.Create(user);
         if (result.Succeeded)
         {
             var loginInfo = Context.GetOwinContext().Authentication.GetExternalLoginInfo();
@@ -89,10 +87,10 @@ public partial class Account_RegisterExternalLogin : System.Web.UI.Page
                 Response.Redirect("~/Account/Login");
                 return;
             }
-            result = manager.AddLogin(user.Id, loginInfo.Login);
+            result = Master.UserManager.AddLogin(user.Id, loginInfo.Login);
             if (result.Succeeded)
             {
-                IdentityHelper.SignIn(manager, user, isPersistent: false);
+                IdentityHelper.SignIn(Master.UserManager, user, isPersistent: false);
                 IdentityHelper.RedirectToReturnUrl(Request.QueryString["ReturnUrl"], Response);
                 return;
             }

@@ -8,10 +8,10 @@ public class EmailService : IIdentityMessageService
 {
     public Task SendAsync(IdentityMessage message)
     {
-        return new Task(() => SendMessage(message.Subject, message.Body, message.Destination));
+        return SendMessage(message.Subject, message.Body, message.Destination);
     }
 
-    private static void SendMessage(string subject, string body, string to)
+    private static Task SendMessage(string subject, string body, string to)
     {
         // Compose a message
         var mail = new MailMessage(ConfigurationManager.AppSettings["MAILGUN_SMTP_LOGIN"], to)
@@ -32,6 +32,6 @@ public class EmailService : IIdentityMessageService
             Host = ConfigurationManager.AppSettings["MAILGUN_SMTP_SERVER"]
         };
 
-        client.Send(mail);
+        return client.SendMailAsync(mail);
     }
 }
