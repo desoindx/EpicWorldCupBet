@@ -117,6 +117,7 @@
                                                 <div class="checkbox" style="margin-left: -225px; margin-top: -1px; color: #F1CB65;">
                                                     <asp:CheckBox runat="server" ID="RememberMe" />
                                                     <asp:Label ID="Label3" runat="server" AssociatedControlID="RememberMe">Remember me?</asp:Label>
+                                                    <a href="/Account/ForgotPassword" style="margin-left: 30px; width: 160px;">Forgotten your password ?</a>
                                                 </div>
                                             </div>
                                         </div>

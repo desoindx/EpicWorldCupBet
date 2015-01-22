@@ -1189,8 +1189,7 @@ a {
 
 a:hover,
 a:focus {
-    color: #2a6496;
-    text-decoration: underline;
+    color: #fff;
 }
 
 a:focus {
@@ -3080,10 +3079,13 @@ input[type="month"] {
 
     .radio label,
     .checkbox label {
-        padding-left: 20px;
+        padding-left: 0px;
         margin-bottom: 0;
         font-weight: normal;
         cursor: pointer;
+    }
+    .checkbox label:hover {
+        color: #fff;
     }
 
     .radio input[type="radio"],
