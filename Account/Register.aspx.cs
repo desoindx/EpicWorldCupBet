@@ -23,6 +23,10 @@ public partial class Account_Register : Page
     {
         if (ModelState.IsValid)
         {
+            if (UserName.Text.Contains('@'))
+            {
+                ErrorMessage.Text = "@ is not allowed in user name.";
+            }
             var user = new ApplicationUser { UserName = UserName.Text, Email = Email.Text};
             IdentityResult result = Master.UserManager.Create(user, Password.Text);
             if (result.Succeeded)

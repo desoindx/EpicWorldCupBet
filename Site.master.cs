@@ -164,8 +164,10 @@ public partial class SiteMaster : MasterPage
     {
         // so dirty
         var control = Controls[3].Controls[7].Controls[0];
-        ApplicationUser user = UserManager.Find(((TextBox)control.FindControl("UserName")).Text,
-            ((TextBox)control.FindControl("Password")).Text);
+        var userName = ((TextBox)control.FindControl("UserName")).Text;
+        ApplicationUser user;
+        user = userName.Contains("@") ? UserManager.FindByEmail(userName) : UserManager.FindByName(userName);
+        user = UserManager.Find(user.UserName, ((TextBox)control.FindControl("Password")).Text);
         if (user != null)
         {
 

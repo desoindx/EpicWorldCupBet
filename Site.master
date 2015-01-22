@@ -132,7 +132,7 @@
                             <script type='text/javascript'>window.onload = function () {
     setTimeout(function () {
         if ($("#UserName").val().length == 0) {
-            $("#UserName").val('User');
+            $("#UserName").val('User or Mail');
             $("#Password").val('Password');
         }
     }, 100);
