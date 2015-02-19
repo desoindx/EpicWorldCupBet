@@ -16,7 +16,7 @@ namespace SignalR
         protected ApplicationDbContext ApplicationDbContext { get; set; }
         protected UserManager<ApplicationUser> UserManager { get; set; }
 
-        private string User { get { return Context.User.Identity.Name; } }
+        private string User { get { return Context.User == null ? string.Empty : Context.User.Identity.Name; } }
         private readonly BetClient _betClient;
         private static readonly Dictionary<string, string> _userConnectionId = new Dictionary<string, string>();
 

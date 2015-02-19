@@ -104,12 +104,13 @@
                                         </asp:PlaceHolder>
                                         <div class="form-group">
                                             <div class="col-md-10">
-                                                <asp:TextBox runat="server" ClientIDMode="Static" ID="UserName" CssClass="form-control-master" Style="margin-left: -250px; margin-top: -10px; font-size: 10px;"></asp:TextBox>
+                                                <asp:TextBox runat="server" ClientIDMode="Static" ID="UserName" CssClass="form-control-master" Style="margin-left: -250px; margin-top: -10px; font-size: 10px;" onclick="
+                                                    if ($.defaultUserName)$('#UserName').val('');"></asp:TextBox>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-10">
-                                                <asp:TextBox runat="server" ClientIDMode="Static" ID="Password" TextMode="Password" CssClass="form-control-master" Style="margin-left: -75px; margin-top: -19px; font-size: 10px;"></asp:TextBox>
+                                                <asp:TextBox runat="server" ClientIDMode="Static" ID="Password" TextMode="Password" CssClass="form-control-master" Style="margin-left: -75px; margin-top: -19px; font-size: 10px;" onclick="if ($.defaultUserName)$('#Password').val('');"></asp:TextBox>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -131,9 +132,11 @@
                             </ul>
                             <script type='text/javascript'>window.onload = function () {
     setTimeout(function () {
+        $.defaultUserName = false;
         if ($("#UserName").val().length == 0) {
             $("#UserName").val('User or Mail');
             $("#Password").val('Password');
+            $.defaultUserName = true;
         }
     }, 100);
 }

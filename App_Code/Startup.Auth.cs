@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web.Routing;
 using Datas.User;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
@@ -12,6 +13,7 @@ public partial class Startup {
     // For more information on configuring authentication, please visit http://go.microsoft.com/fwlink/?LinkId=301883
     public void ConfigureAuth(IAppBuilder app)
     {
+        app.MapSignalR();
         // Configure the db context, user manager and role manager to use a single instance per request
         app.CreatePerOwinContext(ApplicationDbContext.Create);
         app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
