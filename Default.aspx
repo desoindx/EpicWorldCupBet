@@ -21,7 +21,7 @@
         <label id="alertMessage">These is not the message you are looking for</label>
     </div>
     <% if (Master.UniverseHasMultipleCompetition())
-       {%>
+       { %>
     <div role="tabpanel">
         <ul class="nav nav-tabs" id="CompetitionTab" role="tablist" style="width: 600px;">
             <li role="presentation" class="dropdown active">
@@ -30,28 +30,28 @@
                 <ul class="dropdown-menu" role="menu" id="CompetitionTabMenu">
                     <% bool hasActive = false;
                        foreach (var competition in Master.UniverseCompetitions)
-                       {%>
+                       { %>
                     <li role="presentation" class="<%: hasActive ? "" : "active" %>">
                         <a title="<%: competition.Id %>" href="#<%: "Div-" + competition.Id %>" aria-controls="<%: "Div-" + competition.Id %>" role="tab" data-toggle="tab">
                             <%: competition.Name %>
                         </a>
                     </li>
                     <% if (!hasActive)
-                       {%>
+                       { %>
                     <script type='text/javascript'> 
                         $("#CompetitionDropDownButton")[0].innerHTML = '<%: competition.Name %>' + " <span class='caret'></span>";
                         currentCompetitionId = <%: competition.Id %>;
                     </script>
-                    <%}
+                    <% }
                        hasActive = true;
-                       }%>
+                       } %>
                 </ul>
             </li>
         </ul>
         <div id="CompetitionTabContent" class="tab-content" style="width: 600px; height: 900px;">
             <% hasActive = false;
                foreach (var competition in Master.UniverseCompetitions)
-               {%>
+               { %>
             <div role="tabpanel" class="tab-pane <%: hasActive ? "" : "active" %>" id='<%: "Div-" + competition.Id %>'>
                 <div id='<%: "BidAskDiv-" + competition.Id %>' style="width: 600px; height: 900px;"></div>
                 <div style="margin-top: -850px; margin-left: 650px; width: 500px;">
@@ -62,7 +62,7 @@
                        foreach (var trade in GetLastTrade(competition.Id))
                        { %>
                     <p>
-                        <label id='<%: "Trade" + i + "-"+ competition.Id %>'><%: trade %></label>
+                        <label id='<%: "Trade" + i + "-" + competition.Id %>'><%: trade %></label>
                     </p>
                     <% i++;
                        } %>
@@ -70,14 +70,14 @@
             </div>
             <%
                        hasActive = true;
-               }%>
+               } %>
         </div>
     </div>
     <script type='text/javascript'> 
         <% foreach (var competition in Master.UniverseCompetitions)
-           {%>
-        drawOrdersGrid(<%: GetOrders(competition.Id)%>, <%:competition.Id%>);
-        <%}%>
+           { %>
+        drawOrdersGrid(<%: GetOrders(competition.Id) %>, <%: competition.Id %>);
+        <% } %>
     </script>
     <% }
        else
@@ -99,7 +99,7 @@
            } %>
     </div>
     <script type='text/javascript'>
-        drawOrdersGrid(<%: GetOrders()%>, <%: Master.GetCompetitionId()%>);
+        drawOrdersGrid(<%: GetOrders() %>, <%: Master.GetCompetitionId() %>);
     </script>
     <% } %>
     <div style="margin-top: -900px; margin-left: 700px;">
@@ -151,18 +151,18 @@
                                     <label style="margin-top: 17px; margin-right: 30px;">Team : </label>
                                     <% var hasDisplayed = false;
                                        foreach (var competition in Master.UniverseCompetitions)
-                                       {%>
-                                    <div class="teamSelectPicker" style="height: 0; <%: hasDisplayed ? "display:none" : "" %>" id='<%:"TeamOrderDiv" + competition.Id%>'>
-                                        <select class="selectpicker" id='<%:"TeamOrder-" + competition.Id%>'>
+                                       { %>
+                                    <div class="teamSelectPicker" style="height: 0; <%: hasDisplayed ? "display:none" : "" %>" id='<%: "TeamOrderDiv" + competition.Id %>'>
+                                        <select class="selectpicker" id='<%: "TeamOrder-" + competition.Id %>'>
                                             <% foreach (var team in GetTeamFor(competition.Id))
-                                               {%>
+                                               { %>
                                             <option><%: team %></option>
-                                            <% }%>
+                                            <% } %>
                                         </select>
                                     </div>
                                     <%
                                                hasDisplayed = true;
-                                       }%>
+                                       } %>
                                 </td>
                             </tr>
                             <tr>
@@ -208,11 +208,11 @@
         </div>
     </div>
     <script type='text/javascript'>
-        universeId = <%: Master.SelectedUniverseId%>;
+        universeId = <%: Master.SelectedUniverseId %>;
     </script>
     <% }
        else
-       {%>
+       { %>
     <div style="text-align: center">
         <p>
             <label class="h2">It appears that you don't have any universe configurated !</label>
@@ -227,5 +227,14 @@
         </p>
     </div>
     <% } %>
-    <% } %>
+    <% }
+       else
+       {%>
+    <label>No account ? Click here to connect as a Guest !</label>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <asp:Button ID="Button1" runat="server" OnClick="LogInAsGuest" Text="Go" CssClass="btn btn-default" style="margin-left: -100px;"/>
+        </div>
+    </div>
+    <% }%>
 </asp:Content>
