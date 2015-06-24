@@ -66,7 +66,7 @@ namespace WorldCupBetting
 
         public static string GetExternalLoginRedirectUrl(string accountProvider)
         {
-            return "/Account/RegisterExternalLogin?" + ProviderNameKey + "=" + accountProvider;
+            return "/RegisterExternalLogin?" + ProviderNameKey + "=" + accountProvider;
         }
 
         private static bool IsLocalUrl(string url)
