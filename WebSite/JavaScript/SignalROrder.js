@@ -1,4 +1,12 @@
-﻿$(function () {
+﻿function openOrderPopup() {
+    $("#newOrderDiv").bPopup({
+        speed: 250,
+        transition: 'slideIn',
+        transitionClose: 'slideBack'
+    });
+}
+
+$(function () {
     var betHub = $.connection.Bet;
 
     // Add client-side hub methods that the server will call
@@ -69,12 +77,12 @@
 
             $("#SendOrder").click(function () {
                 betHub.server.sendOrder($("#TeamOrder-" + currentCompetitionId).val(), $("#QuantityOrder").val(), $("#PriceOrder").val(), $("#SideOrder").val(), universeId, currentCompetitionId);
-                popup('newOrderDiv');
+                openOrderPopup();
             });
 
             $("#CancelOrder").click(function () {
                 betHub.server.cancelOrder($("#SideOrder").val(), $("#TeamOrder-" + currentCompetitionId).val(), universeId, currentCompetitionId);
-                popup('newOrderDiv');
+                openOrderPopup();
             });
 
             $("#SendMessage").click(function () {
@@ -82,27 +90,11 @@
                 $("#Message").val('');
             });
 
-            $("#SideOrderBuy").click(function () {
-                clickBuySide();
-            });
-
-            $("#SideOrderSell").click(function () {
-                clickSellSide();
-            });
-
             $("#OpenPopUp").click(function () {
                 showTeamSelectPicker();
-                popup('newOrderDiv');
+                $("#BuySide").prop("checked", true);
+                openOrderPopup();
                 $("#PriceOrder").focus();
-            });
-
-            $("#ClosePopUp").click(function () {
-                popup('newOrderDiv');
-            });
-
-            $("#ClosePopOrderBook").click(function () {
-                $.manuallyCloseorderBookDiv = true;
-                popup('orderBookDiv');
             });
 
             $('#OrderTab a').click(function (e) {
@@ -119,19 +111,6 @@
             $('#CompetitionTabMenu a').click(function (e) {
                 $("#CompetitionDropDownButton")[0].innerHTML = this.innerText + " <span class='caret'></span>";
                 showTeamSelectPicker();
-            });
-
-            $(document).keyup(function (e) {
-                if (e.keyCode == 27) {// esc
-                    if ($("#orderBookDiv")[0].style.display != 'none') {
-                        $.manuallyCloseorderBookDiv = true;
-                        popup('orderBookDiv');
-                    }
-
-                    if ($("#newOrderDiv")[0].style.display != 'none') {
-                        popup('newOrderDiv');
-                    }
-                }
             });
         });
 });

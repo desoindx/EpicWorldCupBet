@@ -18,31 +18,17 @@ function onTeamCellMouseOut() {
     $.manuallyCloseorderBookDiv = false;
 }
 
-function clickSellSide() {
-    $("#SideOrderSell").addClass("SelectedSide");
-    $("#SideOrderSell").removeClass("UnselectedSide");
-    $("#SideOrderBuy").removeClass("SelectedSide");
-    $("#SideOrderBuy").addClass("UnselectedSide");
-    $("#SideOrder").val("SELL");
-}
-
-function clickBuySide() {
-    $("#SideOrderBuy").addClass("SelectedSide");
-    $("#SideOrderBuy").removeClass("UnselectedSide");
-    $("#SideOrderSell").removeClass("SelectedSide");
-    $("#SideOrderSell").addClass("UnselectedSide");
-    $("#SideOrder").val("BUY");
-}
-
 function setUpOrder(order, isMine, i, shouldFlash, cellToFlash, competitionId) {
     var cellNb = 0;
     var currentDatas = $.bidasks[competitionId][i];
     if (order.LastTradedPriceEvolution > 0)
-        currentDatas.Team = "<span class='glyphicon glyphicon-arrow-up'style='color:green'> </span>" + " " + order.Team + " (" + order.LastTradedPrice + ") ";
+        currentDatas.Last = "<span class='glyphicon glyphicon-arrow-up'style='color:green'> </span>";
     else if (order.LastTradedPriceEvolution < 0)
-        currentDatas.Team = "<span class='glyphicon glyphicon-arrow-down'style='color:red'> </span>" + " " + order.Team + " (" + order.LastTradedPrice + ") ";
+        currentDatas.Last = "<span class='glyphicon glyphicon-arrow-down'style='color:red'> </span>";
     else
-        currentDatas.Team = "<span class='glyphicon glyphicon-arrow-right'style='color:blue'> </span>" + " "  + order.Team + " (" + order.LastTradedPrice + ") ";
+        currentDatas.Last = "<span class='glyphicon glyphicon-arrow-right'style='color:blue'> </span>";
+
+    currentDatas.Team = order.Team + " (" + order.LastTradedPrice + ") ";
     currentDatas.TeamName = order.Team;
 
     if (order.BestBid != 0) {
@@ -160,7 +146,7 @@ function formatter(row, cell, value, columnDef, dataContext) {
 }
 
 function buttonsFormatter(row, cell, value, columnDef, dataContext) {
-    return "<input type='button' class='btn btn-primary btn-xs center-block' value='" + value + "' id='btnForm' value2='" + row + "' value3='" + cell + "' onClick='onOrder(this);'/>";
+    return "<input type='button' class='btn btn-info btn-xs center-block' value='" + value + "' id='btnForm' value2='" + row + "' value3='" + cell + "' onClick='onOrder(this);'/>";
 }
 
 function onOrder(objBtn) {
@@ -191,7 +177,8 @@ function drawOrdersGrid(orders, competitionId) {
     var currentDatas = [];
 
     var columns = [
-      { id: "Team", name: "Team", field: "Team", width: 300, sortable: true, formatter: formatter},
+      { id: "Last", name: "", field: "Last", width: 20, sortable: true, formatter: formatter },
+      { id: "Team", name: "Team", field: "Team", width: 280, sortable: true },
       { id: "BestBid", name: "Best Bid", field: "BestBid", width: 130, sortable: true },
       { id: "BestAsk", name: "Best Ask", field: "BestAsk", width: 130, sortable: true },
       { id: "MyBid", name: "My Bid", field: "MyBid", width: 130, sortable: true },
@@ -233,11 +220,6 @@ function drawOrdersGrid(orders, competitionId) {
         this.render();
     });
 
-    $('.TeamCell').hoverIntent({
-        over: onTeamCellMouseOver,
-        out: onTeamCellMouseOut
-    });
-
     currentGrid.onClick.subscribe(function (e, args) {
         var cell = this.getCellFromEvent(e);
         if (!cell || !this.canCellBeSelected(cell.row, cell.cell)) {
@@ -247,44 +229,44 @@ function drawOrdersGrid(orders, competitionId) {
         showTeamSelectPicker();
         $("#TeamOrder").selectpicker('val', item.TeamName);
 
-        if (cell.cell == 0) {
+        if (cell.cell < 2) {
             return;
         }
-        else if (cell.cell == 1) {
+        else if (cell.cell == 2) {
             $("#CancelOrder").hide();
-            clickSellSide();
+            $("#SellSide").prop( "checked", true );
             if (item.BestBid != 0)
                 $("#PriceOrder").val(item.BestBid);
             if (item.BesBestBidQuantitytBid != 0)
                 $("#QuantityOrder").val(item.BestBidQuantity);
         }
-        else if (cell.cell == 2) {
+        else if (cell.cell == 3) {
             $("#CancelOrder").hide();
-            clickBuySide();
+            $("#BuySide").prop("checked", true);
             if (item.BestAsk != 0)
                 $("#PriceOrder").val(item.BestAsk);
             if (item.BestAskQuantity != 0)
                 $("#QuantityOrder").val(item.BestAskQuantity);
         }
-        else if (cell.cell == 3) {
+        else if (cell.cell == 4) {
             $("#CancelOrder").show();
             $("#CancelOrder").prop('value', 'Cancel Existing Order');
-            clickBuySide();
+            $("#BuySide").prop("checked", true);
             if (item.MyBid != 0)
                 $("#PriceOrder").val(item.MyBid);
             if (item.MyBidQuantity != 0)
                 $("#QuantityOrder").val(item.MyBidQuantity);
         }
-        else if (cell.cell == 4) {
+        else if (cell.cell == 5) {
             $("#CancelOrder").show();
             $("#CancelOrder").prop('value', 'Cancel Existing Order');
-            clickSellSide();
+            $("#SellSide").prop("checked", true);
             if (item.MyAsk != 0)
                 $("#PriceOrder").val(item.MyAsk);
             if (item.MyAskQuantity != 0)
                 $("#QuantityOrder").val(item.MyAskQuantity);
         }
-        popup('newOrderDiv');
+        openOrderPopup();
         $("#PriceOrder").focus();
     });
 

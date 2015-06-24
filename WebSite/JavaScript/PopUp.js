@@ -45,7 +45,7 @@ function window_pos(popUpDivVar) {
     }
     var popUpDiv = document.getElementById(popUpDivVar);
     blanket.style.width = window_width + 'px';
-    window_width = document.body.parentNode.clientWidth / 2 - 200;//200 is half popup's width
+    window_width = (document.body.parentNode.clientWidth - 250) / 2 - 200;//200 is half popup's width
     if (window.pageXOffset != undefined)
         window_width += window.pageXOffset;
     popUpDiv.style.left = window_width + 'px';

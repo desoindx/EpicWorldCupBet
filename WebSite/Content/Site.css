@@ -20,13 +20,31 @@
     width: 100%;
 }
 
+.navbar-header-center {
+    text-align: center;
+    margin-top: 10px;
+}
+
 #newOrderDiv {
+    background-color: #fff;
+    border-radius: 10px 10px 10px 10px;
+    box-shadow: 0 0 25px 5px #999;
+    color: #111;
+    display: none;
+    min-width: 450px;
+    padding: 25px;
+}
+
+.button.b-close, .button.bClose {
+    background-color: #2196f3;
+    color: #ffffff;
+    border-radius: 7px 7px 7px 7px;
+    box-shadow: none;
+    font: bold 131% sans-serif;
+    padding: 0 6px 2px;
     position: absolute;
-    background: #e6e6e6;
-    width: 400px;
-    height: 400px;
-    border: 5px solid #000;
-    z-index: 9002;
+    right: -7px;
+    top: -7px;
 }
 
 #orderBookDiv {
@@ -38,28 +56,17 @@
     z-index: 9002;
 }
 
-.SelectedSide {
-    color: #333;
-    background-color: #fff;
-    border-color: #F1CB65;
+#newOrderDiv tr {
+    height: 50px;
 }
 
-.UnselectedSide {
-    color: #F1CB65;
-    background-color: #e6e6e6;
-    border-color: #ccc;
+.orderInfo {
+    margin-left: 29px;
+    width: 220px;
 }
 
-    .UnselectedSide:hover {
-        color: #F1CB65;
-        background-color: #ebebeb;
-        border-color: #adadad;
-    }
-
-
-button.btn.dropdown-toggle.selectpicker.teamOrderSelect.btn-default {
-    margin-left: 74px;
-    margin-top: -40px;
+.teamSelectPicker {
+    margin-left: 27px;
 }
 
 .visibleAlert {

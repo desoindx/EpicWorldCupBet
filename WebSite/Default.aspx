@@ -13,7 +13,7 @@
        { %>
     <script src="JavaScript/Order.js"></script>
     <script src="JavaScript/SignalROrder.js"></script>
-    <script src="JavaScript/PopUp.js"></script>
+    <script src="Scripts/bPopUp.js"></script>
 
     <% if (Master.UserHasUniverse)
        { %>
@@ -21,7 +21,7 @@
         <label id="alertMessage">These is not the message you are looking for</label>
     </div>
     <div class="col-md-4 col-md-offset-4">
-        <input style="margin-top: 20px; margin-bottom: 20px; width: 250px;" type="button" id="OpenPopUp" value="Place New Order" class="btn btn-primary" />
+        <input style="margin-top: 20px; margin-bottom: 20px; width: 250px;" type="button" id="OpenPopUp" value="Place New Order" class="btn btn-primary btn-lg" />
     </div>
     <div style="margin-top: 10px; width: 880px; height: 900px;" id='<%: "BidAskDiv-" + Master.GetCompetitionId() %>'>
     </div>
@@ -29,25 +29,23 @@
         drawOrdersGrid(<%: GetOrders() %>, <%: Master.GetCompetitionId() %>);
     </script>
     <div id="blanket" style="display: none"></div>
-    <div id="newOrderDiv" style="display: none">
-        <span class="glyphicon glyphicon-remove" aria-hidden="true" id="ClosePopUp" style="color: red; position: absolute; top: 5px; right: 5px;"></span>
-
-        <table style="margin-left: 50px; margin-top: 50px">
+    <div id="newOrderDiv">
+        <span class="button b-close"><span>X</span></span>
+        <table style="margin-left: 50px">
             <tbody>
                 <tr>
                     <td>
-                        <label style="">Side : </label>
                         <div class="btn-group" role="group" style="margin-left: 37px;">
-                            <button type="button" class="btn SelectedSide" id="SideOrderBuy">BUY</button>
-                            <button type="button" class="btn UnselectedSide" id="SideOrderSell">SELL</button>
+                            <input id="BuySide" type="radio" name="action" value="buy">Buy
+                                <input id="SellSide" type="radio" name="action" value="sell" style="margin-left: 90px;">Sell
+                            <br />
                         </div>
                         <input type="hidden" id="SideOrder" value="BUY" />
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <label style="margin-top: 17px; margin-right: 30px;">Team : </label>
-                        <div class="teamSelectPicker" style="height: 0ne" id="TeamOrderDiv">
+                        <div class="teamSelectPicker" id="TeamOrderDiv">
                             <select class="selectpicker" id="TeamOrder">
                                 <% foreach (var team in GetTeamFor(Master.GetCompetitionId()))
                                    { %>
@@ -59,20 +57,19 @@
                 </tr>
                 <tr>
                     <td>
-                        <label style="">Price : </label>
-                        <input style="width: 220px; margin-left: 35px; margin-top: 10px;" type='number' min="1" max="999" id='PriceOrder' />
+                        <input class="orderInfo" type='number' min="1" max="999" id='PriceOrder' />
+                        <span style="  position: relative; right: 30px;">$</span>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <label style="">Quantity : </label>
-                        <input style="width: 220px; margin-left: 13px; margin-top: 10px;" type='number' min="1" value="10" id='QuantityOrder' />
+                        <input class="orderInfo" type='number' min="1" value="10" id='QuantityOrder' />
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input style="margin-left: 10px; margin-top: 30px" type="button" id="SendOrder" class="btn btn-default" value="Send" />
-                        <input style="margin-left: 80px; margin-top: 30px; display: none;" type="button" class="btn btn-default" id="CancelOrder" value="Cancel Buy Order" />
+                        <input style="margin-left: -50px; margin-top: 30px" type="button" id="SendOrder" class="btn btn-primary" value="Send New Order" />
+                        <input style="margin-left: 50px; margin-top: 30px; display: none;" type="button" class="btn btn-danger" id="CancelOrder" value="Cancel Buy Order" />
                     </td>
                 </tr>
             </tbody>
