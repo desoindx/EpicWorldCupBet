@@ -7,29 +7,19 @@
     $("#TeamOrder").selectpicker('refresh');
 }
 
-function onTeamCellMouseOver() {
-    $.connection.Bet.server.getOrderBook($(this).context.innerText, universeId, currentCompetitionId);
-    popup('orderBookDiv');
-}
-
-function onTeamCellMouseOut() {
-    if (!$.manuallyCloseorderBookDiv)
-        popup('orderBookDiv');
-    $.manuallyCloseorderBookDiv = false;
-}
-
 function setUpOrder(order, isMine, i, shouldFlash, cellToFlash, competitionId) {
     var cellNb = 0;
     var currentDatas = $.bidasks[competitionId][i];
     if (order.LastTradedPriceEvolution > 0)
-        currentDatas.Last = "<span class='glyphicon glyphicon-arrow-up'style='color:green'> </span>";
+        currentDatas.Last = "<span class='glyphicon glyphicon-arrow-up'style='color:#4caf50'> </span>";
     else if (order.LastTradedPriceEvolution < 0)
-        currentDatas.Last = "<span class='glyphicon glyphicon-arrow-down'style='color:red'> </span>";
+        currentDatas.Last = "<span class='glyphicon glyphicon-arrow-down'style='color:#e51c23'> </span>";
     else
         currentDatas.Last = "<span class='glyphicon glyphicon-arrow-right'style='color:blue'> </span>";
 
     currentDatas.Team = order.Team + " (" + order.LastTradedPrice + ") ";
     currentDatas.TeamName = order.Team;
+    currentDatas.Book = "Book";
 
     if (order.BestBid != 0) {
         if (shouldFlash) {
@@ -138,7 +128,6 @@ function setUpOrder(order, isMine, i, shouldFlash, cellToFlash, competitionId) {
 
     currentDatas.MyBidQuantity = order.MyBidQuantity;
     currentDatas.MyAskQuantity = order.MyAskQuantity;
-    currentDatas.Book = "Book";
 }
 
 function formatter(row, cell, value, columnDef, dataContext) {
@@ -146,11 +135,12 @@ function formatter(row, cell, value, columnDef, dataContext) {
 }
 
 function buttonsFormatter(row, cell, value, columnDef, dataContext) {
-    return "<input type='button' class='btn btn-info btn-xs center-block' value='" + value + "' id='btnForm' value2='" + row + "' value3='" + cell + "' onClick='onOrder(this);'/>";
+    return "<input type='button' class='btn btn-info btn-xs center-block' value='" + value + "' id='btnForm' value2='" + row + "' value3='" + cell + "'/>";
 }
 
 function onOrder(objBtn) {
     alert("row::[" + objBtn.value2 + "]\n\ncell::[" + objBtn.value3 + "]");
+    openBookPopup($.bidasks[competitionId][objBtn.value2].TeamName);
 }
 
 function drawOrderBook(team, bids, asks) {
@@ -266,8 +256,11 @@ function drawOrdersGrid(orders, competitionId) {
             if (item.MyAskQuantity != 0)
                 $("#QuantityOrder").val(item.MyAskQuantity);
         }
+        else if (cell.cell == 6) {
+            openBookPopup(item.Team);
+            return;
+        }
         openOrderPopup();
-        $("#PriceOrder").focus();
     });
 
     $.grids[competitionId] = currentGrid;

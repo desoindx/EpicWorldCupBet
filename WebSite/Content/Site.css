@@ -1,12 +1,12 @@
 ﻿
 .priceUp {
     font-weight: bold;
-    background-color: green;
+    background-color: #4caf50;
 }
 
 .priceDown {
     font-weight: bold;
-    background-color: red;
+    background-color: #e51c23;
 }
 
 #blanket {
@@ -48,12 +48,13 @@
 }
 
 #orderBookDiv {
-    position: absolute;
-    background: #e6e6e6;
-    width: 470px;
-    height: 400px;
-    border: 5px solid #000;
-    z-index: 9002;
+    background-color: #fff;
+    border-radius: 10px 10px 10px 10px;
+    box-shadow: 0 0 25px 5px #999;
+    color: #111;
+    display: none;
+    min-width: 550px;
+    padding: 25px;
 }
 
 #newOrderDiv tr {
@@ -61,6 +62,7 @@
 }
 
 .orderInfo {
+    padding-left: 10px;
     margin-left: 29px;
     width: 220px;
 }

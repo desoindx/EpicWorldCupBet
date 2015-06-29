@@ -11,7 +11,7 @@
     <script src="Scripts/SlickGrid/Plugins/slick.cellselectionmodel.js"></script>
     <script src="JavaScript/Ranking.js"></script>
 
-    <div style="width: 400px; height: 1000px;" id="RankingDiv">
+    <div style="width: 400px; height: 1000px; margin-top: 50px" id="RankingDiv">
     </div>
     <script type='text/javascript'>
         drawRankingGrid(<%: GetRanks()%>);

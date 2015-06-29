@@ -23,7 +23,7 @@
     <div class="col-md-4 col-md-offset-4">
         <input style="margin-top: 20px; margin-bottom: 20px; width: 250px;" type="button" id="OpenPopUp" value="Place New Order" class="btn btn-primary btn-lg" />
     </div>
-    <div style="margin-top: 10px; width: 880px; height: 900px;" id='<%: "BidAskDiv-" + Master.GetCompetitionId() %>'>
+    <div style="margin-top: 10px; width: 890px; height: 900px;" id='<%: "BidAskDiv-" + Master.GetCompetitionId() %>'>
     </div>
     <script type='text/javascript'>
         drawOrdersGrid(<%: GetOrders() %>, <%: Master.GetCompetitionId() %>);
@@ -58,7 +58,7 @@
                 <tr>
                     <td>
                         <input class="orderInfo" type='number' min="1" max="999" id='PriceOrder' />
-                        <span style="  position: relative; right: 30px;">$</span>
+                        <span style="position: relative; right: 30px;">$</span>
                     </td>
                 </tr>
                 <tr>
@@ -75,8 +75,8 @@
             </tbody>
         </table>
     </div>
-    <div id="orderBookDiv" style="text-align: center; display: none">
-        <span class="glyphicon glyphicon-remove" aria-hidden="true" id="ClosePopOrderBook" style="color: red; position: absolute; top: 5px; right: 5px;"></span>
+    <div id="orderBookDiv" style="text-align: center;">
+        <span class="button b-close"><span>X</span></span>
         <label class="h4" id="orderBookTeamName"></label>
         <p>
             <label style="margin-right: 15px" id="LastTradedPrice">Last traded price : </label>
@@ -87,9 +87,9 @@
             <label>Bids</label>
             <label style="margin-left: 220px;">Asks</label>
         </p>
-        <div id="bidGrid" style="width: 200px; height: 200px; margin-left: 5px;">
+        <div id="bidGrid" style="width: 200px; height: 200px; margin-left: 25px;">
         </div>
-        <div id="askGrid" style="width: 200px; height: 200px; margin-top: -200px; margin-left: 250px;">
+        <div id="askGrid" style="width: 200px; height: 200px; margin-top: -200px; margin-left: 280px;">
         </div>
     </div>
     <script type='text/javascript'>

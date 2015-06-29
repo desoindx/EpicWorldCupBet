@@ -1,7 +1,6 @@
 ﻿<%@ Page Title="About" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeFile="About.aspx.cs" Inherits="About" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
-    <h2><%: Title %>.</h2>
     <h3>Rules :</h3>
     <p>Every participant start the contest with 10000 euros</p>
     <p>During all the world cup you can buy or sell teams to the other participant</p>

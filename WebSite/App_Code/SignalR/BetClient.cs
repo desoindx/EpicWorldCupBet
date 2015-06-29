@@ -261,14 +261,14 @@ namespace SignalR
                     {
                         if ((side == "BUY" && otherOrder.Price <= price) || (side == "SELL" && otherOrder.Price > price))
                         {
-                            Clients.Client(connectionId).newMessage("please check your price !!!", ErrorClass);
+                            Clients.Client(connectionId).newMessage("Please check your price !!!", ErrorClass);
                             return;
                         }
                     }
 
                     if (UserHasEnough(context, user, choosedTeam.Id, quantity, price, side))
                     {
-                        var remainingQuantity = InsertTrade(context, user, choosedTeam.Id, quantity, price, side, id, connectionId, usersToNotify);
+                        var remainingQuantity = InsertTrade(context, user, choosedTeam.Id, choosedTeam.Name, quantity, price, side, id, connectionId, usersToNotify);
                         if (remainingQuantity > 0)
                             InsertNewOrder(context, user, choosedTeam.Id, remainingQuantity, price, side, id, connectionId);
 
@@ -332,7 +332,7 @@ namespace SignalR
             return exposure <= userMoney.Money1;
         }
 
-        private int InsertTrade(Entities context, string user, int team, int quantity, int price, string side, int universeCompetitionId, string connectionId, HashSet<string> usersToNotify)
+        private int InsertTrade(Entities context, string user, int team, string teamName, int quantity, int price, string side, int universeCompetitionId, string connectionId, HashSet<string> usersToNotify)
         {
             IQueryable<Order> matchingOrders = side == "BUY"
                 ? context.Orders.Where(
@@ -348,7 +348,7 @@ namespace SignalR
             {
                 usersToNotify.Add(matchingOrder.User);
                 InsertNewTrade(context, side == "BUY" ? user : matchingOrder.User, side == "SELL" ? user : matchingOrder.User, team, Math.Min(quantity, matchingOrder.Quantity), matchingOrder.Price, universeCompetitionId);
-                Clients.Client(connectionId).newMessage(string.Format("you traded {0} {1} at {2} with {3}", Math.Min(quantity, matchingOrder.Quantity), team, matchingOrder.Price, matchingOrder.User), InfoClass);
+                Clients.Client(connectionId).newMessage(string.Format("You traded {0} {1} at {2} with {3}", Math.Min(quantity, matchingOrder.Quantity), teamName, matchingOrder.Price, matchingOrder.User), InfoClass);
                 if (quantity < matchingOrder.Quantity)
                 {
                     matchingOrder.Quantity -= quantity;

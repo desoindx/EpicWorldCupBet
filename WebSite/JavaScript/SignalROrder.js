@@ -1,5 +1,21 @@
 ﻿function openOrderPopup() {
     $("#newOrderDiv").bPopup({
+        onOpen: function () {
+        },
+        follow: [false, false],
+        speed: 250,
+        transition: 'slideIn',
+        transitionClose: 'slideBack'
+    });
+    $("#PriceOrder").focus();
+}
+
+function openBookPopup(teamName) {
+    $.connection.Bet.server.getOrderBook(teamName, universeId, competitionId);
+    $("#orderBookDiv").bPopup({
+        onOpen: function () {
+        },
+        follow: [false, false],
         speed: 250,
         transition: 'slideIn',
         transitionClose: 'slideBack'
@@ -38,10 +54,6 @@ $(function () {
                     break;
                 }
             }
-            $('.TeamCell').hoverIntent({
-                over: onTeamCellMouseOver,
-                out: onTeamCellMouseOut
-            });
         },
         newOrders: function (orders) {
             drawOrdersGrid(orders);
@@ -73,16 +85,24 @@ $(function () {
 
     $.connection.hub.start()
         .done(function (state) {
+            competitionId = $("#currentCompetitionId").text();
             $("#ChatDiv").scrollTop(1E10);
 
             $("#SendOrder").click(function () {
-                betHub.server.sendOrder($("#TeamOrder-" + currentCompetitionId).val(), $("#QuantityOrder").val(), $("#PriceOrder").val(), $("#SideOrder").val(), universeId, currentCompetitionId);
-                openOrderPopup();
+                var side = "SELL";
+                if ($("#BuySide").prop("checked"))
+                    side = "BUY";
+                betHub.server.sendOrder($("#TeamOrder").val(), $("#QuantityOrder").val(), $("#PriceOrder").val(), side, universeId, competitionId);
+                $("#newOrderDiv").bPopup().close();
             });
 
             $("#CancelOrder").click(function () {
-                betHub.server.cancelOrder($("#SideOrder").val(), $("#TeamOrder-" + currentCompetitionId).val(), universeId, currentCompetitionId);
-                openOrderPopup();
+                var side = "SELL";
+                if ($("#BuySide").prop("checked"))
+                    side = "BUY";
+
+                betHub.server.cancelOrder(side, $("#TeamOrder").val(), universeId, competitionId);
+                $("#newOrderDiv").bPopup().close();
             });
 
             $("#SendMessage").click(function () {
@@ -94,7 +114,6 @@ $(function () {
                 showTeamSelectPicker();
                 $("#BuySide").prop("checked", true);
                 openOrderPopup();
-                $("#PriceOrder").focus();
             });
 
             $('#OrderTab a').click(function (e) {
