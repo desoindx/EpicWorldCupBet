@@ -53,32 +53,13 @@
             </div>
             <!-- /.navbar-header -->
             <div class="navbar-header-center">
-                <span style="color: #2196f3; font-size: 25px;"><%: SelectedUniverse %> - <%: GetUniverseCompetition() %></span>
+                <span style="color: #2196f3; font-size: 25px;"><%: GetUniverseCompetition() %></span>
                 <span style="display: none" id="currentCompetitionId"><%:GetCompetitionId() %></span>
             </div>
 
             <ul class="nav navbar-top-links navbar-right">
                 <% if (Context.User.Identity.IsAuthenticated)
                    {%>
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-sitemap fa-fw"></i><i class="fa fa-caret-down"></i>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <%foreach (var competition in UniverseCompetitions)
-                          { %>
-                        <li><a href="#"><i class="fa fa-fw"></i><%: competition.Name %></a>
-                        </li>
-                        <li class="divider"></li>
-                        <% } %>
-                        <li>
-                            <a class="text-center" href="#">
-                                <strong>Create New Competition</strong>
-                                <i class="fa fa-angle-right"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
                 <!-- /.dropdown -->
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
