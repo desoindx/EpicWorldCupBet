@@ -7,14 +7,17 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
-public partial class Competition
+namespace Datas.Entities
 {
-    public int Id { get; set; }
-    public string Type { get; set; }
-    public System.DateTime StartDate { get; set; }
-    public System.DateTime EndDate { get; set; }
-    public string Name { get; set; }
+    using System;
+    using System.Collections.Generic;
+    
+    public partial class Competition
+    {
+        public int Id { get; set; }
+        public string Type { get; set; }
+        public System.DateTime StartDate { get; set; }
+        public System.DateTime EndDate { get; set; }
+        public string Name { get; set; }
+    }
 }

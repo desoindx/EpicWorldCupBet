@@ -6,17 +6,21 @@
 //     Manual changes to this file will be overwritten if the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using System;
-using System.Collections.Generic;
 
-public partial class Results
+namespace Datas.Entities
 {
-    public Results()
+    using System;
+    using System.Collections.Generic;
+    
+    public partial class Results
     {
-        this.DefaultValue = 0;
+        public Results()
+        {
+            this.DefaultValue = 0;
+        }
+    
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int DefaultValue { get; set; }
     }
-
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public int DefaultValue { get; set; }
 }

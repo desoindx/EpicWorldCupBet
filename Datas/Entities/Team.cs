@@ -7,13 +7,16 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
-public partial class Team
+namespace Datas.Entities
 {
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public int IdCompetition { get; set; }
-    public Nullable<int> Result { get; set; }
+    using System;
+    using System.Collections.Generic;
+    
+    public partial class Team
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int IdCompetition { get; set; }
+        public Nullable<int> Result { get; set; }
+    }
 }

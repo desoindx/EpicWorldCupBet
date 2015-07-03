@@ -54,7 +54,7 @@
             <!-- /.navbar-header -->
             <div class="navbar-header-center">
                 <span style="color: #2196f3; font-size: 25px;"><%: GetUniverseCompetition() %></span>
-                <span style="display: none" id="currentCompetitionId"><%:GetCompetitionId() %></span>
+                <span style="display: none" id="currentCompetitionId"><%: GetCompetitionId() %></span>
             </div>
 
             <ul class="nav navbar-top-links navbar-right">
@@ -66,7 +66,7 @@
                         <i class="fa fa-user fa-fw"></i><i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#" id="UserMoney"><i class="fa fa-fw"></i><%: Sql.GetMoney(Context.User.Identity.GetUserName()) %> €</a>
+                        <li><a href="#" id="UserMoney"><i class="fa fa-fw"></i><%: GetMoney() %> $</a>
                         </li>
                         <li class="divider"></li>
                         <li><a runat="server" href="~/Manage"><i class="fa fa-gear fa-fw"></i>Settings</a>
@@ -150,8 +150,8 @@
                                         <div class="checkbox">
                                             <label>
                                                 <input name="remember" id="rememberCheckBox" type="checkbox" value="False" onclick="Checked();">Remember Me
-                       
                                             </label>
+                                            <a runat="server" href="~/Register" style="margin-left: 45px;">No account ? Register</a>
                                         </div>
                                         <!-- Change this to a button or input when using this as a form -->
                                         <asp:Button runat="server" OnClick="LogIn" Text="Log in" CssClass="btn btn-lg btn-success btn-block" />

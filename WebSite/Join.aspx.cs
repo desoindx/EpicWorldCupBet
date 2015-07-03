@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Datas.Entities;
 using WorldCupBetting;
 
 public partial class Universe_Join : System.Web.UI.Page
@@ -26,12 +27,14 @@ public partial class Universe_Join : System.Web.UI.Page
 
     protected void JoinUniverse(object sender, EventArgs e)
     {
+        var universeId = UniverseId.Text;
+        var password = Password.Text;
         int id;
-        if (IsValid && Int32.TryParse(UniverseId.Text, out id))
+        if (IsValid && Int32.TryParse(universeId, out id))
         {
             using (var context = new Entities())
             {
-                var universe = context.Universes.FirstOrDefault(x => x.Id == id && x.Password == Password.Text);
+                var universe = context.Universes.FirstOrDefault(x => x.Id == id && x.Password == password);
                 if (universe != null)
                 {
                     var user = Context.User.Identity.Name;
@@ -48,12 +51,22 @@ public partial class Universe_Join : System.Web.UI.Page
                         IdUniverse = universe.Id,
                         UserName = Context.User.Identity.Name
                     });
+                    var universeCompetitions = context.UniverseCompetitions.Where(x => x.IdUniverse == universe.Id);
+                    foreach (var universeCompetition in universeCompetitions)
+                    {
+                        context.Moneys.Add(new Money
+                        {
+                            IdUniverseCompetition = universeCompetition.Id,
+                            Money1 = 100000,
+                            User = Context.User.Identity.Name
+                        });
+                    }
                     context.SaveChanges();
                     IdentityHelper.RedirectToReturnUrl(Request.QueryString["ReturnUrl"], Response);
                 }
                 else
                 {
-                    FailureText.Text = "Invalid username or password.";
+                    FailureText.Text = "Invalid infos.";
                     ErrorMessage.Visible = true;
                 }
             }

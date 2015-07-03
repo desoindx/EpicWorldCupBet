@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using Datas.Entities;
 
 namespace SignalR.SQL
 {
@@ -13,7 +14,9 @@ namespace SignalR.SQL
         {
             Universe universe;
             if (UserDefaultUniverse.TryGetValue(user, out universe))
+            {
                 return universe;
+            }
 
             var universes = GetUserUniverses(user);
             if (universes.Count > 0)
@@ -22,6 +25,7 @@ namespace SignalR.SQL
                 UserDefaultUniverse[user] = universe;
                 return universe;
             }
+
             return null;
         }
 
@@ -31,11 +35,17 @@ namespace SignalR.SQL
                 UserDefaultUniverse[user] = universe;
         }
 
-        public static int GetMoney(string user)
+        public static int GetMoney(string user, int universeCompetitionId)
         {
+            if (universeCompetitionId < 0)
+                return 0;
+
             using (var context = new Entities())
             {
-                var userMoney = context.Moneys.FirstOrDefault(x => x.User == user);
+                var userMoney =
+                    context.Moneys.FirstOrDefault(
+                        x => x.User == user && x.IdUniverseCompetition == universeCompetitionId);
+
                 if (userMoney != null)
                     return userMoney.Money1;
             }

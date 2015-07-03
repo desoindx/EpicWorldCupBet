@@ -100,14 +100,14 @@
        { %>
     <div style="text-align: center">
         <p>
-            <label class="h2">It appears that you don't have any universe configurated !</label>
+            <label class="h2">You don't have any universe configurated !</label>
         </p>
         <p>
-            <a runat="server" href="~/Universe/Create">
-                <input style="margin-left: 10px; margin-top: 30px" type="button" id="CreateUniverse" class="btn btn-default" value="I want to create my own" />
+            <a runat="server" href="~/Create">
+                <input style="margin-left: 10px; margin-top: 30px" type="button" id="CreateUniverse" class="btn btn-info" value="I want to create my own" />
             </a>
-            <a runat="server" href="~/Universe/Join">
-                <input style="margin-left: 80px; margin-top: 30px;" type="button" class="btn btn-default" id="JoinUniverse" value="I want to join an existing universe" />
+            <a runat="server" href="~/Join">
+                <input style="margin-left: 80px; margin-top: 30px;" type="button" class="btn btn-info" id="JoinUniverse" value="I want to join an existing universe" />
             </a>
         </p>
     </div>

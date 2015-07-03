@@ -7,18 +7,21 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
-public partial class Order
+namespace Datas.Entities
 {
-    public int Id { get; set; }
-    public string User { get; set; }
-    public System.DateTime Date { get; set; }
-    public int Team { get; set; }
-    public int Quantity { get; set; }
-    public int Status { get; set; }
-    public int Price { get; set; }
-    public string Side { get; set; }
-    public int IdUniverseCompetition { get; set; }
+    using System;
+    using System.Collections.Generic;
+    
+    public partial class Order
+    {
+        public int Id { get; set; }
+        public string User { get; set; }
+        public System.DateTime Date { get; set; }
+        public int Team { get; set; }
+        public int Quantity { get; set; }
+        public int Status { get; set; }
+        public int Price { get; set; }
+        public string Side { get; set; }
+        public int IdUniverseCompetition { get; set; }
+    }
 }

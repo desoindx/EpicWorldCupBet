@@ -7,17 +7,20 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
-public partial class Trade
+namespace Datas.Entities
 {
-    public int Id { get; set; }
-    public string Buyer { get; set; }
-    public string Seller { get; set; }
-    public System.DateTime Date { get; set; }
-    public int Team { get; set; }
-    public int Quantity { get; set; }
-    public int Price { get; set; }
-    public int IdUniverseCompetition { get; set; }
+    using System;
+    using System.Collections.Generic;
+    
+    public partial class Trade
+    {
+        public int Id { get; set; }
+        public string Buyer { get; set; }
+        public string Seller { get; set; }
+        public System.DateTime Date { get; set; }
+        public int Team { get; set; }
+        public int Quantity { get; set; }
+        public int Price { get; set; }
+        public int IdUniverseCompetition { get; set; }
+    }
 }

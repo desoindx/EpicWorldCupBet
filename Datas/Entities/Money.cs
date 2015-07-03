@@ -7,11 +7,15 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
-public partial class Money
+namespace Datas.Entities
 {
-    public string User { get; set; }
-    public int Money1 { get; set; }
+    using System;
+    using System.Collections.Generic;
+    
+    public partial class Money
+    {
+        public string User { get; set; }
+        public int Money1 { get; set; }
+        public int IdUniverseCompetition { get; set; }
+    }
 }

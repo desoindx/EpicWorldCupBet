@@ -7,12 +7,15 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
-public partial class UniverseAvailable
+namespace Datas.Entities
 {
-    public int Id { get; set; }
-    public int IdUniverse { get; set; }
-    public string UserName { get; set; }
+    using System;
+    using System.Collections.Generic;
+    
+    public partial class UniverseAvailable
+    {
+        public int Id { get; set; }
+        public int IdUniverse { get; set; }
+        public string UserName { get; set; }
+    }
 }

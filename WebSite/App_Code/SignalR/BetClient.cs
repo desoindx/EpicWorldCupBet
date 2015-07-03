@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Datas.Entities;
 using Microsoft.AspNet.SignalR.Hubs;
 using SignalR.SQL;
 
@@ -13,7 +14,6 @@ namespace SignalR
         private const string SuccessClass = "alert-success";
         private const string InfoClass = "alert-info";
 
-        private const int MaxExposure = 10000;
         private readonly Dictionary<string, OrderBook> _orderBooks;
 
         public BetClient(IHubConnectionContext clients, Dictionary<string, string> userConnectionId)
@@ -316,12 +316,6 @@ namespace SignalR
                 return true;
 
             var userMoney = context.Moneys.FirstOrDefault(x => x.User == user);
-            if (userMoney == null)
-            {
-                userMoney = new Money { User = user, Money1 = MaxExposure };
-                context.Moneys.Add(userMoney);
-            }
-
             var previousOrders = context.Orders.Where(x => x.User == user && x.Status == 0 && x.Side.Trim() == "BUY");
             int exposure = price * quantity;
             foreach (var previousOrder in previousOrders)
@@ -379,17 +373,7 @@ namespace SignalR
             context.Trades.Add(trade);
 
             var buyerMoney = context.Moneys.FirstOrDefault(x => x.User == buyer);
-            if (buyerMoney == null)
-            {
-                buyerMoney = new Money { User = buyer, Money1 = MaxExposure };
-                context.Moneys.Add(buyerMoney);
-            }
             var sellerMoney = context.Moneys.FirstOrDefault(x => x.User == seller);
-            if (sellerMoney == null)
-            {
-                sellerMoney = new Money { User = seller, Money1 = MaxExposure };
-                context.Moneys.Add(sellerMoney);
-            }
 
             buyerMoney.Money1 -= price * quantity;
             sellerMoney.Money1 += price * quantity;

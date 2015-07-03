@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Datas.Entities;
 using Datas.User;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
@@ -86,9 +87,17 @@ public partial class SiteMaster : MasterPage
     }
 
     private Universe _currentUniverse;
+    private Competition _currentCompetition;
+    private int _id;
+
     protected void Page_Load(object sender, EventArgs e)
     {
         _currentUniverse = Sql.GetUserSelectedUniverse(Context.User.Identity.Name);
+        _currentCompetition = Sql.GetUserSelectedCompetition(_currentUniverse, Context.User.Identity.Name, out _id);
+
+        _numberFormatInfo = (NumberFormatInfo)CultureInfo.InvariantCulture.NumberFormat.Clone();
+        var nfi = _numberFormatInfo;
+        nfi.NumberGroupSeparator = " ";
     }
 
     protected void Unnamed_LoggingOut(object sender, LoginCancelEventArgs e)
@@ -96,68 +105,51 @@ public partial class SiteMaster : MasterPage
         Context.GetOwinContext().Authentication.SignOut();
     }
 
-    public string SelectedUniverse { get { return _currentUniverse.Name; } }
-    public int SelectedUniverseId { get { return _currentUniverse.Id; } }
+    public string SelectedUniverse { get { return _currentUniverse == null ? null : _currentUniverse.Name; } }
+
+    public int SelectedUniverseId { get { return _currentUniverse == null ? -1 : _currentUniverse.Id; } }
+
     private List<Universe> _userUniverses;
-    public List<Universe> UserUniverses
+
+    private List<Universe> UserUniverses
     {
-        get
-        {
-            if (_userUniverses == null)
-                _userUniverses = Sql.GetUserUniverses(Context.User.Identity.Name);
-            return _userUniverses;
-        }
-    }
-
-    protected bool UserHasMultipleUniverse()
-    {
-        var user = Context.User.Identity.Name;
-        if (string.IsNullOrEmpty(user))
-            return false;
-
-        return UserUniverses.Count > 1;
-    }
-
-    protected string GetUserUniverse()
-    {
-        if (UserUniverses.Count == 1)
-            return UserUniverses[0].Name;
-
-        return string.Empty;
+        get { return _userUniverses ?? (_userUniverses = Sql.GetUserUniverses(Context.User.Identity.Name)); }
     }
 
     private List<Competition> _universeCompetitions;
+    private NumberFormatInfo _numberFormatInfo;
 
-    public List<Competition> UniverseCompetitions
+    private List<Competition> UniverseCompetitions
     {
         get
         {
             if (_universeCompetitions == null)
+            {
+                if (SelectedUniverse == null)
+                {
+                    return new List<Competition>();
+                }
+
                 _universeCompetitions = Sql.GetUniverseCompetitions(SelectedUniverse);
+            }
             return _universeCompetitions;
         }
     }
 
-    public bool UniverseHasMultipleCompetition()
-    {
-        return UniverseCompetitions.Count > 1;
-    }
-
     public string GetUniverseCompetition()
     {
-        if (UniverseCompetitions == null || UniverseCompetitions.Count == 0)
-            return string.Empty;
+        if (_currentUniverse == null)
+            return "Welcome " + Context.User.Identity.Name;
 
-        return UniverseCompetitions[0].Name;
+        return _currentUniverse.Name;
     }
 
     public int GetCompetitionId()
     {
-        if (UniverseCompetitions == null)
+        if (_currentCompetition == null)
             return -1;
 
-        var firstUniverse = UniverseCompetitions.FirstOrDefault();
-        return firstUniverse == null ? -1 : firstUniverse.Id;
+        return _currentCompetition.Id;
     }
 
     public bool UserHasUniverse { get { return UserUniverses.Count > 0; } }
@@ -180,14 +172,9 @@ public partial class SiteMaster : MasterPage
         }
     }
 
-    protected void SelectNewUniverse(object sender, EventArgs e)
+    protected string GetMoney()
     {
-        foreach (var universe in UserUniverses)
-        //if (universe.Id.ToString(CultureInfo.InvariantCulture) == UniverseId.Text)
-        {
-            Sql.SetUserUniverse(Context.User.Identity.Name, universe);
-            IdentityHelper.RedirectToReturnUrl(Request.QueryString["ReturnUrl"], Response);
-            return;
-        }
+        var money = Sql.GetMoney(Context.User.Identity.GetUserName(), _id);
+        return money.ToString("#,##0", _numberFormatInfo);
     }
 }

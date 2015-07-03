@@ -6,12 +6,16 @@
 //     Manual changes to this file will be overwritten if the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using System;
-using System.Collections.Generic;
 
-public partial class ResultOverridedValue
+namespace Datas.Entities
 {
-    public int Id { get; set; }
-    public int Value { get; set; }
-    public int IdUniverseCompetition { get; set; }
+    using System;
+    using System.Collections.Generic;
+    
+    public partial class ResultOverridedValue
+    {
+        public int Id { get; set; }
+        public int Value { get; set; }
+        public int IdUniverseCompetition { get; set; }
+    }
 }

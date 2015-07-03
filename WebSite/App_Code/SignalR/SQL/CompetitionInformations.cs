@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
+using Datas.Entities;
 
 namespace SignalR.SQL
 {
@@ -239,6 +242,35 @@ namespace SignalR.SQL
                 id = universeCompetition.Id;
             }
             return true;
+        }
+
+        private static readonly ConcurrentDictionary<Tuple<string, int>, Tuple<Competition, int>> UserDefaultCompetition =
+            new ConcurrentDictionary<Tuple<string, int>, Tuple<Competition, int>>();
+
+        public static Competition GetUserSelectedCompetition(Universe universe, string name, out int id)
+        {
+            id = -1;
+            if (universe == null)
+            {
+                return null;
+            }
+
+            Tuple<Competition, int> compet;
+            if (UserDefaultCompetition.TryGetValue(new Tuple<string, int>(name, universe.Id), out compet))
+            {
+                id = compet.Item2;
+                return compet.Item1;
+            }
+
+            var competitions = GetUniverseCompetitions(universe.Name);
+            if (competitions.Count > 0)
+            {
+                var competition = competitions[0];
+                TryGetUniverseCompetitionId(universe.Id, competition.Id, out id);
+                return competition;
+            }
+
+            return null;
         }
     }
 }

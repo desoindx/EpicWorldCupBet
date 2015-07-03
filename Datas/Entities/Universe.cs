@@ -6,13 +6,17 @@
 //     Manual changes to this file will be overwritten if the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using System;
-using System.Collections.Generic;
 
-public partial class Universe
+namespace Datas.Entities
 {
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public string AdminUser { get; set; }
-    public string Password { get; set; }
+    using System;
+    using System.Collections.Generic;
+    
+    public partial class Universe
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string AdminUser { get; set; }
+        public string Password { get; set; }
+    }
 }
