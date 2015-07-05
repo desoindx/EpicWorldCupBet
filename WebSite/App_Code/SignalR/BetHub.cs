@@ -55,14 +55,14 @@ namespace SignalR
             _betClient.GetClassement(Context.ConnectionId);
         }
 
-        public void SendOrder(string team, int quantity, int price, string side, int universeId, int competitionId)
+        public void SendOrder(string team, int quantity, int price, string side, int universeId, int competitionId, int universeCompetitionId)
         {
-            _betClient.NewOrder(User, team, quantity, price, side.ToUpper(), Context.ConnectionId, universeId, competitionId);
+            _betClient.NewOrder(User, team, quantity, price, side.ToUpper(), Context.ConnectionId, universeId, competitionId, universeCompetitionId);
         }
 
-        public void CancelOrder(string side, string team, int universeId, int competitionId)
+        public void CancelOrder(string side, string team, int universeId, int competitionId, int competitionUniverseId)
         {
-            _betClient.CancelOrder(User, side.ToUpper(), team, Context.ConnectionId, universeId, competitionId);
+            _betClient.CancelOrder(User, side.ToUpper(), team, Context.ConnectionId, universeId, competitionId, competitionUniverseId);
         }
 
         public void SendMessage(int universeId, string message)
@@ -72,20 +72,10 @@ namespace SignalR
                 Clients.Group(universeId.ToString(CultureInfo.InvariantCulture)).chat(lastMessage);
         }
 
-        public void GetMessages()
-        {
-            _betClient.GetMessages();
-        }
-
-        public void GetLastTrades()
-        {
-            _betClient.GetLastTrades(Context.ConnectionId);
-        }
-
-        public void GetOrderBook(string team, int universeId, int competitionId)
+        public void GetOrderBook(string team, int universeCompetitionId, int competitionId)
         {
             var teamsInfo = team.Split('(');
-            _betClient.GetOrderBook(User, teamsInfo[0].Trim(), teamsInfo[1].Split(')')[0].Trim(), universeId, competitionId, Context.ConnectionId);
+            _betClient.GetOrderBook(User, teamsInfo[0].Trim(), teamsInfo[1].Split(')')[0].Trim(), universeCompetitionId, competitionId, Context.ConnectionId);
         }
 
         public void ClearCache(string cache)

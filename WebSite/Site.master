@@ -1,15 +1,11 @@
 ﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Site.master.cs" Inherits="SiteMaster" %>
 
-<%@ Import Namespace="SignalR.SQL" %>
-
 <!DOCTYPE html>
-
 <html lang="en">
 <head runat="server">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%: Page.Title %> - Epic World Cup Betting</title>
-
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/bundles/modernizr") %>
     </asp:PlaceHolder>
@@ -54,7 +50,9 @@
             <!-- /.navbar-header -->
             <div class="navbar-header-center">
                 <span style="color: #2196f3; font-size: 25px;"><%: GetUniverseCompetition() %></span>
+                <span style="display: none" id="currentUniverseId"><%: GetUniverseId() %></span>
                 <span style="display: none" id="currentCompetitionId"><%: GetCompetitionId() %></span>
+                <span style="display: none" id="currentCompetitionUniverseId"><%: GetCompetitionUniverseId() %></span>
             </div>
 
             <ul class="nav navbar-top-links navbar-right">

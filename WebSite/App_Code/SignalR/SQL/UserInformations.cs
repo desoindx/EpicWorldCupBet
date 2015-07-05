@@ -52,19 +52,6 @@ namespace SignalR.SQL
             return 0;
         }
 
-        public static void SetUserMoney(string user, int money)
-        {
-            using (var context = new Entities())
-            {
-                var userMoney = context.Moneys.FirstOrDefault(x => x.User == user);
-                if (userMoney != null)
-                {
-                    userMoney.Money1 = money;
-                    context.SaveChangesAsync();
-                }
-            }
-        }
-
         public static List<Universe> GetUserUniverses(string user)
         {
             using (var context = new Entities())

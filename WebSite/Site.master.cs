@@ -138,10 +138,10 @@ public partial class SiteMaster : MasterPage
 
     public string GetUniverseCompetition()
     {
-        if (_currentUniverse == null)
+        if (_currentCompetition == null)
             return "Welcome " + Context.User.Identity.Name;
 
-        return _currentUniverse.Name;
+        return _currentCompetition.Name;
     }
 
     public int GetCompetitionId()
@@ -150,6 +150,19 @@ public partial class SiteMaster : MasterPage
             return -1;
 
         return _currentCompetition.Id;
+    }
+
+    public int GetUniverseId()
+    {
+        if (_currentUniverse == null)
+            return -1;
+
+        return _currentUniverse.Id;
+    }
+
+    public int GetCompetitionUniverseId()
+    {
+        return _id;
     }
 
     public bool UserHasUniverse { get { return UserUniverses.Count > 0; } }

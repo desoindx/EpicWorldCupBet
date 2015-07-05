@@ -4,7 +4,6 @@
 
 <%@ MasterType VirtualPath="~/Site.Master" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-    <h2><%: Title %>.</h2>
     <form runat="server">
         <div>
             <asp:PlaceHolder runat="server" ID="successMessage" Visible="false" ViewStateMode="Disabled">
@@ -59,9 +58,8 @@
                     </asp:PlaceHolder>
 
                     <asp:PlaceHolder runat="server" ID="changePasswordHolder" Visible="false">
-                        <p>You're logged in as <strong><%: User.Identity.GetUserName() %></strong>.</p>
+                        <p></p>
                         <div class="form-horizontal">
-                            <h4>Change Password Form</h4>
                             <asp:ValidationSummary runat="server" ShowModelStateErrors="true" CssClass="text-danger" />
                             <div class="form-group">
                                 <asp:Label runat="server" ID="CurrentPasswordLabel" AssociatedControlID="CurrentPassword" CssClass="col-md-2 control-label">Current password</asp:Label>

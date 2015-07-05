@@ -11,7 +11,7 @@
 }
 
 function openBookPopup(teamName) {
-    $.connection.Bet.server.getOrderBook(teamName, universeId, competitionId);
+    $.connection.Bet.server.getOrderBook(teamName, competitionUniverseId, competitionId);
     $("#orderBookDiv").bPopup({
         onOpen: function () {
         },
@@ -70,29 +70,21 @@ $(function () {
             }, 5000);
         },
         newMoney: function (money) {
-            $("#UserMoney").text(money + '€');
-        },
-        lastTrades: function (trades) {
-            for (var i = 1; i <= trades.length; i++) {
-                $("#Trade" + i).text(trades[i - 1]);
-            }
-        },
-        chat: function (message) {
-            $("#ChatDiv")[0].innerHTML += "<p><label class='chatName'>" + message[0] + "</label><label>" + message[1] + "</label></p>";
-            $("#ChatDiv").scrollTop(1E10);
+            $("#UserMoney").text(money + '$');
         }
     });
 
     $.connection.hub.start()
         .done(function (state) {
             competitionId = $("#currentCompetitionId").text();
-            $("#ChatDiv").scrollTop(1E10);
+            universeId = $("#currentUniverseId").text();
+            competitionUniverseId = $("#currentCompetitionUniverseId").text();
 
             $("#SendOrder").click(function () {
                 var side = "SELL";
                 if ($("#BuySide").prop("checked"))
                     side = "BUY";
-                betHub.server.sendOrder($("#TeamOrder").val(), $("#QuantityOrder").val(), $("#PriceOrder").val(), side, universeId, competitionId);
+                betHub.server.sendOrder($("#TeamOrder").val(), $("#QuantityOrder").val(), $("#PriceOrder").val(), side, universeId, competitionId, competitionUniverseId);
                 $("#newOrderDiv").bPopup().close();
             });
 
@@ -101,13 +93,8 @@ $(function () {
                 if ($("#BuySide").prop("checked"))
                     side = "BUY";
 
-                betHub.server.cancelOrder(side, $("#TeamOrder").val(), universeId, competitionId);
+                betHub.server.cancelOrder(side, $("#TeamOrder").val(), universeId, competitionId, competitionUniverseId);
                 $("#newOrderDiv").bPopup().close();
-            });
-
-            $("#SendMessage").click(function () {
-                betHub.server.sendMessage(universeId, $("#Message").val());
-                $("#Message").val('');
             });
 
             $("#OpenPopUp").click(function () {
@@ -118,18 +105,6 @@ $(function () {
 
             $('#OrderTab a').click(function (e) {
                 e.preventDefault();
-            });
-
-            $("#Message").keypress(function (event) {
-                if (event.which == 13) {
-                    event.preventDefault();
-                    $("#SendMessage").trigger("click");
-                }
-            });
-
-            $('#CompetitionTabMenu a').click(function (e) {
-                $("#CompetitionDropDownButton")[0].innerHTML = this.innerText + " <span class='caret'></span>";
-                showTeamSelectPicker();
             });
         });
 });
