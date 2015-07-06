@@ -5,6 +5,24 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="BetModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CompetitionGames">
+          <Key>
+            <PropertyRef Name="RoundKey" />
+            <PropertyRef Name="TeamId" />
+          </Key>
+          <Property Name="RoundKey" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="TeamId" Type="int" Nullable="false" />
+          <Property Name="CompetitionId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CompetitionPrizes">
+          <Key>
+            <PropertyRef Name="PrizeName" />
+            <PropertyRef Name="RoundKey" />
+          </Key>
+          <Property Name="PrizeName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="RoundKey" Type="varchar" MaxLength="75" Nullable="false" />
+          <Property Name="CompetitionId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Competitions">
           <Key>
             <PropertyRef Name="Id" />
@@ -14,6 +32,15 @@
           <Property Name="StartDate" Type="datetime" Nullable="false" />
           <Property Name="EndDate" Type="datetime" Nullable="false" />
           <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CompetitonResults">
+          <Key>
+            <PropertyRef Name="RoundKey" />
+            <PropertyRef Name="Result" />
+          </Key>
+          <Property Name="RoundKey" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Result" Type="varchar" MaxLength="1000" Nullable="false" />
+          <Property Name="CompetitionId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Moneys">
           <Key>
@@ -103,7 +130,10 @@
           <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
         <EntityContainer Name="BetModelStoreContainer">
+          <EntitySet Name="CompetitionGames" EntityType="Self.CompetitionGames" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CompetitionPrizes" EntityType="Self.CompetitionPrizes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Competitions" EntityType="Self.Competitions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CompetitonResults" EntityType="Self.CompetitonResults" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Moneys" EntityType="Self.Moneys" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ResultOverridedValues" EntityType="Self.ResultOverridedValues" Schema="dbo" store:Type="Tables" />
@@ -165,6 +195,9 @@
           <EntitySet Name="UniverseAvailables" EntityType="BetModel.UniverseAvailable" />
           <EntitySet Name="Results" EntityType="BetModel.Results" />
           <EntitySet Name="ResultOverridedValues" EntityType="BetModel.ResultOverridedValue" />
+          <EntitySet Name="CompetitionGames" EntityType="BetModel.CompetitionGame" />
+          <EntitySet Name="CompetitionPrizes" EntityType="BetModel.CompetitionPrize" />
+          <EntitySet Name="CompetitonResults" EntityType="BetModel.CompetitonResult" />
         </EntityContainer>
         <EntityType Name="Competition">
           <Key>
@@ -226,6 +259,33 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="None" />
           <Property Name="Value" Type="Int32" Nullable="false" />
           <Property Name="IdUniverseCompetition" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CompetitionGame">
+          <Key>
+            <PropertyRef Name="RoundKey" />
+            <PropertyRef Name="TeamId" />
+          </Key>
+          <Property Name="RoundKey" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TeamId" Type="Int32" Nullable="false" />
+          <Property Name="CompetitionId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CompetitionPrize">
+          <Key>
+            <PropertyRef Name="PrizeName" />
+            <PropertyRef Name="RoundKey" />
+          </Key>
+          <Property Name="PrizeName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="RoundKey" Type="String" Nullable="false" MaxLength="75" FixedLength="false" Unicode="false" />
+          <Property Name="CompetitionId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CompetitonResult">
+          <Key>
+            <PropertyRef Name="RoundKey" />
+            <PropertyRef Name="Result" />
+          </Key>
+          <Property Name="RoundKey" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Result" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="CompetitionId" Type="Int32" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -338,6 +398,33 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+          <EntitySetMapping Name="CompetitionGames">
+            <EntityTypeMapping TypeName="BetModel.CompetitionGame">
+              <MappingFragment StoreEntitySet="CompetitionGames">
+                <ScalarProperty Name="CompetitionId" ColumnName="CompetitionId" />
+                <ScalarProperty Name="TeamId" ColumnName="TeamId" />
+                <ScalarProperty Name="RoundKey" ColumnName="RoundKey" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CompetitionPrizes">
+            <EntityTypeMapping TypeName="BetModel.CompetitionPrize">
+              <MappingFragment StoreEntitySet="CompetitionPrizes">
+                <ScalarProperty Name="CompetitionId" ColumnName="CompetitionId" />
+                <ScalarProperty Name="RoundKey" ColumnName="RoundKey" />
+                <ScalarProperty Name="PrizeName" ColumnName="PrizeName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CompetitonResults">
+            <EntityTypeMapping TypeName="BetModel.CompetitonResult">
+              <MappingFragment StoreEntitySet="CompetitonResults">
+                <ScalarProperty Name="CompetitionId" ColumnName="CompetitionId" />
+                <ScalarProperty Name="Result" ColumnName="Result" />
+                <ScalarProperty Name="RoundKey" ColumnName="RoundKey" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>
@@ -352,7 +439,7 @@
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
         <DesignerProperty Name="EnablePluralization" Value="true" />
-        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="False" />
         <DesignerProperty Name="UseLegacyProvider" Value="False" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
       </DesignerInfoPropertySet>

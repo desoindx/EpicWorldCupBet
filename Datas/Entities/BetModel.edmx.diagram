@@ -15,6 +15,9 @@
         <EntityTypeShape EntityType="BetModel.UniverseAvailable" Width="1.5" PointX="4" PointY="2.375" />
         <EntityTypeShape EntityType="BetModel.Results" Width="1.5" PointX="2.25" PointY="3.375" />
         <EntityTypeShape EntityType="BetModel.ResultOverridedValue" Width="1.5" PointX="4" PointY="4.125" />
+        <EntityTypeShape EntityType="BetModel.CompetitionGame" Width="1.5" PointX="0.75" PointY="5.75" />
+        <EntityTypeShape EntityType="BetModel.CompetitionPrize" Width="1.5" PointX="2.75" PointY="6.75" />
+        <EntityTypeShape EntityType="BetModel.CompetitonResult" Width="1.5" PointX="6.75" PointY="4.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -52,7 +52,6 @@
   <ItemGroup>
     <Compile Include="BasicCompetition.cs" />
     <Compile Include="Competition.cs" />
-    <Compile Include="Importer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Round.cs" />
   </ItemGroup>

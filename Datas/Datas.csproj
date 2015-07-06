@@ -30,6 +30,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Entities\BetModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BetModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\BetModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BetModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\BetModel1.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -38,10 +48,14 @@
     <Compile Include="Entities\Competition.cs">
       <DependentUpon>EntitiesModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\EntitiesModel.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>EntitiesModel.Context.tt</DependentUpon>
+    <Compile Include="Entities\CompetitionGame.cs">
+      <DependentUpon>EntitiesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\CompetitionPrize.cs">
+      <DependentUpon>EntitiesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\CompetitonResult.cs">
+      <DependentUpon>EntitiesModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\EntitiesModel.cs">
       <AutoGen>True</AutoGen>
@@ -111,12 +125,18 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>BetModel1.Designer.cs</LastGenOutput>
     </EntityDeploy>
+    <None Include="Entities\BetModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>BetModel.Context.cs</LastGenOutput>
+      <DependentUpon>BetModel.edmx</DependentUpon>
+    </None>
     <None Include="Entities\BetModel.edmx.diagram">
       <DependentUpon>BetModel.edmx</DependentUpon>
     </None>
-    <None Include="Entities\EntitiesModel.Context.tt">
+    <None Include="Entities\BetModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>EntitiesModel.Context.cs</LastGenOutput>
+      <LastGenOutput>BetModel.cs</LastGenOutput>
+      <DependentUpon>BetModel.edmx</DependentUpon>
     </None>
     <None Include="Entities\EntitiesModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
