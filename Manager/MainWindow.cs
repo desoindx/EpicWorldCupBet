@@ -41,7 +41,7 @@ namespace Manager
                 foreach (var competition in context.CompetitionGames.Select(x => x.CompetitionId).Distinct())
                 {
                     int id = competition;
-                    CompetitionListBox.Items.Add(context.Competitions.Where(x => x.Id == id).Select(x => x.Name));
+                    CompetitionListBox.Items.Add(context.Competitions.Where(x => x.Id == id).Select(x => x.Name).First());
                 }
             }
         }

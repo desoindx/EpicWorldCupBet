@@ -92,6 +92,7 @@ namespace Manager
                         newPrize.CompetitionId = competition.Id;
                         newPrize.PrizeName = prizeName;
                         newPrize.RoundKey = round;
+                        context.CompetitionPrizes.Add(newPrize);
                     }
                     context.SaveChanges();
                 }
@@ -141,10 +142,11 @@ namespace Manager
                     var roundKey = GetCellValue(sharedString, firstCell);
                     foreach (var result in results)
                     {
-                        var newPrize = context.CompetitonResults.Create();
-                        newPrize.CompetitionId = competition.Id;
-                        newPrize.Result = result;
-                        newPrize.RoundKey = roundKey;
+                        var newResult = context.CompetitonResults.Create();
+                        newResult.CompetitionId = competition.Id;
+                        newResult.Result = result;
+                        newResult.RoundKey = roundKey;
+                        context.CompetitonResults.Add(newResult);
                     }
                     context.SaveChanges();
                 }
@@ -172,10 +174,11 @@ namespace Manager
                     var roundKey = GetCellValue(sharedString, firstCell);
                     foreach (var team in roundTeams)
                     {
-                        var newPrize = context.CompetitionGames.Create();
-                        newPrize.CompetitionId = competition.Id;
-                        newPrize.TeamId = GetTeamId(team, teams, competition, context);
-                        newPrize.RoundKey = roundKey;
+                        var newGame = context.CompetitionGames.Create();
+                        newGame.CompetitionId = competition.Id;
+                        newGame.TeamId = GetTeamId(team, teams, competition, context);
+                        newGame.RoundKey = roundKey;
+                        context.CompetitionGames.Add(newGame);
                     }
                     context.SaveChanges();
                 }
@@ -193,6 +196,7 @@ namespace Manager
             teamId = context.Teams.Create();
             teamId.IdCompetition = competition.Id;
             teamId.Name = team;
+            context.Teams.Add(teamId);
             context.SaveChanges();
 
             return teamId.Id;
