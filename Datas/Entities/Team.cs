@@ -18,5 +18,6 @@ namespace Datas.Entities
         public string Name { get; set; }
         public int IdCompetition { get; set; }
         public Nullable<int> Result { get; set; }
+        public Nullable<bool> RealTeam { get; set; }
     }
 }

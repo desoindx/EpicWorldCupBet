@@ -79,6 +79,6 @@ namespace Datas.Entities
         public virtual DbSet<ResultOverridedValue> ResultOverridedValues { get; set; }
         public virtual DbSet<CompetitionGame> CompetitionGames { get; set; }
         public virtual DbSet<CompetitionPrize> CompetitionPrizes { get; set; }
-        public virtual DbSet<CompetitonResult> CompetitonResults { get; set; }
+        public virtual DbSet<CompetitionResult> CompetitionResults { get; set; }
     }
 }

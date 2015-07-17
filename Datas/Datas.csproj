@@ -54,7 +54,7 @@
     <Compile Include="Entities\CompetitionPrize.cs">
       <DependentUpon>EntitiesModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\CompetitonResult.cs">
+    <Compile Include="Entities\CompetitionResult.cs">
       <DependentUpon>EntitiesModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\EntitiesModel.cs">

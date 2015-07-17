@@ -83,8 +83,7 @@ namespace Manager
                         continue;
                     }
 
-
-                    var rounds = cells.Skip(1).Select(x => GetCellValue(sharedString, x));
+                    var rounds = cells.Skip(1).Select(x => GetCellValue(sharedString, x)).Where(x => !string.IsNullOrEmpty(x));
                     var prizeName = GetCellValue(sharedString, firstCell);
                     foreach (var round in rounds)
                     {
@@ -126,8 +125,8 @@ namespace Manager
         {
             using (var context = new Entities())
             {
-                context.CompetitonResults.RemoveRange(
-                    context.CompetitonResults.Where(x => x.CompetitionId == competition.Id));
+                context.CompetitionResults.RemoveRange(
+                    context.CompetitionResults.Where(x => x.CompetitionId == competition.Id));
 
                 foreach (Row row in sheetData.Elements<Row>())
                 {
@@ -138,15 +137,15 @@ namespace Manager
                         continue;
                     }
 
-                    var results = cells.Skip(1).Select(x => GetCellValue(sharedString, x));
+                    var results = cells.Skip(1).Select(x => GetCellValue(sharedString, x)).Where(x => !string.IsNullOrEmpty(x));
                     var roundKey = GetCellValue(sharedString, firstCell);
                     foreach (var result in results)
                     {
-                        var newResult = context.CompetitonResults.Create();
+                        var newResult = context.CompetitionResults.Create();
                         newResult.CompetitionId = competition.Id;
                         newResult.Result = result;
                         newResult.RoundKey = roundKey;
-                        context.CompetitonResults.Add(newResult);
+                        context.CompetitionResults.Add(newResult);
                     }
                     context.SaveChanges();
                 }
@@ -170,7 +169,7 @@ namespace Manager
                         continue;
                     }
 
-                    var roundTeams = cells.Skip(1).Select(x => GetCellValue(sharedString, x));
+                    var roundTeams = cells.Skip(1).Select(x => GetCellValue(sharedString, x)).Where(x => !string.IsNullOrEmpty(x));
                     var roundKey = GetCellValue(sharedString, firstCell);
                     foreach (var team in roundTeams)
                     {
@@ -196,6 +195,7 @@ namespace Manager
             teamId = context.Teams.Create();
             teamId.IdCompetition = competition.Id;
             teamId.Name = team;
+            teamId.RealTeam = !team.StartsWith("*");
             context.Teams.Add(teamId);
             context.SaveChanges();
 

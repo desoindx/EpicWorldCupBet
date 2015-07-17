@@ -17,5 +17,6 @@ namespace Datas.Entities
         public string RoundKey { get; set; }
         public int TeamId { get; set; }
         public int CompetitionId { get; set; }
+        public int Id { get; set; }
     }
 }

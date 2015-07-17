@@ -12,10 +12,11 @@ namespace Datas.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class CompetitonResult
+    public partial class CompetitionResult
     {
         public string RoundKey { get; set; }
         public string Result { get; set; }
         public int CompetitionId { get; set; }
+        public int Id { get; set; }
     }
 }

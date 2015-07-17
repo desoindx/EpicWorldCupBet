@@ -14,8 +14,9 @@ namespace Datas.Entities
     
     public partial class CompetitionPrize
     {
-        public string PrizeName { get; set; }
         public string RoundKey { get; set; }
+        public string PrizeName { get; set; }
         public int CompetitionId { get; set; }
+        public int Id { get; set; }
     }
 }

@@ -96,6 +96,10 @@
       <Project>{FE984959-2AA8-4464-AEA2-5271BB39ADA0}</Project>
       <Name>Datas</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Pricer\Pricer.csproj">
+      <Project>{27089891-4505-43C6-8F72-6D564DBE770A}</Project>
+      <Name>Pricer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
