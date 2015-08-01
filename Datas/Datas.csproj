@@ -57,6 +57,8 @@
     <Compile Include="Entities\CompetitionResult.cs">
       <DependentUpon>EntitiesModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\CustomCompetitionGame.cs" />
+    <Compile Include="Entities\CustomTeam.cs" />
     <Compile Include="Entities\EntitiesModel.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

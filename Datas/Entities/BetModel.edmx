@@ -21,6 +21,7 @@
           <Property Name="RoundKey" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="PrizeName" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="CompetitionId" Type="int" Nullable="false" />
+          <Property Name="Value" Type="float" Nullable="false" />
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
         <EntityType Name="CompetitionResults">
@@ -277,6 +278,7 @@
           </Key>
           <Property Name="RoundKey" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="PrizeName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Value" Type="Double" Nullable="false" />
           <Property Name="CompetitionId" Type="Int32" Nullable="false" />
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
         </EntityType>
@@ -416,6 +418,7 @@
               <MappingFragment StoreEntitySet="CompetitionPrizes">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="CompetitionId" ColumnName="CompetitionId" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
                 <ScalarProperty Name="PrizeName" ColumnName="PrizeName" />
                 <ScalarProperty Name="RoundKey" ColumnName="RoundKey" />
               </MappingFragment>

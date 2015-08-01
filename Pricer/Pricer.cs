@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using DocumentFormat.OpenXml.Spreadsheet;
+﻿using System.Collections.Generic;
+using Datas.Entities;
 
 namespace Pricer
 {
@@ -8,12 +7,13 @@ namespace Pricer
     {
         private static readonly Dictionary<string, BasicCompetition> Competitions = new Dictionary<string, BasicCompetition>();
 
-        public static List<Tuple<string, double>> Price(string competitionName)
+        public static Dictionary<Team, double> Price(string competitionName, Dictionary<Team, double> strengths)
         {
             BasicCompetition competition;
             if (!Competitions.TryGetValue(competitionName, out competition))
             {
-                competition = new BasicCompetition(competitionName);
+                competition = new StrengthCompetition(competitionName, strengths);
+                Competitions[competitionName] = competition;
             }
 
             return competition.Price();
