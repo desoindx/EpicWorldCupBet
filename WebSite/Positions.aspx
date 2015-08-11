@@ -12,10 +12,10 @@
     <script src="Scripts/SlickGrid/Plugins/slick.cellnewcopymanager.js"></script>
     <script src="Scripts/SlickGrid/Plugins/slick.cellselectionmodel.js"></script>
     <script src="JavaScript/Positions.js"></script>
-    <div style="width: 600px; height: 900px; margin-top: 50px;" id='<%: "Div-" + Master.GetCompetitionId() %>'>
-        <div style="width: 350px; height: 900px;" id='<%: "PositionsDiv-" + Master.GetCompetitionId() %>'>
+    <div style=" margin-top: 50px;" id='<%: "Div-" + Master.GetCompetitionId() %>'>
+        <div style="float: left;width: 650px; height: 900px;" id='<%: "PositionsDiv-" + Master.GetCompetitionId() %>'>
         </div>
-        <div style="overflow: auto; margin-top: -890px; margin-left: 500px; width: 500px; height: 825px;" id='<%: "TradesDiv-" + Master.GetCompetitionId() %>'>
+        <div style="float: right;overflow: auto; margin-top: -890px; margin-left: 500px; width: 500px; height: 825px;" id='<%: "TradesDiv-" + Master.GetCompetitionId() %>'>
         </div>
     </div>
     <script type='text/javascript'>

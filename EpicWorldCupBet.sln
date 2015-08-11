@@ -9,6 +9,7 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "WebSite", "http://localhost
 	ProjectSection(WebsiteProperties) = preProject
 		UseIISExpress = "true"
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5"
+		ProjectReferences = "{27089891-4505-43C6-8F72-6D564DBE770A}|Pricer.dll;{FE984959-2AA8-4464-AEA2-5271BB39ADA0}|Datas.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_1229"
 		Debug.AspNetCompiler.PhysicalPath = "WebSite\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_1229\"

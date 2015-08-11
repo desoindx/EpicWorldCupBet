@@ -15,8 +15,13 @@ function drawPositionGrid(competitionId, positions) {
         };
 
 
-    columns[0] = { id: "Team", name: "Team", field: "Team", width: 200, sortable: true };
-    columns[1] = { id: "Position", name: "Position", field: "Position", width: 150, sortable: true };
+    columns[0] = { id: "Team", name: "Team", field: "Team", width: 200, sortable: true, resizable: false };
+    columns[1] = { id: "Position", name: "Position", field: "Position", width: 75, sortable: true, resizable: false };
+    columns[2] = { id: "Best", name: "Best", field: "Best", width: 75, sortable: true, resizable: false };
+    columns[3] = { id: "Best10", name: "Best 10%", field: "Best10", width: 75, sortable: true, resizable: false };
+    columns[4] = { id: "Average", name: "Average", field: "Average", width: 75, sortable: true, resizable: false };
+    columns[5] = { id: "Worst10", name: "Worst 10%", field: "Worst10", width: 75, sortable: true, resizable: false };
+    columns[6] = { id: "Worst", name: "Worst", field: "Worst", width: 75, sortable: true, resizable: false };
 
     grid = new Slick.Grid("#PositionsDiv-" + competitionId, positions, columns, options);
 

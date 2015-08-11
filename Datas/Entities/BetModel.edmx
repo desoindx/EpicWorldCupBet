@@ -21,8 +21,8 @@
           <Property Name="RoundKey" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="PrizeName" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="CompetitionId" Type="int" Nullable="false" />
-          <Property Name="Value" Type="float" Nullable="false" />
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Value" Type="float" Nullable="false" />
         </EntityType>
         <EntityType Name="CompetitionResults">
           <Key>
@@ -42,6 +42,8 @@
           <Property Name="StartDate" Type="datetime" Nullable="false" />
           <Property Name="EndDate" Type="datetime" Nullable="false" />
           <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Tie" Type="float" Nullable="false" />
+          <Property Name="Score" Type="float" Nullable="false" />
         </EntityType>
         <EntityType Name="Moneys">
           <Key>
@@ -92,6 +94,7 @@
           <Property Name="IdCompetition" Type="int" Nullable="false" />
           <Property Name="Result" Type="int" />
           <Property Name="RealTeam" Type="bit" />
+          <Property Name="Strength" Type="float" />
         </EntityType>
         <EntityType Name="Trades">
           <Key>
@@ -210,6 +213,8 @@
           <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Tie" Type="Double" Nullable="false" />
+          <Property Name="Score" Type="Double" Nullable="false" />
         </EntityType>
         <EntityType Name="Team">
           <Key>
@@ -220,6 +225,7 @@
           <Property Name="IdCompetition" Type="Int32" Nullable="false" />
           <Property Name="Result" Type="Int32" Nullable="true" />
           <Property Name="RealTeam" Type="Boolean" />
+          <Property Name="Strength" Type="Double" />
         </EntityType>
         <EntityType Name="Universe">
           <Key>
@@ -338,7 +344,9 @@
     <EntitySetMapping Name="Competitions">
       <EntityTypeMapping TypeName="IsTypeOf(BetModel.Competition)">
         <MappingFragment StoreEntitySet="Competitions">
-          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Score" ColumnName="Score" />
+                <ScalarProperty Name="Tie" ColumnName="Tie" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Type" ColumnName="Type" />
           <ScalarProperty Name="StartDate" ColumnName="StartDate" />
           <ScalarProperty Name="EndDate" ColumnName="EndDate" />
@@ -349,7 +357,8 @@
     <EntitySetMapping Name="Teams">
       <EntityTypeMapping TypeName="IsTypeOf(BetModel.Team)">
         <MappingFragment StoreEntitySet="Teams">
-          <ScalarProperty Name="RealTeam" ColumnName="RealTeam" />
+                <ScalarProperty Name="Strength" ColumnName="Strength" />
+                <ScalarProperty Name="RealTeam" ColumnName="RealTeam" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="IdCompetition" ColumnName="IdCompetition" />

@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Web;
-using Datas.User;
-using Microsoft.AspNet.Identity.Owin;
+using System.Web.UI;
+using Microsoft.AspNet.Identity;
 using WorldCupBetting;
 
-public partial class Logout : System.Web.UI.Page
+public partial class Logout : Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        Context.GetOwinContext().Get<ApplicationSignInManager>().AuthenticationManager.SignOut();
+        Context.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
         Response.Redirect("~/Default.aspx");
         IdentityHelper.RedirectToReturnUrl(Request.QueryString["ReturnUrl"], Response);
     }

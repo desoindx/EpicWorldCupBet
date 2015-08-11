@@ -20,10 +20,12 @@
     <div id="myAlert" class="alert hiddenAlert" role="alert">
         <label id="alertMessage">These is not the message you are looking for</label>
     </div>
-    <div class="col-md-4 col-md-offset-4">
+    <div style="position: absolute; left: 50%; margin-left: -138px;">
         <input style="margin-top: 20px; margin-bottom: 20px; width: 250px;" type="button" id="OpenPopUp" value="Place New Order" class="btn btn-primary btn-lg" />
     </div>
-    <div style="margin-top: 10px; width: 890px; height: 900px;" id='<%: "BidAskDiv-" + Master.GetCompetitionId() %>'>
+    <div style="position: absolute; left: 50%; margin-left: -455px;">
+        <div style="margin-top: 80px; width: 920px; height: 900px;" id='<%: "BidAskDiv-" + Master.GetCompetitionId() %>'>
+        </div>
     </div>
     <script type='text/javascript'>
         drawOrdersGrid(<%: GetOrders() %>, <%: Master.GetCompetitionId() %>);

@@ -19,5 +19,6 @@ namespace Datas.Entities
         public int IdCompetition { get; set; }
         public Nullable<int> Result { get; set; }
         public Nullable<bool> RealTeam { get; set; }
+        public Nullable<double> Strength { get; set; }
     }
 }

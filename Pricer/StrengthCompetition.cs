@@ -1,26 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using Datas;
 using Datas.Entities;
 
 namespace Pricer
 {
     public class StrengthCompetition : BasicCompetition
     {
-        private Dictionary<Team, double> _strengths;
-        private Random _random;
+        public Dictionary<Team, double> Strengths { get; set; }
+        private readonly Random _random;
 
-        public StrengthCompetition(string name, Dictionary<Team, double> strengths)
+        public StrengthCompetition(string name)
             : base(name)
         {
-            _strengths = strengths;
             _random = new Random();
+        }
+
+        public void SetStrengthsToDefaultValues()
+        {
+            Strengths = new Dictionary<Team, double>();
+            foreach (var team in Teams.Values)
+            {
+                Strengths[team] = team.Strength ?? 1;
+            }
         }
 
         protected override void Simulate(Round round, Tuple<Team, Team> game)
         {
-            var strength1 = _strengths[game.Item1];
-            var strength2 = _strengths[game.Item2];
+            var strength1 = Strengths[game.Item1];
+            var strength2 = Strengths[game.Item2];
 
             round.AddResult(game, _random.NextDouble(), strength1, strength2);
         }

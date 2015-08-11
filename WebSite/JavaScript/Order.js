@@ -19,7 +19,7 @@ function setUpOrder(order, isMine, i, shouldFlash, cellToFlash, competitionId) {
 
     currentDatas.Team = order.Team + " (" + order.LastTradedPrice + ") ";
     currentDatas.TeamName = order.Team;
-    currentDatas.Book = "Book";
+    currentDatas.Book = "Show All";
 
     if (order.BestBid != 0) {
         if (shouldFlash) {
@@ -167,13 +167,13 @@ function drawOrdersGrid(orders, competitionId) {
     var currentDatas = [];
 
     var columns = [
-      { id: "Last", name: "", field: "Last", width: 20, sortable: true, formatter: formatter },
-      { id: "Team", name: "Team", field: "Team", width: 280, sortable: true },
-      { id: "BestBid", name: "Best Bid", field: "BestBid", width: 130, sortable: true },
-      { id: "BestAsk", name: "Best Ask", field: "BestAsk", width: 130, sortable: true },
-      { id: "MyBid", name: "My Bid", field: "MyBid", width: 130, sortable: true },
-      { id: "MyAsk", name: "My Ask", field: "MyAsk", width: 130, sortable: true },
-      { id: "Book", name: "Book", field: "Book", width: 60, sortable: false, formatter: buttonsFormatter }
+      { id: "Last", name: "", field: "Last", width: 20, sortable: true, formatter: formatter, resizable:false },
+      { id: "Team", name: "Team", field: "Team", width: 280, sortable: true, resizable: false },
+      { id: "BestBid", name: "Best Bid", field: "BestBid", width: 130, sortable: true, resizable: false },
+      { id: "BestAsk", name: "Best Ask", field: "BestAsk", width: 130, sortable: true, resizable: false },
+      { id: "MyBid", name: "My Bid", field: "MyBid", width: 130, sortable: true, resizable: false },
+      { id: "MyAsk", name: "My Ask", field: "MyAsk", width: 130, sortable: true, resizable: false },
+      { id: "Book", name: "Order Book", field: "Book", width: 90, sortable: false, formatter: buttonsFormatter, resizable: false }
     ],
     options = {
         enableCellNavigation: true,

@@ -19,5 +19,7 @@ namespace Datas.Entities
         public System.DateTime StartDate { get; set; }
         public System.DateTime EndDate { get; set; }
         public string Name { get; set; }
+        public double Tie { get; set; }
+        public double Score { get; set; }
     }
 }

@@ -119,7 +119,7 @@ public partial class SiteMaster : MasterPage
     private List<Competition> _universeCompetitions;
     private NumberFormatInfo _numberFormatInfo;
 
-    private List<Competition> UniverseCompetitions
+    protected List<Competition> UniverseCompetitions
     {
         get
         {
@@ -136,6 +136,11 @@ public partial class SiteMaster : MasterPage
         }
     }
 
+    protected bool HasMultipleCompetition()
+    {
+        return UniverseCompetitions.Count > 1;
+    }
+
     public string GetUniverseCompetition()
     {
         if (_currentCompetition == null)
@@ -150,6 +155,14 @@ public partial class SiteMaster : MasterPage
             return -1;
 
         return _currentCompetition.Id;
+    }
+    
+    public string GetCompetitionName()
+    {
+        if (_currentCompetition == null)
+            return null;
+
+        return _currentCompetition.Name;
     }
 
     public int GetUniverseId()

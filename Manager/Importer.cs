@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using Datas.Entities;
@@ -13,6 +14,11 @@ namespace Manager
         private const string Games = "Games";
         private const string Results = "Results";
         private const string Prizes = "Prizes";
+        private const string Forces = "Forces";
+        private const string Infos = "Infos";
+
+        private const string AverageScore = "Average Score";
+        private const string Tie = "Tie";
 
         public static void Import(string fileName)
         {
@@ -37,8 +43,64 @@ namespace Manager
                         case Prizes:
                             ImportPrizes(sharedString, sheetData, competition);
                             break;
+                        case Infos:
+                            ImportInfos(sharedString, sheetData, competition);
+                            break;
+                        case Forces:
+                            ImportForces(sharedString, sheetData, competition);
+                            break;
                     }
                 }
+            }
+        }
+
+        private static void ImportForces(List<string> sharedString, SheetData sheetData, Competition competition)
+        {
+            using (var context = new Entities())
+            {
+                var teams = context.Teams.Where(x => x.IdCompetition == competition.Id).ToDictionary(x => x.Name);
+
+                foreach (Row row in sheetData.Elements<Row>())
+                {
+                    var cells = row.Elements<Cell>();
+                    var firstCell = cells == null ? null : cells.FirstOrDefault();
+                    if (firstCell == null)
+                    {
+                        continue;
+                    }
+
+                    var team = teams[GetCellValue(sharedString, firstCell)];
+                    team.Strength = double.Parse(GetCellValue(sharedString, cells.ElementAt(1)), CultureInfo.InvariantCulture);
+                }
+                context.SaveChanges();
+            }
+        }
+
+        private static void ImportInfos(List<string> sharedString, SheetData sheetData, Competition competition)
+        {
+            using (var context = new Entities())
+            {
+                var compet = context.Competitions.First(x => x.Id == competition.Id);
+                foreach (Row row in sheetData.Elements<Row>())
+                {
+                    var cells = row.Elements<Cell>();
+                    var firstCell = cells == null ? null : cells.FirstOrDefault();
+                    if (firstCell == null)
+                    {
+                        continue;
+                    }
+
+                    switch (GetCellValue(sharedString, firstCell))
+                    {
+                        case Tie:
+                            compet.Tie = double.Parse(GetCellValue(sharedString, cells.ElementAt(1)), CultureInfo.InvariantCulture);
+                            break;
+                        case AverageScore:
+                            compet.Score = double.Parse(GetCellValue(sharedString, cells.ElementAt(1)), CultureInfo.InvariantCulture);
+                            break;
+                    }
+                }
+                context.SaveChanges();
             }
         }
 

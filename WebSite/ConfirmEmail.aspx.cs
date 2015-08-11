@@ -21,6 +21,11 @@ public partial class Account_ConfirmEmail : System.Web.UI.Page
             }
         }
 
+        if (_userId != null || _code == null)
+        {
+            Response.Redirect("~/Default.aspx");
+        }
+
         var result = Master.UserManager.ConfirmEmail(_userId, _code);
         Success = result.Succeeded;
     }

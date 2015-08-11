@@ -8,7 +8,7 @@ namespace SignalR.SQL
 {
     public static partial class Sql
     {
-        public static Dictionary<string, int> GetPosition(string user, int universeId, int competitionId)
+        public static Dictionary<Team, int> GetPosition(string user, int universeId, int competitionId)
         {
             if (string.IsNullOrEmpty(user))
                 return null;
@@ -20,11 +20,11 @@ namespace SignalR.SQL
                     return null;
 
                 var teams = GetTeamsForCompetition(competitionId, context);
-                var positions = new Dictionary<string, int>();
+                var positions = new Dictionary<Team, int>();
                 foreach (var team in teams)
                 {
                     var position = GetUserPositionOnTeam(context, user, team, id);
-                    positions[team.Name] = position;
+                    positions[team] = position;
                 }
 
                 return positions;
@@ -181,7 +181,7 @@ namespace SignalR.SQL
             List<Team> teams;
             if (!CompetitionTeams.TryGetValue(competitionId, out teams))
             {
-                teams = context.Teams.Where(x => x.IdCompetition == competitionId).OrderBy(x => x.Name).ToList();
+                teams = context.Teams.Where(x => x.IdCompetition == competitionId && (!x.RealTeam.HasValue || x.RealTeam.Value)).OrderBy(x => x.Name).ToList();
                 CompetitionTeams[competitionId] = teams;
             }
             return teams;
@@ -246,6 +246,26 @@ namespace SignalR.SQL
 
         private static readonly ConcurrentDictionary<Tuple<string, int>, Tuple<Competition, int>> UserDefaultCompetition =
             new ConcurrentDictionary<Tuple<string, int>, Tuple<Competition, int>>();
+
+        public static void UpdateDefaultCompetition(string userName, int competitionId)
+        {
+            var universe = GetUserSelectedUniverse(userName);
+            if (universe == null)
+            {
+                return;
+            }
+
+            var competitions = GetUniverseCompetitions(universe.Name);
+            var competition = competitions.FirstOrDefault(x => x.Id == competitionId);
+            if (competition == null)
+            {
+                return;
+            }
+
+            int id;
+            TryGetUniverseCompetitionId(universe.Id, competition.Id, out id);
+            UserDefaultCompetition[new Tuple<string, int>(userName, universe.Id)] = new Tuple<Competition, int>(competition, id);
+        }
 
         public static Competition GetUserSelectedCompetition(Universe universe, string name, out int id)
         {

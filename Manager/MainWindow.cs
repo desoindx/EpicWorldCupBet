@@ -31,21 +31,21 @@ namespace Manager
 
         private void PriceButtonOnClick(object sender, EventArgs eventArgs)
         {
-            var strenghts = new Dictionary<Team, double>();
+            var strengths = new Dictionary<Team, double>();
             foreach (DataGridViewRow row in teamGridView.Rows)
             {
-                strenghts[(Team)row.Cells[_columnId].Value] =
+                strengths[(Team)row.Cells[_columnId].Value] =
                     double.Parse(row.Cells[_columnStrength].Value.ToString());
             }
 
             Dictionary<Team, double> results = null;
             if (StrenghtRadioButton.Checked)
             {
-                results = Pricer.Pricer.Price(CompetitionListBox.SelectedItem.ToString(), strenghts);
+                results = Pricer.PricerHelper.Price(CompetitionListBox.SelectedItem.ToString(), strengths);
             }
             else
             {
-                //            Pricer.Pricer.Price(CompetitionListBox.SelectedItem.ToString(), );
+                //            PricerHelper.PricerHelper.Price(CompetitionListBox.SelectedItem.ToString(), );
             }
 
             foreach (DataGridViewRow row in teamGridView.Rows)
@@ -72,7 +72,7 @@ namespace Manager
                     var newRow = teamGridView.Rows[newRowIndex];
                     newRow.Cells[_columnId].Value = team;
                     newRow.Cells[_columnTeam].Value = team.Name;
-                    newRow.Cells[_columnStrength].Value = 1;
+                    newRow.Cells[_columnStrength].Value = team.Strength ?? 1;
                     newRow.Cells[_columnValue].Value = string.Empty;
                 }
             }

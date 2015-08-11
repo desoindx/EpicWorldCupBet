@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using Datas.Entities;
 using Microsoft.AspNet.SignalR.Hubs;
+using Pricer;
 using SignalR.SQL;
 
 namespace SignalR
@@ -252,7 +253,7 @@ namespace SignalR
                         }
                     }
 
-                    if (UserHasEnough(context, user, choosedTeam.Id, quantity, price, side, universeCompetitionId, competitionId))
+                    if (UserHasEnough(context, user, choosedTeam, quantity, price, side, universeId, competitionId, universeCompetitionId))
                     {
                         var remainingQuantity = InsertTrade(context, user, choosedTeam.Id, choosedTeam.Name, quantity, price, side, universeCompetitionId, connectionId, usersToNotify);
                         if (remainingQuantity > 0)
@@ -270,43 +271,15 @@ namespace SignalR
             }
         }
 
-        private bool UserHasEnough(Entities context, string user, int team, int quantity, int price, string side, int universeCompetitionId, int competitionId)
+        private bool UserHasEnough(Entities context, string user, Team team, int quantity, int price, string side, int universeId, int competitionId, int universeCompetitionId)
         {
-            var positions = context.Trades.Where(x => (x.Seller == user || x.Buyer == user) && x.Team == team);
-            var total = 0;
-            foreach (var position in positions)
-            {
-                if (position.Buyer == user)
-                    total += position.Quantity;
-                else
-                    total -= position.Quantity;
-            }
+            var positions = Sql.GetPosition(user, universeId, competitionId);
+            var signedQuantity = (side == "SELL" ? -1 : 1) * quantity;
+            positions[team] += signedQuantity;
+            var worstScenario = PricerHelper.GetWorstScenario(context.Competitions.First(x => x.Id == competitionId).Name, positions, 0.1);
+            var userMoney = context.Moneys.First(x => x.User == user && x.IdUniverseCompetition == universeCompetitionId);
 
-            if (side == "SELL" && total < 0)
-            {
-                total -= quantity;
-                if (total < -250)
-                    return false;
-            }
-            else if (side == "BUY" && total > 0)
-            {
-                total += quantity;
-                if (total > 250)
-                    return false;
-            }
-
-            if (side == "SELL")
-                return true;
-
-            var userMoney = context.Moneys.FirstOrDefault(x => x.User == user && x.IdUniverseCompetition == universeCompetitionId);
-            var previousOrders = context.Orders.Where(x => x.User == user && x.Status == 0 && x.Side.Trim() == "BUY");
-            int exposure = price * quantity;
-            foreach (var previousOrder in previousOrders)
-            {
-                exposure += previousOrder.Price * previousOrder.Quantity;
-            }
-
-            return exposure <= userMoney.Money1;
+            return  userMoney.Money1 - signedQuantity * price + worstScenario >= 0;
         }
 
         private int InsertTrade(Entities context, string user, int team, string teamName, int quantity, int price, string side, int universeCompetitionId, string connectionId, HashSet<string> usersToNotify)
@@ -490,101 +463,6 @@ namespace SignalR
                 }
                 Clients.Client(connectionId).newCharts(teamsTrades.Values.ToList());
             }
-        }
-
-        public void Price(string connectionId,
-            int brazil,
-            int croatia,
-            int mexico,
-            int cameroon,
-            int australia,
-            int chile,
-            int netherlands,
-            int spain,
-            int colombia,
-            int greece,
-            int ivory,
-            int japan,
-            int costa,
-            int england,
-            int italy,
-            int uruguay,
-            int ecuador,
-            int france,
-            int honduras,
-            int switzerland,
-            int argentina,
-            int bosnia,
-            int iran,
-            int nigeria,
-            int germany,
-            int ghana,
-            int portugal,
-            int united,
-            int algeria,
-            int belgium,
-            int russia,
-            int south)
-        {
-            var pricer = new Pricer();
-            var pricingResult = pricer.Price(new List<int> {brazil,
-                croatia,
-                mexico,
-                cameroon,
-                australia,
-                chile,
-                netherlands,
-                spain,
-                colombia,
-                greece,
-                ivory,
-                japan,
-                costa,
-                england,
-                italy,
-                uruguay,
-                ecuador,
-                france,
-                honduras,
-                switzerland,
-                argentina,
-                bosnia,
-                iran,
-                nigeria,
-                germany,
-                ghana,
-                portugal,
-                united,
-                algeria,
-                belgium,
-                russia,
-                south});
-
-            var teams = new List<string>();
-            var price = new List<double>();
-
-            foreach (var value in pricingResult)
-            {
-                teams.Add(value.Key.Replace(" ", ""));
-                price.Add(value.Value);
-            }
-            Clients.Client(connectionId).pricingFinished(teams, price);
-        }
-
-        internal void Price(string connectionId)
-        {
-            var pricer = new Pricer();
-            var pricingResult = pricer.Price();
-
-            var teams = new List<string>();
-            var price = new List<double>();
-
-            foreach (var value in pricingResult)
-            {
-                teams.Add(value.Key.Replace(" ", ""));
-                price.Add(value.Value);
-            }
-            Clients.Client(connectionId).pricingFinished(teams, price);
         }
 
         public void GetOrderBook(string user, string team, string lastTradedPrice, int universeCompetitionId, int competitionId, string connectionId)
