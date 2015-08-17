@@ -45,7 +45,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html">Epic Bet</a>
+                <a class="navbar-brand" href="index.html">Epic Sport Exchange</a>
             </div>
             <!-- /.navbar-header -->
             <div class="navbar-header-center" style="margin-left: 50px">
@@ -59,7 +59,6 @@
                 <% if (Context.User.Identity.IsAuthenticated)
                    {%>
                 <!-- /.dropdown -->
-                <li class="dropdown">
                     <% if (HasMultipleCompetition())
                        {%><li class="dropdown">
                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -74,6 +73,7 @@
                            </ul>
                        </li>
                     <%} %>
+                <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-user fa-fw"></i><i class="fa fa-caret-down"></i>
                     </a>
@@ -124,7 +124,7 @@
         <div id="page-wrapper">
             <div class="container-fluid">
                 <div class="row">
-                    <% if (Context.User.Identity.IsAuthenticated || Page.Title == "Register")
+                    <% if (Context.User.Identity.IsAuthenticated || Page.Title == "Register" || Page.Title == "Forgot Password" || Page.Title == "Reset Password")
                        { %><div class="col-lg-12">
                            <div class="body-content container-fluid">
                                <asp:ContentPlaceHolder ID="MainContent" runat="server">
@@ -163,7 +163,8 @@
                                             <label>
                                                 <input name="remember" id="rememberCheckBox" type="checkbox" value="False" onclick="Checked();">Remember Me
                                             </label>
-                                            <a runat="server" href="~/Register" style="margin-left: 45px; float: right;">No account ? Register</a>
+                                            <a runat="server" href="~/ForgotPassword" style="margin-left: 45px; float: right;">Reset my password !</a>
+                                            <a runat="server" href="~/Register" style="margin-left: 45px; float: right;">Create an account !</a>
                                         </div>
                                         <!-- Change this to a button or input when using this as a form -->
                                         <asp:Button runat="server" OnClick="LogIn" Text="Log in" CssClass="btn btn-lg btn-success btn-block" />

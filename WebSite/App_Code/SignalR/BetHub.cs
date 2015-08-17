@@ -28,17 +28,18 @@ namespace SignalR
             {
                 Groups.Add(Context.ConnectionId, competition.ToString(CultureInfo.InvariantCulture));
             }
+
             return base.OnConnected();
         }
 
         public override Task OnDisconnected()
         {
-            _userConnectionId.Remove(User);
             var userAvailableCompetitions = Sql.GetUserAvailableCompetitions(User);
             foreach (var competition in userAvailableCompetitions)
             {
                 Groups.Remove(Context.ConnectionId, competition.ToString(CultureInfo.InvariantCulture));
             }
+
             return base.OnDisconnected();
         }
 

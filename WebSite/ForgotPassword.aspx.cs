@@ -16,7 +16,8 @@ public partial class Account_ForgotPassword : System.Web.UI.Page
     {
         if (ModelState.IsValid)
         {
-            var user = await Master.UserManager.FindByEmailAsync(MailAdress.Text);
+            var email = Request.Form["Email"];
+            var user = await Master.UserManager.FindByEmailAsync(email);
             if (user == null || !(user.EmailConfirmed))
             {
                 FailureText.Text = "Adress Mail not valid";
@@ -36,7 +37,7 @@ public partial class Account_ForgotPassword : System.Web.UI.Page
                "Please reset your password by clicking <a href=\""
                                                + url + "\">here</a>");
 
-            SuccessText.Text = "A reset Email has been correctly send to " + MailAdress.Text;
+            SuccessText.Text = "A reset Email has been correctly send to " + email;
             ErrorMessage.Visible = false;
             SuccessMessage.Visible = true;
         }

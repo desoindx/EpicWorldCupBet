@@ -20,7 +20,15 @@ public partial class Logout : System.Web.UI.Page
             }
         }
 
-        Response.Redirect("~/Default.aspx");
+        var urlReferrer = Request.UrlReferrer;
+        if (urlReferrer == null)
+        {
+            Response.Redirect("~/Default.aspx");
+        }
+        else
+        {
+            Response.Redirect(urlReferrer.ToString()); 
+        }
         IdentityHelper.RedirectToReturnUrl(Request.QueryString["ReturnUrl"], Response);
     }
 }

@@ -77,16 +77,37 @@ namespace Pricer
             var average = orderedResults[(int)(vars[2]* count)].Item2;
             var best10 = orderedResults[(int)(vars[3] * count)].Item2;
             var best = orderedResults[(int)(vars[4] * count)].Item2;
-            return positions.Select(position => new TeamResult
+            
+            var teamResults = new List<TeamResult>();
+            var total = new TeamResult {Team = "Total", Position = 0};
+            foreach (var position in positions)
             {
-                Team = position.Key.Name,
-                Position = position.Value,
-                Worst = worst.GetResult(position.Key) * position.Value,
-                Worst10 = worst10.GetResult(position.Key) * position.Value,
-                Average = average.GetResult(position.Key) * position.Value,
-                Best10 = best10.GetResult(position.Key) * position.Value,
-                Best = best.GetResult(position.Key) * position.Value
-            }).ToList();
+                var team = position.Key;
+                var quantity = position.Value;
+                var worstValue = worst.GetResult(team) * quantity;
+                var worst10Value = worst10.GetResult(team) * quantity;
+                var averageValue = average.GetResult(team) * quantity;
+                var best10Value = best10.GetResult(team) * quantity;
+                var bestValue = best.GetResult(team) * quantity;
+                teamResults.Add(new TeamResult
+                {
+                    Team = team.Name,
+                    Position = quantity,
+                    Worst = worstValue,
+                    Worst10 = worst10Value,
+                    Average = averageValue,
+                    Best10 = best10Value,
+                    Best = bestValue
+                });
+                total.Worst += worstValue;
+                total.Worst10 += worst10Value;
+                total.Average += averageValue;
+                total.Best10 += best10Value;
+                total.Best += bestValue;
+            }
+
+            teamResults.Add(total);
+            return teamResults;
         }
     }
 }
