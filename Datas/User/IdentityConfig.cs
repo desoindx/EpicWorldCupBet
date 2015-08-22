@@ -93,13 +93,8 @@ namespace Datas.User
     // This is useful if you do not want to tear down the database each time you run the application.
     // public class ApplicationDbInitializer : DropCreateDatabaseAlways<ApplicationDbContext>
     // This example shows you how to create a new database if the Model changes
-    public class ApplicationDbInitializer : DropCreateDatabaseIfModelChanges<ApplicationDbContext>
+    public class ApplicationDbInitializer : CreateDatabaseIfNotExists<ApplicationDbContext>
     {
-        protected override void Seed(ApplicationDbContext context)
-        {
-            InitializeIdentityForEF(context);
-            base.Seed(context);
-        }
 
         //Create User=Admin@Admin.com with password=Admin@123456 in the Admin role        
         public static void InitializeIdentityForEF(ApplicationDbContext db)

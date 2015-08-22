@@ -25,7 +25,7 @@ namespace WorldCupBetting
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("DefaultConnection", false)
+            : base("EpicSportExchange", false)
         {
         }
 

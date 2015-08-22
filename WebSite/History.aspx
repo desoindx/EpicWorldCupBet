@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Position" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeFile="Positions.aspx.cs" Inherits="Positions" %>
+﻿<%@ Page Title="History" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeFile="History.aspx.cs" Inherits="Positions" %>
 
 <%@ MasterType VirtualPath="~/Site.Master" %>
 
@@ -12,14 +12,14 @@
     <script src="Scripts/SlickGrid/Plugins/slick.cellnewcopymanager.js"></script>
     <script src="Scripts/SlickGrid/Plugins/slick.cellselectionmodel.js"></script>
     <script src="JavaScript/Positions.js"></script>
-    <div style="margin-top: 50px;" id='<%: "Div-" + Master.GetCompetitionId() %>'>
-        <div style="position: absolute; left: 50%; margin-left: -320px;">
-            <div style="float: left; width: 650px; height: 900px;" id='<%: "PositionsDiv-" + Master.GetCompetitionId() %>'>
-            </div>
+    <div style=" margin-top: 50px;" id='<%: "Div-" + Master.GetCompetitionId() %>'>
+        <div style="position: absolute; left: 50%; margin-left: -250px;">
+        <div style="float: right;overflow: auto; width: 500px; height: 825px;" id='<%: "TradesDiv-" + Master.GetCompetitionId() %>'>
+        </div>
         </div>
     </div>
     <script type='text/javascript'>
-        drawPositionGrid(<%: Master.GetCompetitionId()%>,<%: GetPositions(Master.GetCompetitionId())%>);
+        drawTrades(<%: Master.GetCompetitionId()%>,<%: GetTrades(Master.GetCompetitionId())%>);
     </script>
     <% } %>
 </asp:Content>

@@ -22,6 +22,12 @@ namespace Manager
             CompetitionListBox.SelectedIndexChanged += CompetitionListBoxOnSelectedIndexChanged;
             PriceButton.Click += PriceButtonOnClick;
             StrenghtRadioButton.CheckedChanged += StrenghtRadioButtonOnCheckedChanged;
+            MailButton.Click += MailButtonOnClick;
+        }
+
+        private void MailButtonOnClick(object sender, EventArgs eventArgs)
+        {
+            throw new NotImplementedException();
         }
 
         private void StrenghtRadioButtonOnCheckedChanged(object sender, EventArgs eventArgs)

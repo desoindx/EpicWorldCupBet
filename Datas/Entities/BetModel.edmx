@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="BetModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="BetModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="CompetitionGames">
           <Key>
             <PropertyRef Name="Id" />
@@ -20,9 +20,9 @@
           </Key>
           <Property Name="RoundKey" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="PrizeName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Value" Type="float" Nullable="false" />
           <Property Name="CompetitionId" Type="int" Nullable="false" />
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Value" Type="float" Nullable="false" />
         </EntityType>
         <EntityType Name="CompetitionResults">
           <Key>
@@ -306,8 +306,8 @@
     <EntitySetMapping Name="Moneys">
       <EntityTypeMapping TypeName="IsTypeOf(BetModel.Money)">
         <MappingFragment StoreEntitySet="Moneys">
+          <ScalarProperty Name="User" ColumnName="User" />
           <ScalarProperty Name="IdUniverseCompetition" ColumnName="IdUniverseCompetition" />
-                <ScalarProperty Name="User" ColumnName="User" />
           <ScalarProperty Name="Money1" ColumnName="Money1" />
         </MappingFragment>
       </EntityTypeMapping>
@@ -344,25 +344,25 @@
     <EntitySetMapping Name="Competitions">
       <EntityTypeMapping TypeName="IsTypeOf(BetModel.Competition)">
         <MappingFragment StoreEntitySet="Competitions">
-          <ScalarProperty Name="Score" ColumnName="Score" />
-                <ScalarProperty Name="Tie" ColumnName="Tie" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Type" ColumnName="Type" />
           <ScalarProperty Name="StartDate" ColumnName="StartDate" />
           <ScalarProperty Name="EndDate" ColumnName="EndDate" />
           <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Tie" ColumnName="Tie" />
+          <ScalarProperty Name="Score" ColumnName="Score" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="Teams">
       <EntityTypeMapping TypeName="IsTypeOf(BetModel.Team)">
         <MappingFragment StoreEntitySet="Teams">
-                <ScalarProperty Name="Strength" ColumnName="Strength" />
-                <ScalarProperty Name="RealTeam" ColumnName="RealTeam" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="IdCompetition" ColumnName="IdCompetition" />
           <ScalarProperty Name="Result" ColumnName="Result" />
+          <ScalarProperty Name="RealTeam" ColumnName="RealTeam" />
+          <ScalarProperty Name="Strength" ColumnName="Strength" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -412,37 +412,37 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-          <EntitySetMapping Name="CompetitionGames">
-            <EntityTypeMapping TypeName="BetModel.CompetitionGame">
-              <MappingFragment StoreEntitySet="CompetitionGames">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="CompetitionId" ColumnName="CompetitionId" />
-                <ScalarProperty Name="TeamId" ColumnName="TeamId" />
-                <ScalarProperty Name="RoundKey" ColumnName="RoundKey" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="CompetitionPrizes">
-            <EntityTypeMapping TypeName="BetModel.CompetitionPrize">
-              <MappingFragment StoreEntitySet="CompetitionPrizes">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="CompetitionId" ColumnName="CompetitionId" />
-                <ScalarProperty Name="Value" ColumnName="Value" />
-                <ScalarProperty Name="PrizeName" ColumnName="PrizeName" />
-                <ScalarProperty Name="RoundKey" ColumnName="RoundKey" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="CompetitionResults">
-            <EntityTypeMapping TypeName="BetModel.CompetitionResult">
-              <MappingFragment StoreEntitySet="CompetitionResults">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="CompetitionId" ColumnName="CompetitionId" />
-                <ScalarProperty Name="Result" ColumnName="Result" />
-                <ScalarProperty Name="RoundKey" ColumnName="RoundKey" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
+    <EntitySetMapping Name="CompetitionGames">
+      <EntityTypeMapping TypeName="IsTypeOf(BetModel.CompetitionGame)">
+        <MappingFragment StoreEntitySet="CompetitionGames">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="RoundKey" ColumnName="RoundKey" />
+          <ScalarProperty Name="TeamId" ColumnName="TeamId" />
+          <ScalarProperty Name="CompetitionId" ColumnName="CompetitionId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CompetitionPrizes">
+      <EntityTypeMapping TypeName="IsTypeOf(BetModel.CompetitionPrize)">
+        <MappingFragment StoreEntitySet="CompetitionPrizes">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="RoundKey" ColumnName="RoundKey" />
+          <ScalarProperty Name="PrizeName" ColumnName="PrizeName" />
+          <ScalarProperty Name="Value" ColumnName="Value" />
+          <ScalarProperty Name="CompetitionId" ColumnName="CompetitionId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CompetitionResults">
+      <EntityTypeMapping TypeName="IsTypeOf(BetModel.CompetitionResult)">
+        <MappingFragment StoreEntitySet="CompetitionResults">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="RoundKey" ColumnName="RoundKey" />
+          <ScalarProperty Name="Result" ColumnName="Result" />
+          <ScalarProperty Name="CompetitionId" ColumnName="CompetitionId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>

@@ -6067,14 +6067,13 @@ a.label:focus {
     display: inline-block;
     min-width: 10px;
     padding: 3px 7px;
-    font-size: 12px;
+    font-size: 8px;
     font-weight: normal;
     color: #ffffff;
     line-height: 1;
     vertical-align: middle;
     white-space: nowrap;
     text-align: center;
-    background-color: #bbbbbb;
     border-radius: 10px;
 }
 

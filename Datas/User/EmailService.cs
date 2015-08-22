@@ -14,7 +14,7 @@ public class EmailService : IIdentityMessageService
     private static Task SendMessage(string subject, string body, string to)
     {
         // Compose a message
-        var mail = new MailMessage(ConfigurationManager.AppSettings["MAILGUN_SMTP_LOGIN"], to)
+        var mail = new MailMessage("Support@epicsportexchange.com", to)
         {
             Subject = subject,
             Body = body,
@@ -24,12 +24,8 @@ public class EmailService : IIdentityMessageService
         // Send it!
         var client = new SmtpClient
         {
-            Port = Int32.Parse(ConfigurationManager.AppSettings["MAILGUN_SMTP_PORT"]),
-            DeliveryMethod = SmtpDeliveryMethod.Network,
-            UseDefaultCredentials = false,
-            Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["MAILGUN_SMTP_LOGIN"],
-                ConfigurationManager.AppSettings["MAILGUN_SMTP_PASSWORD"]),
-            Host = ConfigurationManager.AppSettings["MAILGUN_SMTP_SERVER"]
+            Credentials = new System.Net.NetworkCredential("Support@epicsportexchange.com","vRa77330"),
+            Host = "localhost"
         };
 
         return client.SendMailAsync(mail);

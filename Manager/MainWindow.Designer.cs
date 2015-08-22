@@ -37,10 +37,11 @@
             this.Team = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Strength = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CompetitionListBox = new System.Windows.Forms.ListBox();
             this.RefreshButton = new System.Windows.Forms.Button();
             this.LoadButton = new System.Windows.Forms.Button();
-            this.Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MailButton = new System.Windows.Forms.Button();
             this.mainTabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.teamGridView)).BeginInit();
@@ -58,6 +59,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.MailButton);
             this.tabPage1.Controls.Add(this.QuoteRadioButton);
             this.tabPage1.Controls.Add(this.StrenghtRadioButton);
             this.tabPage1.Controls.Add(this.PriceButton);
@@ -137,6 +139,12 @@
             this.Value.HeaderText = "Value";
             this.Value.Name = "Value";
             // 
+            // Id
+            // 
+            this.Id.HeaderText = "Id";
+            this.Id.Name = "Id";
+            this.Id.Visible = false;
+            // 
             // CompetitionListBox
             // 
             this.CompetitionListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -165,11 +173,14 @@
             this.LoadButton.Text = "Load Competition";
             this.LoadButton.UseVisualStyleBackColor = true;
             // 
-            // Id
+            // MailButton
             // 
-            this.Id.HeaderText = "Id";
-            this.Id.Name = "Id";
-            this.Id.Visible = false;
+            this.MailButton.Location = new System.Drawing.Point(832, 6);
+            this.MailButton.Name = "MailButton";
+            this.MailButton.Size = new System.Drawing.Size(133, 23);
+            this.MailButton.TabIndex = 7;
+            this.MailButton.Text = "Test Mail";
+            this.MailButton.UseVisualStyleBackColor = true;
             // 
             // MainWindow
             // 
@@ -202,5 +213,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Strength;
         private System.Windows.Forms.DataGridViewTextBoxColumn Value;
         private System.Windows.Forms.DataGridViewTextBoxColumn Id;
+        private System.Windows.Forms.Button MailButton;
     }
 }

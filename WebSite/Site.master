@@ -56,6 +56,20 @@
             </div>
 
             <ul class="nav navbar-top-links navbar-right">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-fw"></i><i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="#" id="UserMoney"><i class="fa fa-fw"></i><%: GetMoney() %> $</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a runat="server" href="~/Manage"><i class="fa fa-gear fa-fw"></i>Settings</a>
+                        </li>
+                        <li><a runat="server" href="~/Logout"><i class="fa fa-sign-out fa-fw"></i>Logout</a></li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
                 <% if (Context.User.Identity.IsAuthenticated)
                    {%>
                 <!-- /.dropdown -->
@@ -75,17 +89,11 @@
                     <%} %>
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-user fa-fw"></i><i class="fa fa-caret-down"></i>
+                        <i class="fa fa-bell fa-fw"></i><i class="fa fa-caret-down"></i>
+                        <span id ="NumberOfNewTrades" class="badge badge-notify">3</span>
                     </a>
-                    <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#" id="UserMoney"><i class="fa fa-fw"></i><%: GetMoney() %> $</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li><a runat="server" href="~/Manage"><i class="fa fa-gear fa-fw"></i>Settings</a>
-                        </li>
-                        <li><a runat="server" href="~/Logout"><i class="fa fa-sign-out fa-fw"></i>Logout</a></li>
+                    <ul class="dropdown-menu">
                     </ul>
-                    <!-- /.dropdown-user -->
                 </li>
                 <!-- /.dropdown -->
                 <% } %>
@@ -106,10 +114,10 @@
                         <li>
                             <a runat="server" href="~/Ranking"><i class="fa fa-bar-chart-o fa-fw"></i>Ranking</a>
                         </li>
-                        <% } %>
                         <li>
-                            <a runat="server" href="~/About"><i class="fa fa-edit fa-fw"></i>Rules</a>
+                            <a runat="server" href="~/History"><i class="fa fa-history fa-fw"></i>History</a>
                         </li>
+                        <% } %>
                         <li>
                             <a runat="server" href="~/Contact"><i class="fa fa-envelope fa-fw"></i>Contact</a>
                         </li>

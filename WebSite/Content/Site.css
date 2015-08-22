@@ -9,6 +9,13 @@
     background-color: #e51c23;
 }
 
+.badge-notify{
+   background:red;
+   position:relative;
+   top: -12px;
+   left: -28px;
+}
+
 #blanket {
     background-color: transparent;
     opacity: 0.65;
