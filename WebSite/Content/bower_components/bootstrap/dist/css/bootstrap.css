@@ -6064,9 +6064,8 @@ a.label:focus {
     }
 
 .badge {
-    display: inline-block;
     min-width: 10px;
-    padding: 3px 7px;
+    padding: 3px 0px 7px;
     font-size: 8px;
     font-weight: normal;
     color: #ffffff;
@@ -6076,10 +6075,6 @@ a.label:focus {
     text-align: center;
     border-radius: 10px;
 }
-
-    .badge:empty {
-        display: none;
-    }
 
 .btn .badge {
     position: relative;
@@ -8927,10 +8922,6 @@ input[type="checkbox"],
 
 .alert .close {
     color: #fff;
-}
-
-.badge {
-    padding: 3px 6px 5px;
 }
 
 .progress {

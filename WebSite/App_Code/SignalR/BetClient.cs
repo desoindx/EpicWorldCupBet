@@ -189,11 +189,11 @@ namespace SignalR
                 return false;
             }
 
-            if (!Sql.IsUserAuthorizedOn(user, universeId))
-            {
-                Clients.Client(connectionId).newMessage("Fail To add order because you are not allowed on this universe", ErrorClass);
-                return false;
-            }
+//            if (!Sql.IsUserAuthorizedOn(user, universeId))
+//            {
+//                Clients.Client(connectionId).newMessage("Fail To add order because you are not allowed on this universe", ErrorClass);
+//                return false;
+//            }
 
             if (quantity < 1)
             {
@@ -261,11 +261,11 @@ namespace SignalR
 
                         context.SaveChanges();
                         OnNewOrder(context, team, usersToNotify, universeId, competitionId, universeCompetitionId);
+                        GetTradeHistory(competitionId, universeCompetitionId);
                     }
                     else
                     {
                         Clients.Client(connectionId).newMessage("You already have too much exposure", ErrorClass);
-                        return;
                     }
                 }
             }
@@ -277,9 +277,9 @@ namespace SignalR
             var signedQuantity = (side == "SELL" ? -1 : 1) * quantity;
             positions[team] += signedQuantity;
             var worstScenario = PricerHelper.GetWorstScenario(context.Competitions.First(x => x.Id == competitionId).Name, positions, 0.1);
-            var userMoney = context.Moneys.First(x => x.User == user && x.IdUniverseCompetition == universeCompetitionId);
+//            var userMoney = context.Moneys.First(x => x.User == user && x.IdUniverseCompetition == universeCompetitionId);
 
-            return  userMoney.Money1 - signedQuantity * price + worstScenario >= 0;
+            return  100000 - signedQuantity * price + worstScenario >= 0;
         }
 
         private int InsertTrade(Entities context, string user, int team, string teamName, int quantity, int price, string side, int universeCompetitionId, string connectionId, HashSet<string> usersToNotify)
@@ -298,6 +298,7 @@ namespace SignalR
             {
                 usersToNotify.Add(matchingOrder.User);
                 InsertNewTrade(context, side == "BUY" ? user : matchingOrder.User, side == "SELL" ? user : matchingOrder.User, team, Math.Min(quantity, matchingOrder.Quantity), matchingOrder.Price, universeCompetitionId);
+                
                 Clients.Client(connectionId).newMessage(string.Format("You traded {0} {1} at {2} with {3}", Math.Min(quantity, matchingOrder.Quantity), teamName, matchingOrder.Price, matchingOrder.User), InfoClass);
                 if (quantity < matchingOrder.Quantity)
                 {
@@ -331,8 +332,8 @@ namespace SignalR
             var buyerMoney = context.Moneys.FirstOrDefault(x => x.User == buyer && x.IdUniverseCompetition == universeCompetitionId);
             var sellerMoney = context.Moneys.FirstOrDefault(x => x.User == seller && x.IdUniverseCompetition == universeCompetitionId);
 
-            buyerMoney.Money1 -= price * quantity;
-            sellerMoney.Money1 += price * quantity;
+//            buyerMoney.Money1 -= price * quantity;
+//            sellerMoney.Money1 += price * quantity;
         }
 
         private void InsertNewOrder(Entities context, string user, int team, int quantity, int price, string side, int idUniverseCompetition, string connectionId)
@@ -382,7 +383,7 @@ namespace SignalR
             }
 
             if (order != null)
-                Clients.Group(competitionId.ToString(CultureInfo.InvariantCulture), connectionIdToIgnore)
+                Clients.Group(id.ToString(CultureInfo.InvariantCulture), connectionIdToIgnore)
                     .newPrice(order, false, competitionId);
         }
 
@@ -496,6 +497,59 @@ namespace SignalR
                     Clients.Client(connectionId).showOrderBook(team, bids, asks, lastTradedPriceValue, midPrice, position);
                 }
             }
+        }
+
+        private void GetTradeHistory(int competitionId, int competitionUniverseId)
+        {
+            bool newTrade;
+            var tradesList = GetTradeList(DateTime.MinValue, competitionId, competitionUniverseId, out newTrade);
+            if (tradesList.Count == 0)
+            {
+                Clients.Group(competitionUniverseId.ToString(CultureInfo.InvariantCulture)).newTrades("No trade in the last 24 hours.", 1, false, competitionUniverseId);
+            }
+            else
+            {
+                Clients.Group(competitionUniverseId.ToString(CultureInfo.InvariantCulture)).newTrades(tradesList, tradesList.Count, newTrade, competitionUniverseId);
+            }
+        }
+
+        public void GetTradeHistory(DateTime lastSeen, int competitionId, int competitionUniverseId, string connectionId)
+        {
+            bool newTrade;
+            var tradesList = GetTradeList(lastSeen, competitionId, competitionUniverseId, out newTrade);
+
+            if (tradesList.Count == 0)
+            {
+                Clients.Client(connectionId).newTrades("No trade in the last 24 hours.", 1, false, competitionUniverseId);
+            }
+            else
+            {
+                Clients.Client(connectionId).newTrades(tradesList, tradesList.Count, newTrade, competitionUniverseId);
+            }
+        }
+
+        private static List<string> GetTradeList(DateTime lastSeen, int competitionId, int competitionUniverseId, out bool newTrade)
+        {
+            var limitDate = DateTime.Now.AddDays(-1);
+            var tradesList = new List<string>();
+            newTrade = false;
+            using (var context = new Entities())
+            {
+                var teamNames = context.Teams.Where(x => x.IdCompetition == competitionId)
+                    .ToDictionary(x => x.Id, x => x.Name);
+                var trades =
+                    context.Trades.Where(x => x.IdUniverseCompetition == competitionUniverseId && x.Date > limitDate).OrderByDescending(x => x.Date);
+                foreach (var trade in trades)
+                {
+                    if (trade.Date > lastSeen)
+                    {
+                        newTrade = true;
+                    }
+                    tradesList.Add(string.Format("At {0}, {1} {2} traded at {3}", trade.Date.ToShortTimeString(), trade.Quantity,
+                        teamNames[trade.Team], trade.Price));
+                }
+            }
+            return tradesList;
         }
 
         private class OrderBook

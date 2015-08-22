@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.SignalR;
@@ -19,6 +21,8 @@ namespace SignalR
         private string User { get { return Context.User.Identity.Name; } }
         private readonly BetClient _betClient;
         private static readonly Dictionary<string, string> _userConnectionId = new Dictionary<string, string>();
+        private static readonly Dictionary<Tuple<string, int>, DateTime> _userLastSeenTrades = new Dictionary<Tuple<string, int>, DateTime>();
+        private Random _random;
 
         public override Task OnConnected()
         {
@@ -45,6 +49,7 @@ namespace SignalR
 
         public BetHub()
         {
+            _random = new Random();
             ApplicationDbContext = new ApplicationDbContext();
             UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(ApplicationDbContext));
 
@@ -58,12 +63,30 @@ namespace SignalR
 
         public void SendOrder(string team, int quantity, int price, string side, int universeId, int competitionId, int universeCompetitionId)
         {
-            _betClient.NewOrder(User, team, quantity, price, side.ToUpper(), Context.ConnectionId, universeId, competitionId, universeCompetitionId);
+            _betClient.NewOrder(
+            _random.Next(100).ToString(), team, quantity, price, side.ToUpper(), Context.ConnectionId, universeId, competitionId, universeCompetitionId);
         }
 
         public void CancelOrder(string side, string team, int universeId, int competitionId, int competitionUniverseId)
         {
             _betClient.CancelOrder(User, side.ToUpper(), team, Context.ConnectionId, universeId, competitionId, competitionUniverseId);
+        }
+
+        public void GetTradeHistory(int competitionId, int competitionUniverseId)
+        {
+            DateTime userLastSeenTrade;
+            if (
+                !_userLastSeenTrades.TryGetValue(new Tuple<string, int>(User, competitionUniverseId),
+                    out userLastSeenTrade))
+            {
+                userLastSeenTrade = DateTime.MinValue;
+            }
+            _betClient.GetTradeHistory(userLastSeenTrade, competitionId, competitionUniverseId, Context.ConnectionId);
+        }
+
+        public void ShowTradeHistory(int competitionUniverseId)
+        {
+            _userLastSeenTrades[new Tuple<string, int>(User, competitionUniverseId)] = DateTime.Now;
         }
 
         public void SendMessage(int universeId, string message)

@@ -31,6 +31,7 @@
     <script src="Scripts/hoverIntent.js"></script>
     <script type="text/javascript" src="Scripts/jquery.signalR-2.0.3.min.js"></script>
     <script type="text/javascript" src="../signalr/hubs"></script>
+    <script src="JavaScript/Master.js"></script>
     <asp:ContentPlaceHolder ID="HeadContent" runat="server">
     </asp:ContentPlaceHolder>
 </head>
@@ -73,30 +74,30 @@
                 <% if (Context.User.Identity.IsAuthenticated)
                    {%>
                 <!-- /.dropdown -->
-                    <% if (HasMultipleCompetition())
-                       {%><li class="dropdown">
-                           <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                               <i class="fa fa-sitemap fa-fw"></i><i class="fa fa-caret-down"></i>
-                           </a>
-                           <ul class="dropdown-menu">
-                               <%foreach (var competition in UniverseCompetitions)
-                                 { %>
-                               <li><a href=<%:"ChangeCompetition?comp=" + competition.Id%>><i class="fa fa-fw"></i><%: competition.Name %></a>
-                               </li>
-                               <% } %>
-                           </ul>
-                       </li>
-                    <%} %>
-                <li class="dropdown">
+                <% if (HasMultipleCompetition())
+                   {%><li class="dropdown">
+                       <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                           <i class="fa fa-sitemap fa-fw"></i><i class="fa fa-caret-down"></i>
+                       </a>
+                       <ul class="dropdown-menu">
+                           <%foreach (var competition in UniverseCompetitions)
+                             { %>
+                           <li><a href='<%:"ChangeCompetition?comp=" + competition.Id%>'><i class="fa fa-fw"></i><%: competition.Name %></a>
+                           </li>
+                           <% } %>
+                       </ul>
+                   </li>
+                <%} %>
+                <li id="ListTradeButton" class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-bell fa-fw"></i><i class="fa fa-caret-down"></i>
-                        <span id ="NumberOfNewTrades" class="badge badge-notify">3</span>
+                        <span id="NumberOfNewTrades" class="badge badge-notify"></span>
                     </a>
-                    <ul class="dropdown-menu">
+                    <ul id="ListTrade" class="dropdown-menu scrollable-menu">
                     </ul>
-                </li>
+                    </li>
                 <!-- /.dropdown -->
-                <% } %>
+            <% } %>
             </ul>
             <!-- /.navbar-top-links -->
 

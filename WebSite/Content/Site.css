@@ -9,11 +9,21 @@
     background-color: #e51c23;
 }
 
-.badge-notify{
-   background:red;
-   position:relative;
-   top: -12px;
-   left: -28px;
+.scrollable-menu {
+    height: auto;
+    max-height: 500px;
+    overflow-x: hidden;
+}
+
+.badge-notify {
+    background: red;
+    position: relative;
+    top: -12px;
+    left: -28px;
+}
+
+.showBadge {
+    display: inline-block;
 }
 
 #blanket {

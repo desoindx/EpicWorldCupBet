@@ -59,6 +59,7 @@ namespace SignalR.SQL
                 var universes = from a in context.UniverseAvailables.Where(x => x.UserName == user)
                                 from u in context.Universes.Where(x => x.Id == a.IdUniverse)
                                 select u;
+                
                 return universes.ToList();
             }
         }
