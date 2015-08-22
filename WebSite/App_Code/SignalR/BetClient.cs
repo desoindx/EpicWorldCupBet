@@ -189,11 +189,11 @@ namespace SignalR
                 return false;
             }
 
-//            if (!Sql.IsUserAuthorizedOn(user, universeId))
-//            {
-//                Clients.Client(connectionId).newMessage("Fail To add order because you are not allowed on this universe", ErrorClass);
-//                return false;
-//            }
+            if (!Sql.IsUserAuthorizedOn(user, universeId))
+            {
+                Clients.Client(connectionId).newMessage("Fail To add order because you are not allowed on this universe", ErrorClass);
+                return false;
+            }
 
             if (quantity < 1)
             {
@@ -277,9 +277,9 @@ namespace SignalR
             var signedQuantity = (side == "SELL" ? -1 : 1) * quantity;
             positions[team] += signedQuantity;
             var worstScenario = PricerHelper.GetWorstScenario(context.Competitions.First(x => x.Id == competitionId).Name, positions, 0.1);
-//            var userMoney = context.Moneys.First(x => x.User == user && x.IdUniverseCompetition == universeCompetitionId);
+            var userMoney = context.Moneys.First(x => x.User == user && x.IdUniverseCompetition == universeCompetitionId);
 
-            return  100000 - signedQuantity * price + worstScenario >= 0;
+            return userMoney.Money1 - signedQuantity * price + worstScenario >= 0;
         }
 
         private int InsertTrade(Entities context, string user, int team, string teamName, int quantity, int price, string side, int universeCompetitionId, string connectionId, HashSet<string> usersToNotify)
@@ -332,8 +332,8 @@ namespace SignalR
             var buyerMoney = context.Moneys.FirstOrDefault(x => x.User == buyer && x.IdUniverseCompetition == universeCompetitionId);
             var sellerMoney = context.Moneys.FirstOrDefault(x => x.User == seller && x.IdUniverseCompetition == universeCompetitionId);
 
-//            buyerMoney.Money1 -= price * quantity;
-//            sellerMoney.Money1 += price * quantity;
+            buyerMoney.Money1 -= price * quantity;
+            sellerMoney.Money1 += price * quantity;
         }
 
         private void InsertNewOrder(Entities context, string user, int team, int quantity, int price, string side, int idUniverseCompetition, string connectionId)

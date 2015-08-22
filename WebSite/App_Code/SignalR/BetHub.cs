@@ -22,7 +22,6 @@ namespace SignalR
         private readonly BetClient _betClient;
         private static readonly Dictionary<string, string> _userConnectionId = new Dictionary<string, string>();
         private static readonly Dictionary<Tuple<string, int>, DateTime> _userLastSeenTrades = new Dictionary<Tuple<string, int>, DateTime>();
-        private Random _random;
 
         public override Task OnConnected()
         {
@@ -49,7 +48,6 @@ namespace SignalR
 
         public BetHub()
         {
-            _random = new Random();
             ApplicationDbContext = new ApplicationDbContext();
             UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(ApplicationDbContext));
 
@@ -63,8 +61,7 @@ namespace SignalR
 
         public void SendOrder(string team, int quantity, int price, string side, int universeId, int competitionId, int universeCompetitionId)
         {
-            _betClient.NewOrder(
-            _random.Next(100).ToString(), team, quantity, price, side.ToUpper(), Context.ConnectionId, universeId, competitionId, universeCompetitionId);
+            _betClient.NewOrder(User, team, quantity, price, side.ToUpper(), Context.ConnectionId, universeId, competitionId, universeCompetitionId);
         }
 
         public void CancelOrder(string side, string team, int universeId, int competitionId, int competitionUniverseId)
