@@ -1,0 +1,175 @@
+.leaflet-center {
+	width: 40%;
+	margin-left: auto;
+	margin-right: auto;
+	position: relative;
+}
+.leaflet-control-geosearch, .leaflet-control-geosearch ul {
+	border-radius: 7px;
+	background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);
+	margin: 10px 0 0 0;
+	padding: 5px;
+	width: 100%;
+	height: auto;
+}
+.leaflet-control-geosearch-msg ul {
+	list-style: none;
+	display: none;
+	height: auto;
+	background: none;
+	padding: 0;
+}
+.leaflet-control-geosearch ul li {
+	background: none repeat scroll 0 0 rgba(255, 255, 255, 0.75);
+    border-radius: 4px;
+    margin: 2px 0;
+    padding: 4px;
+    font: 12px arial;
+    text-indent: 4px;
+}
+.leaflet-container .leaflet-control-geosearch input {
+	width: 100%;
+	height: 28px;
+	padding: 0;
+	text-indent: 8px;
+	background: rgba(255, 255, 255, 0.75);			
+	border-radius: 4px;
+	border: none;
+}
+
+.info {
+	padding: 6px 8px;
+	font: 14px/16px Arial, Helvetica, sans-serif;
+	background: white;
+	background: rgba(255,255,255,0.8);
+	box-shadow: 0 0 15px rgba(0,0,0,0.2);
+	border-radius: 5px;
+}
+.info h4 {
+	margin: 0 0 5px;
+	color: #777;
+}
+#Menu {
+	font-size:75%;
+	width: 245px;
+	height: 300px;
+}
+
+@media only screen and (max-width: 479px){
+   #Menu {
+     display:none; 
+   }
+}
+
+.legend {
+	text-align: left;
+	line-height: 18px;
+	color: #555;
+}
+
+.legend i {
+	width: 18px;
+	height: 18px;
+	float: left;
+	margin-right: 8px;
+	opacity: 0.7;
+} 
+		
+body {
+	padding: 0;
+	margin: 0;
+}
+
+html, body, #map {
+	height: 100%;
+}
+
+table {
+	border-collapse:collapse;
+	margin: 0 0 5px;
+}	
+
+TD.fixed-TD120 {
+	width: 120px;
+}
+		
+TD.fixed-TD60 {
+	width: 60px;
+}
+		
+TD.fixed-TD40 {
+	width: 40px;
+}
+		
+TH.fixed-TH100 {
+	width: 100px;
+	border-bottom: 1px solid grey;
+	border-top: 1px solid grey;
+	border-collapse:collapse;
+}
+		
+TH{
+	border-bottom: 1px solid grey;
+	border-top: 1px solid grey;
+	border-collapse:collapse;
+}
+
+.marker-cluster-small {
+	background-color: rgba(181, 226, 140, 0.6);
+	}
+.marker-cluster-small div {
+	background-color: rgba(110, 204, 57, 0.6);
+	}
+
+.marker-cluster-medium {
+	background-color: rgba(241, 211, 87, 0.6);
+	}
+.marker-cluster-medium div {
+	background-color: rgba(240, 194, 12, 0.6);
+	}
+
+.marker-cluster-large {
+	background-color: rgba(253, 156, 115, 0.6);
+	}
+.marker-cluster-large div {
+	background-color: rgba(241, 128, 23, 0.6);
+	}
+
+.marker-cluster {
+	background-clip: padding-box;
+	border-radius: 20px;
+	}
+.marker-cluster div {
+	width: 30px;
+	height: 30px;
+	margin-left: 5px;
+	margin-top: 5px;
+
+	text-align: center;
+	border-radius: 15px;
+	font: 12px "Helvetica Neue", Arial, Helvetica, sans-serif;
+	}
+.marker-cluster span {
+	line-height: 30px;
+	}
+	
+#PoliceSummary td {
+	padding: 5px;
+	text-align: right;
+}
+
+#Uploading{
+	min-height: 250px;
+	height: 250px;
+    overflow: -moz-scrollbars-vertical;
+	overflow: scroll;
+} 
+
+#newFountainDiv {
+    background-color: #fff;
+    border-radius: 10px 10px 10px 10px;
+    box-shadow: 0 0 25px 5px #999;
+    color: #111;
+    display: none;
+    padding: 25px;
+}

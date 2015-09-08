@@ -40,11 +40,6 @@ public partial class _Default : Page
         return Chats.GetChat(Master.SelectedUniverseId);
     }
 
-    protected List<string> GetTeamFor(int competitionId)
-    {
-        return Sql.GetTeamsForCompetition(competitionId).Select(x => x.Name).ToList();
-    }
-
     protected void LogInAsGuest(object sender, EventArgs e)
     {
         var random = new Random();

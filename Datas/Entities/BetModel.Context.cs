@@ -7,15 +7,12 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using Microsoft.AspNet.Identity.EntityFramework;
-using WorldCupBetting;
-
 namespace Datas.Entities
 {
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
-
+    
     public partial class Entities : DbContext
     {
         public Entities()
@@ -41,5 +38,9 @@ namespace Datas.Entities
         public virtual DbSet<CompetitionGame> CompetitionGames { get; set; }
         public virtual DbSet<CompetitionPrize> CompetitionPrizes { get; set; }
         public virtual DbSet<CompetitionResult> CompetitionResults { get; set; }
+        public virtual DbSet<SwapOrder> SwapOrders { get; set; }
+        public virtual DbSet<SwapTrade> SwapTrades { get; set; }
+        public virtual DbSet<NewTradeChecked> NewTradeCheckeds { get; set; }
+        public virtual DbSet<Fountain> Fountains { get; set; }
     }
 }

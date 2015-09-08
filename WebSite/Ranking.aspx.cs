@@ -12,7 +12,7 @@ public partial class Ranking : Page
 
     protected object GetRanks()
     {
-        var moneys = Sql.GetRankingForAUniverse(Master.SelectedUniverseId)
+        var moneys = Sql.GetRankingForAUniverse(Master.GetCompetitionUniverseId())
             .Select(x => new RankingInfo{User = x.Key, Money = x.Value})
             .ToList();
 

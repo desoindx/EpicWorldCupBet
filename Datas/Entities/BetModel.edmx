@@ -45,6 +45,18 @@
           <Property Name="Tie" Type="float" Nullable="false" />
           <Property Name="Score" Type="float" Nullable="false" />
         </EntityType>
+        <EntityType Name="Fountains">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Long" Type="float" Nullable="false" />
+          <Property Name="Lat" Type="float" Nullable="false" />
+          <Property Name="Antoine" Type="datetime" />
+          <Property Name="Camille" Type="datetime" />
+          <Property Name="Loic" Type="datetime" />
+          <Property Name="Xavier" Type="datetime" />
+        </EntityType>
         <EntityType Name="Moneys">
           <Key>
             <PropertyRef Name="User" />
@@ -53,6 +65,15 @@
           <Property Name="User" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Money1" Type="int" Nullable="false" />
           <Property Name="IdUniverseCompetition" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="NewTradeChecked">
+          <Key>
+            <PropertyRef Name="User" />
+            <PropertyRef Name="IdUniverseCompetition" />
+          </Key>
+          <Property Name="User" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IdUniverseCompetition" Type="int" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Orders">
           <Key>
@@ -84,6 +105,36 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
           <Property Name="DefaultValue" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SwapOrders">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="User" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="BuyTeam" Type="int" Nullable="false" />
+          <Property Name="BuyQuantity" Type="int" Nullable="false" />
+          <Property Name="SellTeam" Type="int" Nullable="false" />
+          <Property Name="SellQuantity" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="Price" Type="int" Nullable="false" />
+          <Property Name="IdUniverseCompetition" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SwapTrades">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Buyer" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Seller" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="BuyTeam" Type="int" Nullable="false" />
+          <Property Name="BuyQuantity" Type="int" Nullable="false" />
+          <Property Name="SellTeam" Type="int" Nullable="false" />
+          <Property Name="SellQuantity" Type="int" Nullable="false" />
+          <Property Name="Price" Type="int" Nullable="false" />
+          <Property Name="IdUniverseCompetition" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Teams">
           <Key>
@@ -139,10 +190,14 @@
           <EntitySet Name="CompetitionPrizes" EntityType="Self.CompetitionPrizes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CompetitionResults" EntityType="Self.CompetitionResults" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Competitions" EntityType="Self.Competitions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Fountains" EntityType="Self.Fountains" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Moneys" EntityType="Self.Moneys" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NewTradeChecked" EntityType="Self.NewTradeChecked" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ResultOverridedValues" EntityType="Self.ResultOverridedValues" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Results" EntityType="Self.Results" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SwapOrders" EntityType="Self.SwapOrders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SwapTrades" EntityType="Self.SwapTrades" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Teams" EntityType="Self.Teams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Trades" EntityType="Self.Trades" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UniverseAvailables" EntityType="Self.UniverseAvailables" Schema="dbo" store:Type="Tables" />
@@ -203,6 +258,10 @@
           <EntitySet Name="CompetitionGames" EntityType="BetModel.CompetitionGame" />
           <EntitySet Name="CompetitionPrizes" EntityType="BetModel.CompetitionPrize" />
           <EntitySet Name="CompetitionResults" EntityType="BetModel.CompetitionResult" />
+          <EntitySet Name="SwapOrders" EntityType="BetModel.SwapOrder" />
+          <EntitySet Name="SwapTrades" EntityType="BetModel.SwapTrade" />
+          <EntitySet Name="NewTradeCheckeds" EntityType="BetModel.NewTradeChecked" />
+          <EntitySet Name="Fountains" EntityType="BetModel.Fountain" />
           </EntityContainer>
         <EntityType Name="Competition">
           <Key>
@@ -296,6 +355,57 @@
           <Property Name="Result" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="CompetitionId" Type="Int32" Nullable="false" />
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="SwapOrder">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="User" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="BuyTeam" Type="Int32" Nullable="false" />
+          <Property Name="BuyQuantity" Type="Int32" Nullable="false" />
+          <Property Name="SellTeam" Type="Int32" Nullable="false" />
+          <Property Name="SellQuantity" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="Price" Type="Int32" Nullable="false" />
+          <Property Name="IdUniverseCompetition" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SwapTrade">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Buyer" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Seller" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="BuyTeam" Type="Int32" Nullable="false" />
+          <Property Name="BuyQuantity" Type="Int32" Nullable="false" />
+          <Property Name="SellTeam" Type="Int32" Nullable="false" />
+          <Property Name="SellQuantity" Type="Int32" Nullable="false" />
+          <Property Name="Price" Type="Int32" Nullable="false" />
+          <Property Name="IdUniverseCompetition" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="NewTradeChecked">
+          <Key>
+            <PropertyRef Name="User" />
+            <PropertyRef Name="IdUniverseCompetition" />
+          </Key>
+          <Property Name="User" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IdUniverseCompetition" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="Fountain">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Long" Type="Double" Nullable="false" />
+          <Property Name="Lat" Type="Double" Nullable="false" />
+          <Property Name="Antoine" Type="DateTime" Precision="3" />
+          <Property Name="Camille" Type="DateTime" Precision="3" />
+          <Property Name="Loic" Type="DateTime" Precision="3" />
+          <Property Name="Xavier" Type="DateTime" Precision="3" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -443,6 +553,60 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+          <EntitySetMapping Name="SwapOrders">
+            <EntityTypeMapping TypeName="BetModel.SwapOrder">
+              <MappingFragment StoreEntitySet="SwapOrders">
+                <ScalarProperty Name="IdUniverseCompetition" ColumnName="IdUniverseCompetition" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="SellQuantity" ColumnName="SellQuantity" />
+                <ScalarProperty Name="SellTeam" ColumnName="SellTeam" />
+                <ScalarProperty Name="BuyQuantity" ColumnName="BuyQuantity" />
+                <ScalarProperty Name="BuyTeam" ColumnName="BuyTeam" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="User" ColumnName="User" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SwapTrades">
+            <EntityTypeMapping TypeName="BetModel.SwapTrade">
+              <MappingFragment StoreEntitySet="SwapTrades">
+                <ScalarProperty Name="IdUniverseCompetition" ColumnName="IdUniverseCompetition" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="SellQuantity" ColumnName="SellQuantity" />
+                <ScalarProperty Name="SellTeam" ColumnName="SellTeam" />
+                <ScalarProperty Name="BuyQuantity" ColumnName="BuyQuantity" />
+                <ScalarProperty Name="BuyTeam" ColumnName="BuyTeam" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Seller" ColumnName="Seller" />
+                <ScalarProperty Name="Buyer" ColumnName="Buyer" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NewTradeCheckeds">
+            <EntityTypeMapping TypeName="BetModel.NewTradeChecked">
+              <MappingFragment StoreEntitySet="NewTradeChecked">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="IdUniverseCompetition" ColumnName="IdUniverseCompetition" />
+                <ScalarProperty Name="User" ColumnName="User" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Fountains">
+            <EntityTypeMapping TypeName="BetModel.Fountain">
+              <MappingFragment StoreEntitySet="Fountains">
+                <ScalarProperty Name="Xavier" ColumnName="Xavier" />
+                <ScalarProperty Name="Loic" ColumnName="Loic" />
+                <ScalarProperty Name="Camille" ColumnName="Camille" />
+                <ScalarProperty Name="Antoine" ColumnName="Antoine" />
+                <ScalarProperty Name="Lat" ColumnName="Lat" />
+                <ScalarProperty Name="Long" ColumnName="Long" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>

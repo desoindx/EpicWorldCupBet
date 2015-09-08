@@ -9,6 +9,11 @@ namespace Pricer
     {
         private static readonly Dictionary<string, BasicCompetition> Competitions = new Dictionary<string, BasicCompetition>();
 
+        public static void Clear()
+        {
+            Competitions.Clear();
+        }
+
         public static Dictionary<Team, double> Price(string competitionName, Dictionary<Team, double> strengths)
         {
             var competition = GetCompetion(competitionName);

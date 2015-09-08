@@ -31,6 +31,7 @@ namespace SignalR.SQL
                     UserCompetitions.Clear();
                     UserUniversesRights.Clear();
                     CompetitionTeams.Clear();
+                    Pricer.PricerHelper.Clear();
                     return;
                 case Caches.TeamsName:
                     TeamsName.Clear();

@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="_Default" %>
+﻿<%@ Page Title="Actions" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="_Default" %>
 
 <%@ MasterType VirtualPath="~/Site.Master" %>
 
@@ -20,7 +20,7 @@
     <div id="myAlert" class="alert hiddenAlert" role="alert">
         <label id="alertMessage">These is not the message you are looking for</label>
     </div>
-    <div style="position: absolute; left: 50%; margin-left: -138px;">
+    <div style="position: absolute; left: 50%; margin-left: -138px; z-index: 100;">
         <input style="margin-top: 20px; margin-bottom: 20px; width: 250px;" type="button" id="OpenPopUp" value="Place New Order" class="btn btn-primary btn-lg" />
     </div>
     <div style="position: absolute; left: 50%; margin-left: -455px;">
@@ -49,7 +49,7 @@
                     <td>
                         <div class="teamSelectPicker" id="TeamOrderDiv">
                             <select class="selectpicker" id="TeamOrder">
-                                <% foreach (var team in GetTeamFor(Master.GetCompetitionId()))
+                                <% foreach (var team in Master.GetTeamFor(Master.GetCompetitionId()))
                                    { %>
                                 <option><%: team %></option>
                                 <% } %>

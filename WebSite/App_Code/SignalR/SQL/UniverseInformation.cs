@@ -16,16 +16,16 @@ namespace SignalR.SQL
                 dict[key] = value;
         }
 
-        public static Dictionary<string, int> GetRankingForAUniverse(int idUniverse)
+        public static Dictionary<string, int> GetRankingForAUniverse(int idUniverseCompetition)
         {
             var moneys = new Dictionary<string, int>();
             using (var context = new Entities())
             {
-                var competitions = context.UniverseCompetitions.Where(x => x.IdUniverse == idUniverse).ToList();
+                var competitions = context.UniverseCompetitions.Where(x => x.Id == idUniverseCompetition).ToList();
                 foreach (var competition in competitions)
                     GetRankingForACompetition(competition, moneys, context);
 
-                var currentMoney = context.Moneys.Where(x => moneys.Keys.Contains<string>(x.User));
+                var currentMoney = context.Moneys.Where(x => x.IdUniverseCompetition == idUniverseCompetition && moneys.Keys.Contains<string>(x.User));
                 foreach (var money in currentMoney)
                 {
                     moneys.UpdateOrSet(money.User, money.Money1, (x, y) => x + y);

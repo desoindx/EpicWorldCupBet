@@ -28,7 +28,7 @@ public partial class Account_ResetPassword : System.Web.UI.Page
     {
         if (ModelState.IsValid)
         {
-            var user = await Master.UserManager.FindByNameAsync(Email.Text);
+            var user = await Master.UserManager.FindByEmailAsync(Email.Text);
             if (user == null)
             {
                 FailureText.Text = "Adress Mail not valid";
@@ -39,7 +39,7 @@ public partial class Account_ResetPassword : System.Web.UI.Page
             var result = await Master.UserManager.ResetPasswordAsync(user.Id, _code, Password.Text);
             if (result.Succeeded)
             {
-                SuccessText.Text = "Your Email has been correctly changed.";
+                SuccessText.Text = "Your Password has been correctly changed.";
                 ErrorMessage.Visible = false;
                 SuccessMessage.Visible = true;
                 return;

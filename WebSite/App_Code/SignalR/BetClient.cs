@@ -319,7 +319,7 @@ namespace SignalR
         {
             var trade = new Trade
             {
-                Date = DateTime.Now,
+                Date = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Romance Standard Time")),
                 Quantity = quantity,
                 Team = team,
                 Buyer = buyer,
@@ -350,7 +350,7 @@ namespace SignalR
 
             var order = new Order
             {
-                Date = DateTime.Now,
+                Date = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Romance Standard Time")),
                 Quantity = quantity,
                 Status = 0,
                 Team = team,
@@ -530,7 +530,7 @@ namespace SignalR
 
         private static List<string> GetTradeList(DateTime lastSeen, int competitionId, int competitionUniverseId, out bool newTrade)
         {
-            var limitDate = DateTime.Now.AddDays(-1);
+            var limitDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Romance Standard Time")).AddDays(-1);
             var tradesList = new List<string>();
             newTrade = false;
             using (var context = new Entities())

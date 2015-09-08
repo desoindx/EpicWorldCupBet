@@ -112,8 +112,8 @@ namespace Manager
                 if (competition == null)
                 {
                     competition = context.Competitions.Create();
-                    competition.EndDate = DateTime.Now.AddYears(1);
-                    competition.StartDate = DateTime.Now;
+                    competition.EndDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Romance Standard Time")).AddYears(1);
+                    competition.StartDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Romance Standard Time"));
                     competition.Name = competitionName;
                     competition.Type = string.Empty;
                     context.Competitions.Add(competition);
@@ -157,8 +157,8 @@ namespace Manager
                         newPrize.RoundKey = round;
                         context.CompetitionPrizes.Add(newPrize);
                     }
-                    context.SaveChanges();
                 }
+                context.SaveChanges();
             }
         }
 
@@ -211,8 +211,8 @@ namespace Manager
                         newResult.RoundKey = roundKey;
                         context.CompetitionResults.Add(newResult);
                     }
-                    context.SaveChanges();
                 }
+                context.SaveChanges();
             }
         }
 
@@ -243,8 +243,8 @@ namespace Manager
                         newGame.RoundKey = roundKey;
                         context.CompetitionGames.Add(newGame);
                     }
-                    context.SaveChanges();
                 }
+                context.SaveChanges();
             }
         }
 

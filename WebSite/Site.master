@@ -5,7 +5,7 @@
 <head runat="server">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%: Page.Title %> - Epic World Cup Betting</title>
+    <title><%: Page.Title %> - ESE</title>
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/bundles/modernizr") %>
     </asp:PlaceHolder>
@@ -46,7 +46,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html">Epic Sport Exchange</a>
+                <a class="navbar-brand" href="Default">Epic Sport Exchange</a>
             </div>
             <!-- /.navbar-header -->
             <div class="navbar-header-center" style="margin-left: 50px">
@@ -95,20 +95,30 @@
                     </a>
                     <ul id="ListTrade" class="dropdown-menu scrollable-menu">
                     </ul>
-                    </li>
+                </li>
                 <!-- /.dropdown -->
-            <% } %>
+                <% } %>
             </ul>
             <!-- /.navbar-top-links -->
 
             <div class="navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
-                        <li>
-                            <a runat="server" href="~/Default"><i class="fa fa-table fa-fw"></i>Home</a>
-                        </li>
                         <% if (Context.User.Identity.IsAuthenticated)
                            { %>
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-table fa-fw"></i>Exchange
+                            </a>
+                            <ul class="nav nav-second-level collapse">
+                                <li>
+                                    <a runat="server" href="~/Default"><i class="fa fa-dollar fa-fw"></i>Actions</a>
+                                </li>
+                                <li>
+                                    <a runat="server" href="~/Default"><i class="fa fa-random fa-fw"></i>Swaps</a>
+                                </li>
+                            </ul>
+                        </li>
                         <li>
                             <a runat="server" href="~/Positions"><i class="fa fa-dashboard fa-fw"></i>Positions</a>
                         </li>
@@ -119,6 +129,9 @@
                             <a runat="server" href="~/History"><i class="fa fa-history fa-fw"></i>History</a>
                         </li>
                         <% } %>
+                        <li>
+                            <a runat="server" href="~/About"><i class="fa fa-question-circle fa-fw"></i>Rules</a>
+                        </li>
                         <li>
                             <a runat="server" href="~/Contact"><i class="fa fa-envelope fa-fw"></i>Contact</a>
                         </li>
@@ -136,8 +149,26 @@
                     <% if (Context.User.Identity.IsAuthenticated || Page.Title == "Register" || Page.Title == "Forgot Password" || Page.Title == "Reset Password")
                        { %><div class="col-lg-12">
                            <div class="body-content container-fluid">
+                               <% if (UserHasUniverse || Page.Title == "Register" || Page.Title == "Join Universe" || Page.Title == "Forgot Password" || Page.Title == "Reset Password")
+                                  { %>
                                <asp:ContentPlaceHolder ID="MainContent" runat="server">
                                </asp:ContentPlaceHolder>
+                               <% }
+                                  else
+                                  {%><div style="text-align: center">
+                           <p>
+                               <label class="h2">You don't have any universe configurated !</label>
+                           </p>
+                           <p>
+                               <a runat="server" href="~/Create">
+                                   <input style="margin-left: 10px; margin-top: 30px" type="button" id="CreateUniverse" class="btn btn-info" value="I want to create my own" />
+                               </a>
+                               <a runat="server" href="~/Join">
+                                   <input style="margin-left: 80px; margin-top: 30px;" type="button" class="btn btn-info" id="JoinUniverse" value="I want to join an existing universe" />
+                               </a>
+                           </p>
+                       </div>
+                               <% } %>
                            </div>
                        </div>
                     <% }
@@ -169,10 +200,7 @@
                                             <input class="form-control" placeholder="Password" name="password" type="password" value="">
                                         </div>
                                         <div class="checkbox">
-                                            <label>
-                                                <input name="remember" id="rememberCheckBox" type="checkbox" value="False" onclick="Checked();">Remember Me
-                                            </label>
-                                            <a runat="server" href="~/ForgotPassword" style="margin-left: 45px; float: right;">Reset my password !</a>
+                                            <a runat="server" href="~/ForgotPassword" style="margin-right: 45px; float: left;">Reset my password !</a>
                                             <a runat="server" href="~/Register" style="margin-left: 45px; float: right;">Create an account !</a>
                                         </div>
                                         <!-- Change this to a button or input when using this as a form -->

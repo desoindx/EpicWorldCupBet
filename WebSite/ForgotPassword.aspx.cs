@@ -18,7 +18,7 @@ public partial class Account_ForgotPassword : System.Web.UI.Page
         {
             var email = Request.Form["Email"];
             var user = await Master.UserManager.FindByEmailAsync(email);
-            if (user == null || !(user.EmailConfirmed))
+            if (user == null)
             {
                 FailureText.Text = "Adress Mail not valid";
                 ErrorMessage.Visible = true;
@@ -26,7 +26,7 @@ public partial class Account_ForgotPassword : System.Web.UI.Page
             }
 
             var code = await Master.UserManager.GeneratePasswordResetTokenAsync(user.Id);
-            var url = new UriBuilder("http://epicworldcupbet.apphb.com/Account/ResetPassword");
+            var url = new UriBuilder("http://www.epicsportexchange.com/ResetPassword");
             var parameters = HttpUtility.ParseQueryString(string.Empty);
             parameters["Id"] = user.Id;
             parameters["Code"] = code;

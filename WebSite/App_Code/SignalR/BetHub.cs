@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
+using Datas.Entities;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -21,7 +23,7 @@ namespace SignalR
         private string User { get { return Context.User.Identity.Name; } }
         private readonly BetClient _betClient;
         private static readonly Dictionary<string, string> _userConnectionId = new Dictionary<string, string>();
-        private static readonly Dictionary<Tuple<string, int>, DateTime> _userLastSeenTrades = new Dictionary<Tuple<string, int>, DateTime>();
+        private static Dictionary<Tuple<string, int>, DateTime> _userLastSeenTrades;
 
         public override Task OnConnected()
         {
@@ -71,6 +73,14 @@ namespace SignalR
 
         public void GetTradeHistory(int competitionId, int competitionUniverseId)
         {
+            if (_userLastSeenTrades == null)
+            {
+                using (var context = new Entities())
+                {
+                    _userLastSeenTrades = context.NewTradeCheckeds.ToDictionary(x => new Tuple<string, int>(x.User, x.IdUniverseCompetition),
+                        x => x.Date);
+                }
+            }
             DateTime userLastSeenTrade;
             if (
                 !_userLastSeenTrades.TryGetValue(new Tuple<string, int>(User, competitionUniverseId),
@@ -78,12 +88,33 @@ namespace SignalR
             {
                 userLastSeenTrade = DateTime.MinValue;
             }
+
             _betClient.GetTradeHistory(userLastSeenTrade, competitionId, competitionUniverseId, Context.ConnectionId);
         }
 
         public void ShowTradeHistory(int competitionUniverseId)
         {
-            _userLastSeenTrades[new Tuple<string, int>(User, competitionUniverseId)] = DateTime.Now;
+            var userLastSeenTrade = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Romance Standard Time"));
+            using (var context = new Entities())
+            {
+                var newTradeChecked = context.NewTradeCheckeds.FirstOrDefault(x => x.IdUniverseCompetition == competitionUniverseId && x.User == User);
+                if (newTradeChecked == null)
+                {
+                    newTradeChecked = new NewTradeChecked
+                    {
+                        Date = userLastSeenTrade,
+                        IdUniverseCompetition = competitionUniverseId,
+                        User = User
+                    };
+                    context.NewTradeCheckeds.Add(newTradeChecked);
+                }
+                else
+                {
+                    newTradeChecked.Date = userLastSeenTrade;
+                }
+                context.SaveChanges();
+            }
+            _userLastSeenTrades[new Tuple<string, int>(User, competitionUniverseId)] = userLastSeenTrade;
         }
 
         public void SendMessage(int universeId, string message)
@@ -101,7 +132,10 @@ namespace SignalR
 
         public void ClearCache(string cache)
         {
-            Sql.ClearCache(cache);
+            if (Context.User.IsInRole("Admin"))
+            {
+                Sql.ClearCache(cache);
+            }
         }
     }
 }

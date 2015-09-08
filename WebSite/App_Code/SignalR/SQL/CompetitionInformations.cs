@@ -100,6 +100,38 @@ namespace SignalR.SQL
             return orders;
         }
 
+        public static List<SwapR> GetSwaps(string user, int universeId, int competitionId)
+        {
+            if (string.IsNullOrEmpty(user))
+                return null;
+
+            var orders = new List<SwapR>();
+            using (var context = new Entities())
+            {
+                if (!IsUserAuthorizedOn(user, universeId, context))
+                    return null;
+
+                int id;
+                if (!TryGetUniverseCompetitionId(universeId, competitionId, context, out id))
+                    return null;
+
+                var swaps = context.SwapOrders.Where(x => x.IdUniverseCompetition == id && x.Status == 0);
+                foreach (var swap in swaps)
+                {
+                    orders.Add(new SwapR
+                    {
+                        BuyQuantity = swap.BuyQuantity,
+                        BuyTeam = GetTeamName(swap.BuyTeam),
+                        IsMine = swap.User == user,
+                        Price = swap.Price,
+                        SellQuantity = swap.SellQuantity,
+                        SellTeam = GetTeamName(swap.SellTeam)
+                    });
+                }
+            }
+            return orders;
+        }
+
         public static OrderR GetTeamInformation(Entities context, string user, string teamName, int universeId, int competitionId)
         {
             if (!context.UniverseAvailables.Any(x => x.UserName == user && x.IdUniverse == universeId))

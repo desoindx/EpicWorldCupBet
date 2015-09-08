@@ -2,21 +2,77 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <h3>Rules :</h3>
-    <p>Every participant start the contest with 10000 euros</p>
-    <p>During all the world cup you can buy or sell teams to the other participant</p>
+    <p>Every participant start the contest with 100 000 euros</p>
+    <p>During all the competition you can buy or sell teams to the other participant</p>
     <p>When a team is eliminated you cannot trade it anymore</p>
     <p>At the end of the competition you receive/pay the following amount</p>
-    <p>1000 euros for the winner</p>
-    <p>750 euros for the second</p>
-    <p>500 euros for the third</p>
-    <p>450 euros for the fourth</p>
-    <p>250 euros if the team was eliminated in 1/4th finals</p>
-    <p>100 euros if the team was eliminated in 1/8th finals</p>
-    <p>For example you decide to buy from John 5 Brazil at 650 euros</p>
+
+    <p>Rugby World Cup 2015</p>
+    <table>
+        <tbody style="margin-left: 50px">
+            <tr>
+                <td>Winner</td>
+                <td>1000$</td>
+            </tr>
+            <tr>
+                <td>Second</td>
+                <td>750$</td>
+            </tr>
+            <tr>
+                <td>Third</td>
+                <td>500$</td>
+            </tr>
+            <tr>
+                <td>Fourth</td>
+                <td>450$</td>
+            </tr>
+            <tr>
+                <td>Quarter Finalist</td>
+                <td>200$</td>
+            </tr>
+            <tr>
+                <td>Third place in group phase</td>
+                <td>50$</td>
+            </tr>
+            <tr>
+                <td>Fourth place in group phase</td>
+                <td>10$</td>
+            </tr>
+        </tbody>
+    </table>
+    <p>Champions League 2015/2016</p>
+    <table>
+        <tbody style="margin-left: 50px">
+            <tr>
+                <td>Winner</td>
+                <td>1000$</td>
+            </tr>
+            <tr>
+                <td>Second</td>
+                <td>750$</td>
+            </tr>
+            <tr>
+                <td>Semi Finalist</td>
+                <td>450$</td>
+            </tr>
+            <tr>
+                <td>Quarter Finalist</td>
+                <td>250$</td>
+            </tr>
+            <tr>
+                <td>Height Finalist</td>
+                <td>100$</td>
+            </tr>
+            <tr>
+                <td>UEFA Qualification</td>
+                <td>25$</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p>For example you decide to buy from John 5 New-Zealand at 650 euros</p>
     <p>John directly received 3250 (650 x 5) euros</p>
     <p>At the end of the world cup</p>
-    <p>If the Brazil won the world cup John pay you 5000 (5 x 1000) euros (you made a +1750 euros PnL)</p>
-    <p>If the Brazil is eliminated in quarter finals John pay you 1250 (5 x 250) euros (you made a -2000 euros PnL)</p>
-    <p>For the final payoff i'll use the following calculator (depending on the number of participant)</p>
-    <a href="http://www.diypokertour.com/pokertour.aspx?tabindex=6&tabid=136">http://www.diypokertour.com/pokertour.aspx?tabindex=6&tabid=136</a>
+    <p>If the New-Zealand won the world cup John pay you 5000 (5 x 1000) euros (you made a +1750 euros PnL)</p>
+    <p>If the New-Zealand is eliminated in quarter finals John pay you 1000 (5 x 200) euros (you made a -2250 euros PnL)</p>
 </asp:Content>

@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Datas.Entities;
+using SignalR.SQL;
 using WorldCupBetting;
 
 public partial class Universe_Join : System.Web.UI.Page
@@ -61,7 +62,9 @@ public partial class Universe_Join : System.Web.UI.Page
                             User = Context.User.Identity.Name
                         });
                     }
+
                     context.SaveChanges();
+                    Sql.ClearCache(SignalR.SQL.Caches.All);
                     IdentityHelper.RedirectToReturnUrl(Request.QueryString["ReturnUrl"], Response);
                 }
                 else

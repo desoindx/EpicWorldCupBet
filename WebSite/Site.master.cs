@@ -9,6 +9,7 @@ using System.Web.UI.WebControls;
 using Datas.Entities;
 using Datas.User;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using SignalR.SQL;
 using WorldCupBetting;
@@ -65,6 +66,19 @@ public partial class SiteMaster : MasterPage
         }
 
         Page.PreLoad += master_Page_PreLoad;
+
+//
+//        var userManager = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
+//        var roleManager = HttpContext.Current.GetOwinContext().Get<ApplicationRoleManager>();
+//        const string roleName = "Admin";
+//        var role = new IdentityRole(roleName);
+//        var roleresult = roleManager.Create(role);
+//        var user = userManager.FindByName("Xavier");
+//        var rolesForUser = userManager.GetRoles(user.Id);
+//        if (!rolesForUser.Contains(role.Name))
+//        {
+//            var result = userManager.AddToRole(user.Id, role.Name);
+//        }
     }
 
     protected void master_Page_PreLoad(object sender, EventArgs e)
@@ -187,7 +201,7 @@ public partial class SiteMaster : MasterPage
         if (user != null)
         {
 
-            SignInManager.SignIn(user, Request.Form["remember"] == "True", true);
+            SignInManager.SignIn(user, true, true);
             Response.Redirect("~/Default.aspx");
             IdentityHelper.RedirectToReturnUrl(Request.QueryString["ReturnUrl"], Response);
         }
@@ -196,6 +210,11 @@ public partial class SiteMaster : MasterPage
             FailureText.Text = "Invalid username or password.";
             ErrorMessage.Visible = true;
         }
+    }
+
+    public List<string> GetTeamFor(int competitionId)
+    {
+        return Sql.GetTeamsForCompetition(competitionId).Select(x => x.Name).ToList();
     }
 
     protected string GetMoney()

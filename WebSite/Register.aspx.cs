@@ -27,10 +27,9 @@ public partial class Account_Register : Page
             IdentityResult result = Master.UserManager.Create(user, Password.Text);
             if (result.Succeeded)
             {
-                Master.SignInManager.SignIn(user, false, true);
                 var code = await Master.UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
 
-                var url = new UriBuilder("http://epicworldcupbet.apphb.com/ConfirmEmail");
+                var url = new UriBuilder("http://www.epicsportexchange.com/ConfirmEmail");
                 var parameters = HttpUtility.ParseQueryString(string.Empty);
                 parameters["Id"] = user.Id;
                 parameters["Code"] = code;
@@ -40,7 +39,10 @@ public partial class Account_Register : Page
                    "Confirm your account",
                    "Please confirm your account by clicking <a href=\""
                                                    + url + "\">here</a>");
+
+                Master.SignInManager.SignIn(user, false, true);
                 Response.Redirect("~/Default.aspx");
+                IdentityHelper.RedirectToReturnUrl(Request.QueryString["ReturnUrl"], Response);
             }
             else
             {
