@@ -19,8 +19,6 @@
 
     <script src="SCRIPTS/leaflet_numbered_markers.js"></script>
     <script src="SCRIPTS/point.js"></script>
-    <script src="SCRIPTS/event.js"></script>
-
     <script src="SCRIPTS/GeoSearch/l.control.geosearch.js"></script>
     <script src="SCRIPTS/GeoSearch/l.geosearch.provider.openstreetmap.js"></script>
 
@@ -43,8 +41,6 @@
     <script src="SCRIPTS/Draw/Toolbar.js"></script>
     <script src="SCRIPTS/Draw/draw/DrawToolbar.js"></script>
     <script src="SCRIPTS/Draw/edit/EditToolbar.js"></script>
-    <script src="http://maps.google.com/maps/api/js?v=3.2&sensor=false"></script>
-    <script src="SCRIPTS/google.js"></script>
     <script type="text/javascript" src="../Scripts/jquery.signalR-2.0.3.min.js"></script>
     <script type="text/javascript" src="../../signalr/hubs"></script>
     <script src="Fountain.js"></script>
@@ -60,17 +56,17 @@
                     </p>
                 </asp:PlaceHolder>
                 <div class="form-group">
-                    <asp:TextBox runat="server" id="Longitude" Text="" style="display:none"/>
-                    <asp:TextBox runat="server" id="Lattitude" Text="" style="display:none"/>
+                    <asp:TextBox runat="server" ID="Longitude" Text="" Style="display: none" />
+                    <asp:TextBox runat="server" ID="Lattitude" Text="" Style="display: none" />
                 </div>
                 <div class="form-group">
-                    <asp:CheckBox runat="server" id="Antoine" Text="Antoine"/>
-                    <asp:CheckBox runat="server" id="Camille" Text="Camille"/>
-                    <asp:CheckBox runat="server" id="Loic" Text="Loic"/>
-                    <asp:CheckBox runat="server" id="Xavier" Text="Xavier"/>
+                    <asp:CheckBox runat="server" ID="Antoine" Text="Antoine" />
+                    <asp:CheckBox runat="server" ID="Camille" Text="Camille" />
+                    <asp:CheckBox runat="server" ID="Loic" Text="Loic" />
+                    <asp:CheckBox runat="server" ID="Xavier" Text="Xavier" />
                 </div>
                 <div class="form-group">
-                    <asp:FileUpload type="file" runat="server" capture="camera" accept="image/*" id="Upload" name="cameraInput"/>
+                    <asp:FileUpload type="file" runat="server" capture="camera" accept="image/*" ID="Upload" name="cameraInput" />
                 </div>
                 <!-- Change this to a button or input when using this as a form -->
                 <asp:Button runat="server" OnClick="Save" Text="Save Fountain" CssClass="btn btn-primary" />
@@ -80,42 +76,35 @@
     <div id="map"></div>
     <div id="Menu">
         <ul>
-            <li><a href="#Summary">Summary</a></li>
+            <li><a href="#Summary">Foutain</a></li>
         </ul>
         <div id="Summary">
-            <div id="PoliceSummaryAccordion">
-                <ul>
-                    <li><a href="#PoliceSummary">Foutain</a></li>
-                </ul>
-                <div id="PoliceSummary">
-                    <table>
-                        <tr>
-                            <td><b>Colloc</b></td>
-                            <td><b>First Found</b></td>
-                            <td><b>Found</b></td>
-                        </tr>
-                        <% LoadStats();
-                           foreach (var user in Fountains)
-                           {
-                              %> 
-                        <tr>
-                            <td><%:user.Key %></td>
-                            <td><%:user.Value.Item1 %></td>
-                            <td><%:user.Value.Item2 %></td>
-                        </tr>
-                          <%  } %>
-                        <tr>
-                            <td>Total</td>
-                            <td>-</td>
-                            <td><%:FountainsCount %></td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
+            <table>
+                <tr>
+                    <td><b>Colloc</b></td>
+                    <td><b>First Found</b></td>
+                    <td><b>Found</b></td>
+                </tr>
+                <% LoadStats();
+                   foreach (var user in Fountains)
+                   {
+                %>
+                <tr>
+                    <td><%:user.Key %></td>
+                    <td><%:user.Value.Item1 %></td>
+                    <td><%:user.Value.Item2 %></td>
+                </tr>
+                <%  } %>
+                <tr>
+                    <td>Total</td>
+                    <td>-</td>
+                    <td><%:FountainsCount %></td>
+                </tr>
+            </table>
         </div>
     </div>
     <script type="text/javascript">
-        init();
+        $("#Menu").tabs();
         var menu = L.control({ position: 'bottomleft' });
         menu.onAdd = function (map) {
             this._div = document.getElementById('Menu');
@@ -132,7 +121,7 @@
             return this._div;
         };
 
-       
+
         function highlightFeature(e) {
             //layer is the object that fired the event (May be a multypolygon in that case)
             var layer = e.target;
@@ -184,33 +173,37 @@
         }
 
         function updatePosition(pos) {
-            map = new L.Map('map', { center: new L.LatLng(pos.coords.latitude, pos.coords.longitude), zoom: 18, minZoom:6 });
+            map = new L.Map('map', { center: new L.LatLng(pos.coords.latitude, pos.coords.longitude), zoom: 18, minZoom: 6 });
             createMap();
         }
 
         function positionError(pos) {
-            map = new L.Map('map', { center: new L.LatLng(47.39, 8.545), zoom: 18, minZoom:6 });
+            map = new L.Map('map', { center: new L.LatLng(47.39, 8.545), zoom: 18, minZoom: 6 });
             createMap();
         }
 
         navigator.geolocation.getCurrentPosition(updatePosition, positionError);
 
         function createMap() {
-            var googleLayer = new L.Google('ROADMAP');
-            map.addLayer(googleLayer);
+            L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+                attribution: 'Gotta find \'em all ! By Antoine, Camille, Loic and Xavier',
+                maxZoom: 18,
+                id: 'djidane.ciebm5cmz001ttdmakbfuuv2x',
+                accessToken: 'pk.eyJ1IjoiZGppZGFuZSIsImEiOiJiNTU1NWU3YmYxNGRmMzhjNGQ5MjFjMWNkODQwMTM4OCJ9.m_HYDHlcIL6WRIwRwWApTA'
+            }).addTo(map);
 
-            map.on('overlayremove', function(eventLayer) {
+            map.on('overlayremove', function (eventLayer) {
                 this.removeControl(legend);
                 this.removeControl(info);
 
             });
 
-            map.on('overlayadd', function(eventLayer) {
+            map.on('overlayadd', function (eventLayer) {
                 legend.addTo(this);
                 info.addTo(this);
             });
 
-            map.on('geosearch_showlocation', function(result) {
+            map.on('geosearch_showlocation', function (result) {
                 map.setZoom(17);
             });
 
@@ -224,12 +217,7 @@
             map.addLayer(drawnItems);
 
             var drawControl = new L.Control.Draw({
-                float: 'bottomleft',
                 draw: {
-                    polyline: false,
-                    rectangle: false,
-                    polygon: false,
-                    circle: false,
                     marker: {
                         shapeOptions: {
                             color: '#662d91'
@@ -240,17 +228,16 @@
                             color: '#662d91'
                         }
                     }
-                },
-                edit: false
+                }
             });
             map.addControl(drawControl);
 
-            map.on('draw:created', function(e) {
+            map.on('draw:created', function (e) {
                 drawnItems.addLayer(e.layer);
                 $("#Longitude").val(e.layer._latlng.lng);
                 $("#Lattitude").val(e.layer._latlng.lat);
                 $("#newFountainDiv").bPopup({
-                    onOpen: function() {
+                    onOpen: function () {
                     },
                     follow: [false, false],
                     speed: 250,

@@ -51,8 +51,6 @@
 }
 #Menu {
 	font-size:75%;
-	width: 245px;
-	height: 300px;
 }
 
 @media only screen and (max-width: 479px){
@@ -153,7 +151,7 @@ TH{
 	line-height: 30px;
 	}
 	
-#PoliceSummary td {
+#Summary td {
 	padding: 5px;
 	text-align: right;
 }

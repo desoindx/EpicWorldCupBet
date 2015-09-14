@@ -242,18 +242,18 @@ function getNumberOfPointToDisplay(zoom) {
         return 50;
     if (zoom > 16)
         return 25;
-    if (zoom > 13)
+    if (zoom > 11)
         return 10;
-    
+
     return 1;
 }
 
 function findMarkers(currentCluster) {
-    var north = map.getBounds().getNorth();
-    var south = map.getBounds().getSouth();
-    var east = map.getBounds().getEast();
-    var west = map.getBounds().getWest();
-    var size = (east - west) / 20;
+    var mapBounds = map.getBounds();
+    var north = mapBounds.getNorth();
+    var south = mapBounds.getSouth();
+    var east = mapBounds.getEast();
+    var west = mapBounds.getWest();
 
     var maxPoint = getNumberOfPointToDisplay(map.getZoom());
     var bounds = new rectangle(north, south, east, west);
@@ -281,8 +281,8 @@ function findMarkers(currentCluster) {
                 if (myCluster.leftChild.marker != null) {
                     var m = myCluster.leftChild.marker;
                     var images = '';
-                    for (var i = 0; i < m.images.length; i++) {
-                        images += '<img style="width:' + winWidth / 4 + 'px;height: ' + winHeight / 4 + 'px;" src="' + m.images[i] + '" runat="server"/>';
+                    for (var j = 0; j < m.images.length; j++) {
+                        images += '<img style="width:' + winWidth / 4 + 'px;height: ' + winHeight / 4 + 'px;" src="' + m.images[j] + '" runat="server"/>';
                     }
                     markers.push(L.marker([m.y, m.x], {
                         icon: createSingleIcon(m.found)
@@ -299,8 +299,8 @@ function findMarkers(currentCluster) {
                 if (myCluster.rightChild.marker != null) {
                     var m = myCluster.rightChild.marker;
                     var images = '';
-                    for (var i = 0; i < m.images.length; i++) {
-                        images += '<img style="width:' + winWidth / 4 + 'px;height: ' + winHeight / 4 + 'px;" src="' + m.images[i] + '" runat="server"/>';
+                    for (var j = 0; j < m.images.length; j++) {
+                        images += '<img style="width:' + winWidth / 4 + 'px;height: ' + winHeight / 4 + 'px;" src="' + m.images[j] + '" runat="server"/>';
                     }
                     markers.push(L.marker([m.y, m.x], {
                         icon: createSingleIcon(m.found)
@@ -317,8 +317,8 @@ function findMarkers(currentCluster) {
             if (myCluster.marker != null) {
                 var m = myCluster.marker;
                 var images = '';
-                for (var i = 0; i < m.images.length; i++) {
-                    images += '<img style="width:' + winWidth / 4 + 'px;height: ' + winHeight / 4 + 'px;" src="' + m.images[i] + '" runat="server"/>';
+                for (var j = 0; j < m.images.length; j++) {
+                    images += '<img style="width:' + winWidth / 4 + 'px;height: ' + winHeight / 4 + 'px;" src="' + m.images[j] + '" runat="server"/>';
                 }
                 markers.push(L.marker([m.y, m.x], {
                     icon: createSingleIcon(m.found)

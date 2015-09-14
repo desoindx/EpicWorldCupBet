@@ -28,7 +28,7 @@ L.drawLocal = {
 			},
 			marker: {
 				tooltip: {
-					start: 'Click map to place marker.'
+					start: 'Click map to add a fountain.'
 				}
 			},
 			polygon: {
