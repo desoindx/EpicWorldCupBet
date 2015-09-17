@@ -16,7 +16,7 @@ public partial class Fountain : Page
 
     protected void Save(object sender, EventArgs e)
     {
-        if (Upload.PostedFile != null && (Antoine.Checked || Camille.Checked || Loic.Checked || Xavier.Checked))
+        if (Upload.PostedFile != null && !string.IsNullOrEmpty(Upload.PostedFile.FileName) && (Antoine.Checked || Camille.Checked || Loic.Checked || Xavier.Checked))
         {
             var longitude = FormatDouble(Longitude.Text);
             var lattitude = FormatDouble(Lattitude.Text);

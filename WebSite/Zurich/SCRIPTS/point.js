@@ -236,14 +236,26 @@ function getLevel(currentCluster, size) {
 }
 
 function getNumberOfPointToDisplay(zoom) {
+    if (zoom == 22)
+        return 10000;
+    if (zoom == 21)
+        return 512;
+    if (zoom == 20)
+        return 256;
+    if (zoom == 19)
+        return 128;
     if (zoom == 18)
-        return 100;
-    if (zoom > 17)
-        return 50;
-    if (zoom > 16)
-        return 25;
-    if (zoom > 11)
-        return 10;
+        return 64;
+    if (zoom == 17)
+        return 32;
+    if (zoom == 16)
+        return 16;
+    if (zoom == 15)
+        return 8;
+    if (zoom == 14)
+        return 4;
+    if (zoom == 13)
+        return 2;
 
     return 1;
 }
@@ -280,16 +292,16 @@ function findMarkers(currentCluster) {
             if (myCluster.leftChild != null) {
                 if (myCluster.leftChild.marker != null) {
                     var m = myCluster.leftChild.marker;
-                    var images = '';
+                    var images = '<table style="width:100%"><tr>';
                     for (var j = 0; j < m.images.length; j++) {
-                        images += '<img style="width:' + winWidth / 4 + 'px;height: ' + winHeight / 4 + 'px;" src="' + m.images[j] + '" runat="server"/>';
+                        images += '<td><img style="height:' + winHeight / 4 + 'px;width: auto;" src="' + m.images[j] + '" runat="server"/></td>';
                     }
                     markers.push(L.marker([m.y, m.x], {
                         icon: createSingleIcon(m.found)
                     })
                     .on('click', onMarkerClick)
                     .bindPopup(images +
-                            '<button onclick="checkExistingFountain(' + m.x + ',' + m.y + ')">I\'m here!</button>'));
+                            '</tr></table><button onclick="checkExistingFountain(' + m.x + ',' + m.y + ')">I\'m here!</button>'));
                 }
                 else if (intersects(myCluster.leftChild.bounds, bounds)) {
                     nextLevelClusters.push(myCluster.leftChild);
@@ -298,16 +310,16 @@ function findMarkers(currentCluster) {
             if (myCluster.rightChild != null) {
                 if (myCluster.rightChild.marker != null) {
                     var m = myCluster.rightChild.marker;
-                    var images = '';
+                    var images = '<table style="width:100%"><tr>';
                     for (var j = 0; j < m.images.length; j++) {
-                        images += '<img style="width:' + winWidth / 4 + 'px;height: ' + winHeight / 4 + 'px;" src="' + m.images[j] + '" runat="server"/>';
+                        images += '<td><img style="height:' + winHeight / 4 + 'px;width:auto;" src="' + m.images[j] + '" runat="server"/></td>';
                     }
                     markers.push(L.marker([m.y, m.x], {
                         icon: createSingleIcon(m.found)
                     })
                       .on('click', onMarkerClick)
                       .bindPopup(images +
-                            '<button onclick="checkExistingFountain(' + m.x + ',' + m.y + ')">I\'m here!</button>'));
+                            '</tr></table><button onclick="checkExistingFountain(' + m.x + ',' + m.y + ')">I\'m here!</button>'));
                 }
                 else if (intersects(myCluster.rightChild.bounds, bounds)) {
                     nextLevelClusters.push(myCluster.rightChild);
@@ -316,16 +328,16 @@ function findMarkers(currentCluster) {
 
             if (myCluster.marker != null) {
                 var m = myCluster.marker;
-                var images = '';
+                var images = '<table style="width:100%"><tr>';
                 for (var j = 0; j < m.images.length; j++) {
-                    images += '<img style="width:' + winWidth / 4 + 'px;height: ' + winHeight / 4 + 'px;" src="' + m.images[j] + '" runat="server"/>';
+                    images += '<td><img style="height:' + winHeight / 4 + 'px;width:auto" src="' + m.images[j] + '" runat="server"/></td>';
                 }
                 markers.push(L.marker([m.y, m.x], {
                     icon: createSingleIcon(m.found)
                 })
                   .on('click', onMarkerClick)
                   .bindPopup(images +
-                        '<button onclick="checkExistingFountain(' + m.x + ',' + m.y + ')">I\'m here!</button>'));
+                        '</tr></table><button onclick="checkExistingFountain(' + m.x + ',' + m.y + ')">I\'m here!</button>'));
             }
         }
 

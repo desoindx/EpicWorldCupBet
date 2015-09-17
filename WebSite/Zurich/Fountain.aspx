@@ -174,7 +174,29 @@
 
         function updatePosition(pos) {
             map = new L.Map('map', { center: new L.LatLng(pos.coords.latitude, pos.coords.longitude), zoom: 18, minZoom: 6 });
+            posmarker = [];
+            refreshPos(pos);
             createMap();
+        }
+
+        function refreshPos(pos) {
+            for (var i = 0; i < posmarker.length; i++) {
+                map.removeLayer(posmarker[i]);
+            }
+
+            posmarker = [];
+            posmarker.push(L.marker([pos.coords.latitude, pos.coords.longitude], {
+                icon: new L.DivIcon({ html: '<div><img src="Icons/ico_curr_pos.png"></img></div>', iconSize: new L.Point(30, 30) })
+            }).on('click', refreshPosition));
+
+            L.layerGroup(posmarker).addTo(map);
+        }
+
+        function refreshPosition(e) {
+            navigator.geolocation.getCurrentPosition(refreshPos, refreshPositionError);
+        }
+
+        function refreshPositionError(pos) {
         }
 
         function positionError(pos) {
@@ -187,7 +209,7 @@
         function createMap() {
             L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
                 attribution: 'Gotta find \'em all ! By Antoine, Camille, Loic and Xavier',
-                maxZoom: 18,
+                maxZoom: 22,
                 id: 'djidane.ciebm5cmz001ttdmakbfuuv2x',
                 accessToken: 'pk.eyJ1IjoiZGppZGFuZSIsImEiOiJiNTU1NWU3YmYxNGRmMzhjNGQ5MjFjMWNkODQwMTM4OCJ9.m_HYDHlcIL6WRIwRwWApTA'
             }).addTo(map);
@@ -245,6 +267,8 @@
                     transitionClose: 'slideBack'
                 });
             });
+
+            init();
         }
     </script>
 </body>
