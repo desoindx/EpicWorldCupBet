@@ -15,10 +15,10 @@
     <link href="Content/slick.headerbuttons.css" rel="stylesheet">
     <link href="Content/slick.headermenu.css" rel="stylesheet">
     <link href="Content/slick.pager.css" rel="stylesheet">
-    <link href="Content/bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
-    <link href="Content/bower_components/metisMenu/dist/metisMenu.css" rel="stylesheet">
-    <link href="Content/dist/css/sb-admin-2.css" rel="stylesheet">
-    <link href="Content/bower_components/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css">
+    <link href="Content/bootstrap.css" rel="stylesheet">
+    <link href="Content/metisMenu.css" rel="stylesheet">
+    <link href="Content/sb-admin-2.css" rel="stylesheet">
+    <link href="Content/font-awesome.css" rel="stylesheet" type="text/css">
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <script src="Scripts/jquery-1.10.2.js"></script>
     <script src="Scripts/jquery.event.drag.min.js"></script>
@@ -26,8 +26,8 @@
     <script src="Scripts/SlickGrid/slick.grid.js"></script>
     <script src="Scripts/bootstrap.min.js"></script>
     <script src="Scripts/bootstrap-select.js"></script>
-    <script src="Content/bower_components/metisMenu/dist/metisMenu.min.js"></script>
-    <script src="Content/dist/js/sb-admin-2.js"></script>
+    <script src="Content/metisMenu.js"></script>
+    <script src="Content/sb-admin-2.js"></script>
     <script src="Scripts/hoverIntent.js"></script>
     <script type="text/javascript" src="Scripts/jquery.signalR-2.0.3.min.js"></script>
     <script type="text/javascript" src="../signalr/hubs"></script>
