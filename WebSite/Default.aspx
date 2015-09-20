@@ -23,16 +23,16 @@
     <div id="cashInfos">
         <table>
             <tr>
-                <td>Cash Available : <%: Master.GetMoney() %> $</td>
-                <td>Max Exposition : <%: GetVar() %> $</td>
-                <td>Cash To Invest : <%: GetCashToInvest() %> $</td>
+                <td id="cashAvailable">Cash Available : <%: Master.GetMoney() %> $</td>
+                <td id="maxExposition">Max Exposition : <%: GetVar() %> $</td>
+                <td id="cashToInvest">Cash To Invest : <%: GetCashToInvest() %> $</td>
             </tr>
         </table>
     </div>
-    <div style="position: absolute; left: 50%; margin-left: -138px; z-index: 100;top:25px">
+    <div style="position: absolute; left: 50%; margin-left: -138px; z-index: 100;top:45px">
         <input style="margin-top: 20px; margin-bottom: 20px; width: 250px;" type="button" id="OpenPopUp" value="Place New Order" class="btn btn-primary btn-lg" />
     </div>
-    <div style="position: absolute; left: 50%; margin-left: -455px;top:30px">
+    <div style="position: absolute; left: 50%; margin-left: -455px;top:45px">
         <div style="margin-top: 80px; width: 920px; height: 900px;" id='<%: "BidAskDiv-" + Master.GetCompetitionId() %>'>
         </div>
     </div>

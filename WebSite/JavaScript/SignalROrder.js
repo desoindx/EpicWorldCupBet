@@ -62,15 +62,20 @@ $(function () {
             $("#myAlert").removeClass("hiddenAlert");
             $("#myAlert").addClass(newClass);
             $("#myAlert").addClass("visibleAlert");
+            $("#cashInfos").addClass("hiddenAlert");
             $("#alertMessage").html(message);
             setTimeout(function () {
                 $("#myAlert").removeClass(newClass);
                 $("#myAlert").removeClass("visibleAlert");
+                $("#cashInfos").removeClass("hiddenAlert");
                 $("#myAlert").addClass("hiddenAlert");
             }, 5000);
         },
-        newMoney: function (money) {
-            $("#UserMoney").text(money + '$');
+        updateCashInfos: function (cashAvailable, maxExposition, cashToInvest) {
+            $("#UserMoney").text(cashAvailable);
+            $("#cashAvailable").text(cashAvailable);
+            $("#maxExposition").text(maxExposition);
+            $("#cashToInvest").text(cashToInvest);
         }
     });
 

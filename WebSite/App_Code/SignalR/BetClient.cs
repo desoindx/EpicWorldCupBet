@@ -17,11 +17,17 @@ namespace SignalR
 
         private readonly Dictionary<string, OrderBook> _orderBooks;
 
+        public NumberFormatInfo NumberFormatInfo { get; set; }
+
         public BetClient(IHubConnectionContext clients, Dictionary<string, string> userConnectionId)
         {
             _orderBooks = new Dictionary<string, OrderBook>();
             Clients = clients;
             _userConnectionId = userConnectionId;
+
+            NumberFormatInfo = (NumberFormatInfo)CultureInfo.InvariantCulture.NumberFormat.Clone();
+            var nfi = NumberFormatInfo;
+            nfi.NumberGroupSeparator = " ";
         }
 
         private IHubConnectionContext Clients
@@ -255,7 +261,7 @@ namespace SignalR
 
                     if (UserHasEnough(context, user, choosedTeam, quantity, price, side, universeId, competitionId, universeCompetitionId))
                     {
-                        var remainingQuantity = InsertTrade(context, user, choosedTeam.Id, choosedTeam.Name, quantity, price, side, universeCompetitionId, connectionId, usersToNotify);
+                        var remainingQuantity = InsertTrade(context, user, choosedTeam.Id, choosedTeam.Name, quantity, price, side, universeId, competitionId, universeCompetitionId, connectionId, usersToNotify);
                         if (remainingQuantity > 0)
                             InsertNewOrder(context, user, choosedTeam.Id, remainingQuantity, price, side, universeCompetitionId, connectionId);
 
@@ -282,7 +288,7 @@ namespace SignalR
             return userMoney.Money1 - signedQuantity * price + worstScenario >= 0;
         }
 
-        private int InsertTrade(Entities context, string user, int team, string teamName, int quantity, int price, string side, int universeCompetitionId, string connectionId, HashSet<string> usersToNotify)
+        private int InsertTrade(Entities context, string user, int team, string teamName, int quantity, int price, string side, int universeId, int competitionId, int universeCompetitionId, string connectionId, HashSet<string> usersToNotify)
         {
             IQueryable<Order> matchingOrders = side == "BUY"
                 ? context.Orders.Where(
@@ -303,15 +309,30 @@ namespace SignalR
                 if (quantity < matchingOrder.Quantity)
                 {
                     matchingOrder.Quantity -= quantity;
-                    return 0;
+                    quantity = 0;
+                    break;
                 }
 
                 matchingOrder.Status = 1;
                 quantity -= matchingOrder.Quantity;
 
                 if (quantity == 0)
-                    return 0;
+                {
+                    break;
+                }
             }
+
+            var positions = Sql.GetPosition(user, universeId, competitionId);
+            var simulationResults = PricerHelper.GetVars(context.Competitions.First(x => x.Id == competitionId).Name, positions, new List<double> { 0, 0.1, 0.5, 0.9, 1 });
+            var worst10 = simulationResults.Last().Worst10;
+            var money =
+                context.Moneys.First(x => x.IdUniverseCompetition == universeCompetitionId && x.User == user).Money1;
+            Clients.Client(connectionId)
+                .updateCashInfos(string.Format("Cash Available :{0} $", money.ToString("#,##0", NumberFormatInfo)),
+                    string.Format("Max Exposition :{0} $", worst10.ToString("#,##0", NumberFormatInfo)),
+                    string.Format("Cash To Invest :{0} $", (money + worst10).ToString("#,##0", NumberFormatInfo)));
+                
+
             return quantity;
         }
 
@@ -372,10 +393,10 @@ namespace SignalR
             int i = 0;
             foreach (var user in users)
             {
-                order = Sql.GetTeamInformation(context, user, team, universeId, competitionId);
                 string connectionId;
                 if (_userConnectionId.TryGetValue(user, out connectionId))
                 {
+                    order = Sql.GetTeamInformation(context, user, team, universeId, competitionId);
                     Clients.Client(connectionId).newPrice(order, true, competitionId);
                     connectionIdToIgnore[i] = connectionId;
                     i++;

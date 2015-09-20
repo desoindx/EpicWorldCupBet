@@ -69,8 +69,11 @@ $(function () {
                 $("#myAlert").addClass("hiddenAlert");
             }, 5000);
         },
-        newMoney: function (money) {
-            $("#UserMoney").text(money + '$');
+        updateCashInfos: function (cashAvailable, maxExposition, cashToInvest) {
+            $("#UserMoney").text(cashAvailable);
+            $("#cashAvailable").text(cashAvailable);
+            $("#maxExposition").text(maxExposition);
+            $("#cashToInvest").text(cashToInvest);
         }
     });
 

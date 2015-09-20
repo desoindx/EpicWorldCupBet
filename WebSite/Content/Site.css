@@ -101,10 +101,9 @@
 }
 
 .visibleAlert {
-    margin-top: 50px;
+    z-index: 150;
 }
 
 .hiddenAlert {
-    margin-top: 50px;
     display: none;
 }
