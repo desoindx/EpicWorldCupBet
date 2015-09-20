@@ -1,6 +1,5 @@
 ﻿function init() {
     var fountainHub = $.connection.Fountain;
-
     // Add client-side hub methods that the server will call
     $.extend(fountainHub.client, {
         displayFountains: function (fountainsList) {
@@ -31,5 +30,15 @@
             winWidth = $(window).width();
             winHeight = $(window).height();
         });
-
 };
+
+function openIphoneMenu() {
+    $("#Menu").bPopup({
+        onOpen: function () {
+        },
+        follow: [false, false],
+        speed: 250,
+        transition: 'slideIn',
+        transitionClose: 'slideBack'
+    });
+}

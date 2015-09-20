@@ -10,10 +10,8 @@ namespace SignalR.SQL
         public static void UpdateOrSet<K, V>(this Dictionary<K, V> dict, K key, V value, Func<V, V, V> operation)
         {
             V currentValue;
-            if (dict.TryGetValue(key, out currentValue))
-                dict[key] = operation(currentValue, value);
-            else
-                dict[key] = value;
+            dict.TryGetValue(key, out currentValue);
+            dict[key] = operation(currentValue, value);
         }
 
         public static Dictionary<string, int> GetRankingForAUniverse(int idUniverseCompetition)

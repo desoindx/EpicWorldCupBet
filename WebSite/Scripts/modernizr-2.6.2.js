@@ -174,7 +174,7 @@ window.Modernizr = (function( window, document, undefined ) {
     /*>>mq*/
     // adapted from matchMedia polyfill
     // by Scott Jehl and Paul Irish
-    // gist.github.com/786768
+    // gist.github.com/7861275
     testMediaQuery = function( mq ) {
 
       var matchMedia = window.matchMedia || window.msMatchMedia;
@@ -1337,7 +1337,7 @@ window.Modernizr = (function( window, document, undefined ) {
     //   * You must specify values. Eg. If you are testing support for the min-width media query use:
     //       Modernizr.mq('(min-width:0)')
     // usage:
-    // Modernizr.mq('only screen and (max-width:768)')
+    // Modernizr.mq('only screen and (max-width:1275)')
     Modernizr.mq            = testMediaQuery;
     /*>>mq*/
 

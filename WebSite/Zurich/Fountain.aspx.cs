@@ -70,7 +70,7 @@ public partial class Fountain : Page
     {
         _fountains.Add("Antoine", new Tuple<int, int>(0,0));
         _fountains.Add("Camille", new Tuple<int, int>(0,0));
-        _fountains.Add("Loic", new Tuple<int, int>(0, 0));
+        _fountains.Add("Loïc", new Tuple<int, int>(0, 0));
         _fountains.Add("Xavier", new Tuple<int, int>(0, 0));
 
         using (var context = new Entities())

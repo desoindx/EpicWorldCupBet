@@ -18,7 +18,7 @@ body {
     background-color: #fff;
 }
 
-@media(min-width:768px) {
+@media(min-width: 1275px) {
     #page-wrapper {
         position: inherit;
         margin: 0 0 0 150px;
@@ -132,7 +132,7 @@ body {
     padding-left: 52px;
 }
 
-@media(min-width:768px) {
+@media(min-width: 1275px) {
     .sidebar {
         z-index: 1;
         position: absolute;

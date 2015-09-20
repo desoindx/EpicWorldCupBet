@@ -20,10 +20,19 @@
     <div id="myAlert" class="alert hiddenAlert" role="alert">
         <label id="alertMessage">These is not the message you are looking for</label>
     </div>
-    <div style="position: absolute; left: 50%; margin-left: -138px; z-index: 100;">
+    <div id="cashInfos">
+        <table>
+            <tr>
+                <td>Cash Available : <%: Master.GetMoney() %> $</td>
+                <td>Max Exposition : <%: GetVar() %> $</td>
+                <td>Cash To Invest : <%: GetCashToInvest() %> $</td>
+            </tr>
+        </table>
+    </div>
+    <div style="position: absolute; left: 50%; margin-left: -138px; z-index: 100;top:25px">
         <input style="margin-top: 20px; margin-bottom: 20px; width: 250px;" type="button" id="OpenPopUp" value="Place New Order" class="btn btn-primary btn-lg" />
     </div>
-    <div style="position: absolute; left: 50%; margin-left: -455px;">
+    <div style="position: absolute; left: 50%; margin-left: -455px;top:30px">
         <div style="margin-top: 80px; width: 920px; height: 900px;" id='<%: "BidAskDiv-" + Master.GetCompetitionId() %>'>
         </div>
     </div>

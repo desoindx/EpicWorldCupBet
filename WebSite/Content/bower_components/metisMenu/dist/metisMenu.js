@@ -65,7 +65,7 @@
             });
         },
 
-        isIE: function() { //https://gist.github.com/padolsey/527683
+        isIE: function() { //https://gist.github.com/padolsey/5212753
             var undef,
                 v = 3,
                 div = document.createElement("div"),

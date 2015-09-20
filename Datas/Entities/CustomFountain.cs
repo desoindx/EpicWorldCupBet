@@ -47,17 +47,17 @@ namespace Datas.Entities
 
             if (Loic.HasValue)
             {
-                var info = infos["Loic"];
-                infos["Loic"] = new Tuple<int, int>(info.Item1, info.Item2 + 1);
+                var info = infos["Loïc"];
+                infos["Loïc"] = new Tuple<int, int>(info.Item1, info.Item2 + 1);
                 if (Loic.Value < minDate)
                 {
                     users.Clear();
-                    users.Add("Loic");
+                    users.Add("Loïc");
                     minDate = Loic.Value;
                 }
                 else if (Loic.Value == minDate)
                 {
-                    users.Add("Loic");
+                    users.Add("Loïc");
                 }
             }
 

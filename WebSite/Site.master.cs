@@ -109,8 +109,8 @@ public partial class SiteMaster : MasterPage
         _currentUniverse = Sql.GetUserSelectedUniverse(Context.User.Identity.Name);
         _currentCompetition = Sql.GetUserSelectedCompetition(_currentUniverse, Context.User.Identity.Name, out _id);
 
-        _numberFormatInfo = (NumberFormatInfo)CultureInfo.InvariantCulture.NumberFormat.Clone();
-        var nfi = _numberFormatInfo;
+        NumberFormatInfo = (NumberFormatInfo)CultureInfo.InvariantCulture.NumberFormat.Clone();
+        var nfi = NumberFormatInfo;
         nfi.NumberGroupSeparator = " ";
     }
 
@@ -131,7 +131,7 @@ public partial class SiteMaster : MasterPage
     }
 
     private List<Competition> _universeCompetitions;
-    private NumberFormatInfo _numberFormatInfo;
+    public NumberFormatInfo NumberFormatInfo;
 
     protected List<Competition> UniverseCompetitions
     {
@@ -217,9 +217,11 @@ public partial class SiteMaster : MasterPage
         return Sql.GetTeamsForCompetition(competitionId).Select(x => x.Name).ToList();
     }
 
-    protected string GetMoney()
+    public double Money;
+
+    public string GetMoney()
     {
-        var money = Sql.GetMoney(Context.User.Identity.GetUserName(), _id);
-        return money.ToString("#,##0", _numberFormatInfo);
+        Money = Sql.GetMoney(Context.User.Identity.GetUserName(), _id);
+        return Money.ToString("#,##0", NumberFormatInfo);
     }
 }

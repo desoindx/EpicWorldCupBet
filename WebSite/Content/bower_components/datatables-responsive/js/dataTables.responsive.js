@@ -678,7 +678,7 @@ Responsive.prototype = {
 Responsive.breakpoints = [
 	{ name: 'desktop',  width: Infinity },
 	{ name: 'tablet-l', width: 1024 },
-	{ name: 'tablet-p', width: 768 },
+	{ name: 'tablet-p', width: 1275 },
 	{ name: 'mobile-l', width: 480 },
 	{ name: 'mobile-p', width: 320 }
 ];

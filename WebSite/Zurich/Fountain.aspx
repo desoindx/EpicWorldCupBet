@@ -62,7 +62,7 @@
                 <div class="form-group">
                     <asp:CheckBox runat="server" ID="Antoine" Text="Antoine" />
                     <asp:CheckBox runat="server" ID="Camille" Text="Camille" />
-                    <asp:CheckBox runat="server" ID="Loic" Text="Loic" />
+                    <asp:CheckBox runat="server" ID="Loic" Text="Loïc" />
                     <asp:CheckBox runat="server" ID="Xavier" Text="Xavier" />
                 </div>
                 <div class="form-group">
@@ -74,6 +74,9 @@
         </form>
     </div>
     <div id="map"></div>
+    <div id="IphoneMenu">
+        <img src="Icons/threelines.png" alt="" style="width: 36px;height: 36px;" onclick="openIphoneMenu();">
+    </div>
     <div id="Menu">
         <ul>
             <li><a href="#Summary">Foutain</a></li>
@@ -111,13 +114,9 @@
             return this._div;
         };
 
-        // control that shows state info on hover
-        var info = L.control({ position: 'bottomleft' });
-        //var infoEQ = L.control({position: 'topleft'});
-
-        info.onAdd = function (map) {
-            this._div = L.DomUtil.create('div', 'info');
-            this.update();
+        var iphoneMenu = L.control({ position: 'bottomleft' });
+        iphoneMenu.onAdd = function (map) {
+            this._div = document.getElementById('IphoneMenu');
             return this._div;
         };
 
@@ -208,7 +207,7 @@
 
         function createMap() {
             L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-                attribution: 'Gotta find \'em all ! By Antoine, Camille, Loic and Xavier',
+                attribution: 'Gotta find \'em all ! By Antoine, Camille, Loïc and Xavier',
                 maxZoom: 22,
                 id: 'djidane.ciebm5cmz001ttdmakbfuuv2x',
                 accessToken: 'pk.eyJ1IjoiZGppZGFuZSIsImEiOiJiNTU1NWU3YmYxNGRmMzhjNGQ5MjFjMWNkODQwMTM4OCJ9.m_HYDHlcIL6WRIwRwWApTA'
@@ -230,6 +229,7 @@
             });
 
             menu.addTo(map);
+            iphoneMenu.addTo(map);
 
             new L.Control.GeoSearch({
                 provider: new L.GeoSearch.Provider.OpenStreetMap(),
