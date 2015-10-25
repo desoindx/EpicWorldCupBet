@@ -4,6 +4,7 @@ using Datas.Entities;
 
 namespace Pricer
 {
+    [Serializable]
     public class StrengthCompetition : BasicCompetition
     {
         public Dictionary<Team, double> Strengths { get; set; }

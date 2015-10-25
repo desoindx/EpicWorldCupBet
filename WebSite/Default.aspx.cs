@@ -13,7 +13,6 @@ using WorldCupBetting;
 
 public partial class _Default : Page
 {
-    private double? _cashToInvest;
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -41,26 +40,6 @@ public partial class _Default : Page
     protected List<string[]> GetMessages()
     {
         return Chats.GetChat(Master.SelectedUniverseId);
-    }
-
-    protected string GetCashToInvest()
-    {
-        if (_cashToInvest == null)
-        {
-            GetVar();
-        }
-
-        return _cashToInvest.Value.ToString("#,##0", Master.NumberFormatInfo);
-    }
-
-    protected string GetVar()
-    {
-        var positions = Sql.GetPosition(Context.User.Identity.Name, Master.SelectedUniverseId, Master.GetCompetitionId());
-        var simulationResults = PricerHelper.GetVars(Master.GetCompetitionName(), positions, new List<double> {0, 0.1, 0.5, 0.9, 1});
-        var worst10 = simulationResults.Last().Worst10;
-        _cashToInvest = Master.Money + worst10;
-
-        return worst10.ToString("#,##0", Master.NumberFormatInfo);
     }
 
     protected void LogInAsGuest(object sender, EventArgs e)

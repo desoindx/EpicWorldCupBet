@@ -26,7 +26,7 @@ public class FountainR
         Xavier = fountain.Xavier;
 	    var zurichImages = "/Zurich/Images";
 	    var path = HttpContext.Current.Server.MapPath("~" + zurichImages);
-        Images = Directory.EnumerateFiles(path).Where(x => x.Contains(string.Format("\\Fountain-{0},{1}-", String.Format("{0:0.00000000}", Long), String.Format("{0:0.00000000}", Lat)))).Select(
+        Images = Directory.EnumerateFiles(path).Where(x => x.Contains(string.Format("\\Fountain-{0},{1}-", String.Format("{0:0.00000000}", Long).Replace(',', '.'), String.Format("{0:0.00000000}", Lat).Replace(',', '.')))).Select(
             x =>
             {
                 var strings = x.Split('\\');

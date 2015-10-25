@@ -6,6 +6,7 @@ using Datas.Entities;
 
 namespace Pricer
 {
+    [Serializable]
     public abstract class BasicCompetition
     {
         private const int SimulationNumber = 50000;
@@ -22,6 +23,7 @@ namespace Pricer
         private readonly List<CompetitionPrize> _prizes;
 
         public Dictionary<SimulationResult, int> Simulation { get; set; }
+        public string Name { get { return _name; } }
 
         public BasicCompetition(string name)
         {
@@ -212,7 +214,7 @@ namespace Pricer
                 {
                     originalTeams.Add(teams[i][permutations[i][count]]);
                 }
-                count ++;
+                count++;
             }
 
             for (int i = 1; i < roundToGenerate; i++)

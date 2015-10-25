@@ -39,9 +39,9 @@ function drawSwapsGrid(orders, competitionId) {
     var columns = [
       { id: "IsMine", name: "Mine", field: "IsMine", width: 40, sortable: true, formatter: checkBoxFormatter, resizable: false },
       { id: "BuyQuantity", name: "Quantity", field: "BuyQuantity", width: 130, sortable: true, resizable: false },
-      { id: "BuyTeam", name: "Buyed Team", field: "BuyTeam", width: 280, sortable: true, resizable: false },
+      { id: "BuyTeam", name: "Bought Team", field: "BuyTeam", width: 280, sortable: true, resizable: false },
       { id: "SellQuantity", name: "Quantity", field: "SellQuantity", width: 130, sortable: true, resizable: false },
-      { id: "SellTeam", name: "Selled Team", field: "SellTeam", width: 280, sortable: true, resizable: false },
+      { id: "SellTeam", name: "Sold Team", field: "SellTeam", width: 280, sortable: true, resizable: false },
       { id: "Price", name: "Price", field: "Price", width: 130, sortable: true, resizable: false }
     ],
     options = {
@@ -78,49 +78,19 @@ function drawSwapsGrid(orders, competitionId) {
         }
         var item = args.grid.getData()[args.row];
         showTeamSelectPicker();
-        $("#TeamOrder").selectpicker('val', item.TeamName);
+        $("#TeamBuy").selectpicker('val', item.SellTeam);
+        $("#TeamSell").selectpicker('val', item.BuyTeam);
 
-        if (cell.cell < 2) {
-            return;
-        }
-        else if (cell.cell == 2) {
-            $("#CancelOrder").hide();
-            $("#SellSide").prop( "checked", true );
-            if (item.BestBid != 0)
-                $("#PriceOrder").val(item.BestBid);
-            if (item.BesBestBidQuantitytBid != 0)
-                $("#QuantityOrder").val(item.BestBidQuantity);
-        }
-        else if (cell.cell == 3) {
-            $("#CancelOrder").hide();
-            $("#BuySide").prop("checked", true);
-            if (item.BestAsk != 0)
-                $("#PriceOrder").val(item.BestAsk);
-            if (item.BestAskQuantity != 0)
-                $("#QuantityOrder").val(item.BestAskQuantity);
-        }
-        else if (cell.cell == 4) {
+        if (item.IsMine) {
             $("#CancelOrder").show();
-            $("#CancelOrder").prop('value', 'Cancel Existing Order');
-            $("#BuySide").prop("checked", true);
-            if (item.MyBid != 0)
-                $("#PriceOrder").val(item.MyBid);
-            if (item.MyBidQuantity != 0)
-                $("#QuantityOrder").val(item.MyBidQuantity);
         }
-        else if (cell.cell == 5) {
-            $("#CancelOrder").show();
-            $("#CancelOrder").prop('value', 'Cancel Existing Order');
-            $("#SellSide").prop("checked", true);
-            if (item.MyAsk != 0)
-                $("#PriceOrder").val(item.MyAsk);
-            if (item.MyAskQuantity != 0)
-                $("#QuantityOrder").val(item.MyAskQuantity);
+        else {
+            $("#CancelOrder").hide();
         }
-        else if (cell.cell == 6) {
-            openBookPopup(item.Team);
-            return;
-        }
+
+        $("#QuantityBuyOrder").val(item.SellQuantity);
+        $("#QuantitySellOrder").val(item.BuyQuantity);
+        $("#PriceOrder").val(item.Price);
         openOrderPopup();
     });
 

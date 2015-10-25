@@ -66,6 +66,11 @@ namespace SignalR
             _betClient.NewOrder(User, team, quantity, price, side.ToUpper(), Context.ConnectionId, universeId, competitionId, universeCompetitionId);
         }
 
+        public void SendSwap(string buyTeam, int buyQuantity, string sellTeam, int sellQuantity, int price, int universeId, int competitionId, int universeCompetitionId)
+        {
+            _betClient.NewSwap(User, buyTeam, buyQuantity, sellTeam, sellQuantity, price, Context.ConnectionId, universeId, competitionId, universeCompetitionId);
+        }
+
         public void CancelOrder(string side, string team, int universeId, int competitionId, int competitionUniverseId)
         {
             _betClient.CancelOrder(User, side.ToUpper(), team, Context.ConnectionId, universeId, competitionId, competitionUniverseId);

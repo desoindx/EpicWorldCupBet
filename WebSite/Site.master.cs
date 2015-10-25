@@ -11,6 +11,7 @@ using Datas.User;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
+using Pricer;
 using SignalR.SQL;
 using WorldCupBetting;
 
@@ -218,10 +219,31 @@ public partial class SiteMaster : MasterPage
     }
 
     public double Money;
+    private double? _cashToInvest;
 
     public string GetMoney()
     {
         Money = Sql.GetMoney(Context.User.Identity.GetUserName(), _id);
         return Money.ToString("#,##0", NumberFormatInfo);
+    }
+
+    public string GetCashToInvest()
+    {
+        if (_cashToInvest == null)
+        {
+            GetVar();
+        }
+
+        return _cashToInvest.Value.ToString("#,##0", NumberFormatInfo);
+    }
+
+    public string GetVar()
+    {
+        var positions = Sql.GetPosition(Context.User.Identity.Name, SelectedUniverseId, GetCompetitionId());
+        var simulationResults = PricerHelper.GetVars(GetCompetitionName(), positions, new List<double> { 0, 0.1, 0.5, 0.9, 1 });
+        var worst10 = simulationResults.Last().Worst10;
+        _cashToInvest = Money + worst10;
+
+        return worst10.ToString("#,##0", NumberFormatInfo);
     }
 }

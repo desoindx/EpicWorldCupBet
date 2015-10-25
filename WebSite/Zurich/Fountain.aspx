@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="css/catExposure.css" />
 
     <script src="SCRIPTS/leaflet.js"></script>
+    <script src="SCRIPTS/Charts.js"></script>
 
     <script src="SCRIPTS/leaflet_numbered_markers.js"></script>
     <script src="SCRIPTS/point.js"></script>

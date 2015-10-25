@@ -5,6 +5,7 @@ using Datas.Entities;
 
 namespace Pricer
 {
+    [Serializable]
     public class SimulationResult
     {
         protected bool Equals(SimulationResult other)

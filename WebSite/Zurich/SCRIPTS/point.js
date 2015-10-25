@@ -68,6 +68,51 @@ function cluster(depth, bounds, leftChild, rightChild, marker, coordinatesPoint,
         return this.leftChild.numberOfChilds() + this.rightChild.numberOfChilds();
     }
 
+    this.getValues = getValues;
+    function getValues() {
+        if (this.leftChild == null && this.rightChild == null) {
+            var values = [];
+            if (this.marker.antoine) {
+                values.push(1);
+            } else {
+                values.push(0);
+            }
+            if (this.marker.camille) {
+                values.push(1);
+            } else {
+                values.push(0);
+            }
+            if (this.marker.loic) {
+                values.push(1);
+            } else {
+                values.push(0);
+            }
+            if (this.marker.xavier) {
+                values.push(1);
+            } else {
+                values.push(0);
+            }
+
+            return values;
+        }
+
+        if (this.leftChild == null)
+            return this.rightChild.getValues();
+
+        if (this.rightChild == null)
+            return this.leftChild.getValues();
+
+        var l = this.leftChild.getValues();
+        var r = this.rightChild.getValues();
+
+        for (var i = 0; i < 4; i++)
+        {
+            l[i] += r[i];
+        }
+
+        return l;
+    }
+
     this.valueOfChilds = valueOfChilds;
     function valueOfChilds() {
         if (this.leftChild == null && this.rightChild == null)
@@ -349,14 +394,18 @@ function findMarkers(currentCluster) {
     }
 
     for (var i = 0; i < clusters.length; i++) {
-        var marker = new L.Marker([clusters[i].coordinatesPoint.y, clusters[i].coordinatesPoint.x], {
-            icon: createIcon(clusters[i])
+        var clusteri = clusters[i];
+        var marker = new L.Marker([clusteri.coordinatesPoint.y, clusteri.coordinatesPoint.x], {
+            icon: createIcon(clusteri, i)
         });
         marker.on('click', onClusterClick);
         markers.push(marker);
     }
 
     L.layerGroup(markers).addTo(map);
+    for (var i = 0; i < clusters.length; i++) {
+        animatePieChart(clusters[i], i);
+    }
 }
 
 function onMarkerClick(e) {

@@ -7,8 +7,15 @@
             for (var i = 0; i < fountainsList.length; i++) {
                 var fountain = fountainsList[i];
                 fountains.push({
-                    x: fountain.Long, y: fountain.Lat, images: fountain.Images, found: fountain.Found
-                });
+                    x: fountain.Long,
+                    y: fountain.Lat,
+                    images: fountain.Images,
+                    found: fountain.Found,
+                    antoine: fountain.Antoine,
+                    camille: fountain.Camille,
+                    loic: fountain.Loic,
+                    xavier:fountain.Xavier
+            });
             }
 
             map.on('zoomend', function (eventLayer) {

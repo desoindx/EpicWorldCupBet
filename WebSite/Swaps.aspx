@@ -21,10 +21,19 @@
     <div id="myAlert" class="alert hiddenAlert" role="alert">
         <label id="alertMessage">These is not the message you are looking for</label>
     </div>
-    <div style="position: absolute; left: 50%; margin-left: -138px; z-index: 100;">
+    <div id="cashInfos">
+        <table>
+            <tr>
+                <td id="cashAvailable">Cash Available : <%: Master.GetMoney() %> $</td>
+                <td id="maxExposition">Max Exposition : <%: Master.GetVar() %> $</td>
+                <td id="cashToInvest">Cash To Invest : <%: Master.GetCashToInvest() %> $</td>
+            </tr>
+        </table>
+    </div>
+    <div style="position: absolute; left: 50%; margin-left: -138px; z-index: 100;top:45px">
         <input style="margin-top: 20px; margin-bottom: 20px; width: 250px;" type="button" id="OpenPopUp" value="Place New Swap" class="btn btn-primary btn-lg" />
     </div>
-    <div style="position: absolute; left: 50%; margin-left: -455px;">
+    <div style="position: absolute; left: 50%; margin-left: -455px;top:45px">
         <div style="margin-top: 80px; width: 920px; height: 900px;" id='<%: "BidAskDiv-" + Master.GetCompetitionId() %>'>
         </div>
     </div>
@@ -38,7 +47,7 @@
             <tbody>
                 <tr>
                     <td>
-                       <label>I want to buy :</label>
+                        <label>I want to buy :</label>
                     </td>
                 </tr>
                 <tr>
@@ -58,7 +67,7 @@
                 </tr>
                 <tr>
                     <td>
-                       <label>And sell :</label>
+                        <label>And sell :</label>
                     </td>
                 </tr>
                 <tr>
@@ -78,7 +87,7 @@
                 </tr>
                 <tr>
                     <td>
-                       <label>For a premium of :</label>
+                        <label>For a premium of :</label>
                     </td>
                 </tr>
                 <tr>
@@ -90,7 +99,7 @@
                 <tr>
                     <td>
                         <input style="margin-left: -50px; margin-top: 30px" type="button" id="SendOrder" class="btn btn-primary" value="Send New Swap" />
-                        <input style="margin-left: 50px; margin-top: 30px; display: none;" type="button" class="btn btn-danger" id="CancelOrder" value="Cancel Swap" />
+                        <input style="position: absolute; right: 20px; margin-top: 30px; display: none;" type="button" class="btn btn-danger" id="CancelOrder" value="Cancel Existing Swap" />
                     </td>
                 </tr>
             </tbody>

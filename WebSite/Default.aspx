@@ -24,8 +24,8 @@
         <table>
             <tr>
                 <td id="cashAvailable">Cash Available : <%: Master.GetMoney() %> $</td>
-                <td id="maxExposition">Max Exposition : <%: GetVar() %> $</td>
-                <td id="cashToInvest">Cash To Invest : <%: GetCashToInvest() %> $</td>
+                <td id="maxExposition">Max Exposition : <%: Master.GetVar() %> $</td>
+                <td id="cashToInvest">Cash To Invest : <%: Master.GetCashToInvest() %> $</td>
             </tr>
         </table>
     </div>

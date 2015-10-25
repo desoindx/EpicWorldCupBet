@@ -187,6 +187,41 @@ namespace SignalR
             Clients.Client(connectionId).newMessage("Successfuly canceled order", SuccessClass);
         }
 
+        private bool CheckSwap(string user, string buyTeam, int buyQuantity, string sellTeam, int sellQuantity, int price, string connectionId, int universeId, int competitionId, int universeCompetitionId)
+        {
+            if (string.IsNullOrEmpty(user))
+            {
+                Clients.Client(connectionId).newMessage("Fail To add order because you are not logged in", ErrorClass);
+                return false;
+            }
+
+            if (!Sql.IsUserAuthorizedOn(user, universeId))
+            {
+                Clients.Client(connectionId).newMessage("Fail To add order because you are not allowed on this universe", ErrorClass);
+                return false;
+            }
+
+            if (buyQuantity < 1 || sellQuantity < 1)
+            {
+                Clients.Client(connectionId).newMessage("Fail To add order because the quantity specified must be stricly positive", ErrorClass);
+                return false;
+            }
+
+            if (buyTeam == sellTeam)
+            {
+                Clients.Client(connectionId).newMessage("Team must be different to do a swap", ErrorClass);
+                return false;
+            }
+
+            //            if (price < 1 || price > 999)
+            //            {
+            //                Clients.Client(connectionId).newMessage("Fail To add order because the price specified must be between 1 and 999", ErrorClass);
+            //                return false;
+            //            }
+
+            return true;
+        }
+
         private bool CheckOrder(string user, string team, int quantity, int price, string side, string connectionId, int universeId, int competitionId, int universeCompetitionId)
         {
             if (string.IsNullOrEmpty(user))
@@ -220,6 +255,64 @@ namespace SignalR
             }
 
             return true;
+        }
+
+        public void NewSwap(string user, string buyTeam, int buyQuantity, string sellTeam, int sellQuantity, int price, string connectionId, int universeId, int competitionId, int universeCompetitionId)
+        {
+            if (!CheckSwap(user, buyTeam, buyQuantity, sellTeam, sellQuantity, price, connectionId, universeId, competitionId, universeCompetitionId))
+                return;
+
+            var usersToNotify = new HashSet<string> { user };
+            lock (this)
+            {
+                using (var context = new Entities())
+                {
+                    Team teamToBuy;
+                    Team teamToSell;
+                    if (!Sql.TryGetTeamIdForCompetition(competitionId, buyTeam, out teamToBuy))
+                    {
+                        Clients.Client(connectionId).newMessage("Fail To add order because the team does not exist", ErrorClass);
+                        return;
+                    }
+
+                    if (!Sql.TryGetTeamIdForCompetition(competitionId, sellTeam, out teamToSell))
+                    {
+                        Clients.Client(connectionId).newMessage("Fail To add order because the team does not exist", ErrorClass);
+                        return;
+                    }
+
+                    if (teamToBuy.Result.HasValue || teamToSell.Result.HasValue)
+                    {
+                        Clients.Client(connectionId).newMessage("Cannot place order on this team anymore", ErrorClass);
+                        return;
+                    }
+
+                    var otherSwap =
+                        context.SwapOrders.FirstOrDefault(
+                            x =>
+                                x.User == user && x.Status == 0 && (x.BuyTeam == teamToBuy.Id && x.SellTeam == teamToSell.Id || x.BuyTeam == teamToSell.Id && x.SellTeam == teamToBuy.Id) &&
+                                x.IdUniverseCompetition == universeCompetitionId);
+                    if (otherSwap != null)
+                    {
+                        otherSwap.Status = 2;
+                    }
+
+//                    if (UserHasEnough(context, user, teamToBuy, buyQuantity, teamToSell, sellQuantity, price, universeId, competitionId, universeCompetitionId))
+//                    {
+//                        var remainingQuantity = InsertTrade(context, user, choosedTeam.Id, choosedTeam.Name, quantity, price, side, universeId, competitionId, universeCompetitionId, connectionId, usersToNotify);
+//                        if (remainingQuantity > 0)
+//                            InsertNewOrder(context, user, choosedTeam.Id, remainingQuantity, price, side, universeCompetitionId, connectionId);
+//
+//                        context.SaveChanges();
+//                        OnNewOrder(context, team, usersToNotify, universeId, competitionId, universeCompetitionId);
+//                        GetTradeHistory(competitionId, universeCompetitionId);
+//                    }
+//                    else
+//                    {
+//                        Clients.Client(connectionId).newMessage("You already have too much exposure", ErrorClass);
+//                    }
+                }
+            }
         }
 
         public void NewOrder(string user, string team, int quantity, int price, string side, string connectionId, int universeId, int competitionId, int universeCompetitionId)
@@ -304,7 +397,7 @@ namespace SignalR
             {
                 usersToNotify.Add(matchingOrder.User);
                 InsertNewTrade(context, side == "BUY" ? user : matchingOrder.User, side == "SELL" ? user : matchingOrder.User, team, Math.Min(quantity, matchingOrder.Quantity), matchingOrder.Price, universeCompetitionId);
-                
+
                 Clients.Client(connectionId).newMessage(string.Format("You traded {0} {1} at {2} with {3}", Math.Min(quantity, matchingOrder.Quantity), teamName, matchingOrder.Price, matchingOrder.User), InfoClass);
                 if (quantity < matchingOrder.Quantity)
                 {
@@ -331,7 +424,7 @@ namespace SignalR
                 .updateCashInfos(string.Format("Cash Available :{0} $", money.ToString("#,##0", NumberFormatInfo)),
                     string.Format("Max Exposition :{0} $", worst10.ToString("#,##0", NumberFormatInfo)),
                     string.Format("Cash To Invest :{0} $", (money + worst10).ToString("#,##0", NumberFormatInfo)));
-                
+
 
             return quantity;
         }

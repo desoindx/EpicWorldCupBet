@@ -7,8 +7,10 @@ namespace Pricer
 {
     using System.Collections.Generic;
 
+    [Serializable]
     public class Round
     {
+        [Serializable]
         private class RoundResult
         {
             public int Point;

@@ -59,6 +59,11 @@
     </Compile>
     <Compile Include="Entities\CustomCompetitionGame.cs" />
     <Compile Include="Entities\CustomFountain.cs" />
+    <Compile Include="Entities\CustomObject\Team.cs" />
+    <Compile Include="Entities\CustomObject\CompetitionPrize.cs" />
+    <Compile Include="Entities\CustomObject\CompetitionResult.cs" />
+    <Compile Include="Entities\CustomObject\CompetitionGame.cs" />
+    <Compile Include="Entities\CustomObject\Competition.cs" />
     <Compile Include="Entities\CustomTeam.cs" />
     <Compile Include="Entities\EntitiesModel.cs">
       <AutoGen>True</AutoGen>

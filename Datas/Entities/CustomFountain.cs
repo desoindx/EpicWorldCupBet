@@ -83,5 +83,37 @@ namespace Datas.Entities
                 infos[user] = new Tuple<int, int>(info.Item1 + 1, info.Item2);
             }
         }
+
+        public Tuple<DateTime, DateTime> Founds
+        {
+            get
+            {
+                var maxDate = Antoine ?? DateTime.MinValue;
+                var minDate = Antoine ?? DateTime.MaxValue;
+                if (Loic.HasValue)
+                {
+                    if (minDate > Loic.Value)
+                        minDate = Loic.Value;
+                    if (maxDate < Loic.Value)
+                        maxDate = Loic.Value;
+                }
+                if (Camille.HasValue)
+                {
+                    if (minDate > Camille.Value)
+                        minDate = Camille.Value;
+                    if (maxDate < Camille.Value)
+                        maxDate = Camille.Value;
+                }
+                if (Xavier.HasValue)
+                {
+                    if (minDate > Xavier.Value)
+                        minDate = Xavier.Value;
+                    if (maxDate < Xavier.Value)
+                        maxDate = Xavier.Value;
+                }
+
+                return new Tuple<DateTime, DateTime>(minDate, maxDate);
+            }
+        }
     }
 }
