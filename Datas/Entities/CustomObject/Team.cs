@@ -2,7 +2,6 @@
 
 namespace Datas.Entities
 {
-    [Serializable]
     public partial class Team
     {
         

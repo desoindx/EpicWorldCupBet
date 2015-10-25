@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Serialization;
 using Datas.Entities;
 
 namespace Pricer
 {
-    [Serializable]
     public class SimulationResult
     {
         protected bool Equals(SimulationResult other)
         {
-            return _key == other._key;
+            return Key == other.Key;
         }
 
         public override bool Equals(object obj)
@@ -26,30 +25,62 @@ namespace Pricer
 
         public override int GetHashCode()
         {
-            return (_key != null ? _key.GetHashCode() : 0);
+            return (Key != null ? Key.GetHashCode() : 0);
         }
 
-        private readonly Dictionary<Team, double> _result;
-        private readonly string _key;
+        public string Key { get; set; }
 
-        public Dictionary<Team, double> Result { get { return _result; } }
+        [XmlIgnore]
+        private SerializableResult[] _serializableResults;
+
+        public SerializableResult[] SerializableResults
+        {
+            get
+            {
+                _serializableResults = _result.Select(kv => new SerializableResult { Id = kv.Key, Value = kv.Value })
+                    .ToArray();
+                return _serializableResults;
+            }
+            set { _serializableResults = value; }
+        }
+
+
+        [XmlIgnore]
+        private Dictionary<Team, double> _result;
+
+        [XmlIgnore]
+        public Dictionary<Team, double> Result
+        {
+            get
+            {
+                if (_result == null)
+                {
+                    _result = _serializableResults.ToDictionary(i => i.Id, i => i.Value);
+                }
+                return _result;
+            }
+        }
+
+        public SimulationResult()
+        {
+        }
 
         public SimulationResult(Dictionary<Team, double> result)
         {
             _result = result;
 
-            _key = string.Empty;
+            Key = string.Empty;
             var orderedResult = result.OrderBy(x => x.Value).ThenBy(x => x.Key.Id);
             foreach (var res in orderedResult)
             {
-                _key += res.Key.Id + "-" + res.Value + "/";
+                Key += res.Key.Id + "-" + res.Value + "/";
             }
         }
 
         public double GetResult(Team team)
         {
             double result;
-            if (!_result.TryGetValue(team, out result))
+            if (!Result.TryGetValue(team, out result))
             {
                 return 0;
             }
@@ -59,7 +90,13 @@ namespace Pricer
 
         public double GetResult(Dictionary<Team, int> positions)
         {
-            return _result.Sum(res => res.Value*positions[res.Key]);
+            return Result.Sum(res => res.Value * positions[res.Key]);
+        }
+
+        public class SerializableResult
+        {
+            public Team Id;
+            public double Value;
         }
     }
 }

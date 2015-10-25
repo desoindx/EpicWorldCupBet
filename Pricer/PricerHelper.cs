@@ -6,18 +6,26 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Web;
+using System.Xml.Serialization;
 using Datas.Entities;
 
 namespace Pricer
 {
     public static class PricerHelper
     {
-        private const bool UseSerialization = false;
         private static readonly Dictionary<string, BasicCompetition> Competitions = new Dictionary<string, BasicCompetition>();
 
         public static void Clear()
         {
             Competitions.Clear();
+            if (HttpContext.Current != null)
+            {
+                var pricingResult = HttpContext.Current.Server.MapPath("~/Pricer/");
+                foreach (var file in Directory.GetFiles(pricingResult))
+                {
+                    File.Delete(file);
+                }
+            }
         }
 
         public static Dictionary<Team, double> Price(string competitionName, Dictionary<Team, double> strengths)
@@ -32,25 +40,24 @@ namespace Pricer
             BasicCompetition competition = null;
             if (!Competitions.TryGetValue(competitionName, out competition))
             {
-                if (UseSerialization && HttpContext.Current != null)
+                competition = new StrengthCompetition(competitionName);
+                if (HttpContext.Current != null)
                 {
                     var pricingResult = HttpContext.Current.Server.MapPath("~/Pricer/");
-                    if (File.Exists(pricingResult + competitionName + ".prc"))
+                    if (File.Exists(pricingResult + competitionName + ".xml"))
                     {
                         try
                         {
-                            FileStream fs = new FileStream(pricingResult + competitionName + ".prc", FileMode.Open);
-                            BinaryFormatter formatter = new BinaryFormatter();
-                            competition = (StrengthCompetition)formatter.Deserialize(fs);
+                            XmlSerializer xs = new XmlSerializer(typeof(SerializableItem[]));
+                            using (StreamReader rd = new StreamReader(pricingResult + competitionName + ".xml"))
+                            {
+                                competition.Simulation = ((SerializableItem[])xs.Deserialize(rd)).ToDictionary(i => i.Id, i => i.Value);
+                            }
                         }
                         catch (Exception)
                         {
                         }
                     }
-                }
-                if (competition == null)
-                {
-                    competition = new StrengthCompetition(competitionName);
                 }
                 Competitions[competitionName] = competition;
             }
@@ -143,21 +150,36 @@ namespace Pricer
         public static Dictionary<Team, double> Price(this BasicCompetition competition)
         {
             var result = competition.Price(true);
-            if (UseSerialization && HttpContext.Current != null)
+            string pricingResult;
+            if (HttpContext.Current != null)
             {
-                var pricingResult = HttpContext.Current.Server.MapPath("~/Pricer/");
-                try
+                pricingResult = HttpContext.Current.Server.MapPath("~/Pricer/");
+            }
+            else
+            {
+                pricingResult = "C:/Users/xavier/Documents/Pricer/";
+            }
+            try
+            {
+                XmlSerializer xs = new XmlSerializer(typeof(SerializableItem[]));
+                using (StreamWriter wr = new StreamWriter(pricingResult + competition.Name + ".xml"))
                 {
-                    FileStream fs = new FileStream(pricingResult + competition.Name + ".prc", FileMode.OpenOrCreate);
-                    BinaryFormatter formatter = new BinaryFormatter();
-                    formatter.Serialize(fs, competition);
+                    xs.Serialize(wr,
+                        competition.Simulation.Select(kv => new SerializableItem { Id = kv.Key, Value = kv.Value })
+                            .ToArray());
                 }
-                catch (Exception)
-                {
-                }
+            }
+            catch (Exception)
+            {
             }
 
             return result;
+        }
+
+        public class SerializableItem
+        {
+            public SimulationResult Id;
+            public int Value;
         }
     }
 }
