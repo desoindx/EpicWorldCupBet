@@ -8,7 +8,7 @@ namespace Pricer
 {
     public abstract class BasicCompetition
     {
-        private const int SimulationNumber = 200000;
+        private const int SimulationNumber = 50000;
 
         private readonly Random _teamSelector = new Random();
         private string _name;

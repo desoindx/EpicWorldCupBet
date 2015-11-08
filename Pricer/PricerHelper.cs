@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Web;
 using System.Xml.Serialization;
 using Datas.Entities;
@@ -14,11 +11,12 @@ namespace Pricer
     public static class PricerHelper
     {
         private static readonly Dictionary<string, BasicCompetition> Competitions = new Dictionary<string, BasicCompetition>();
+        private const bool CacheFile = true;
 
         public static void Clear()
         {
             Competitions.Clear();
-            if (HttpContext.Current != null)
+            if (CacheFile && HttpContext.Current != null)
             {
                 var pricingResult = HttpContext.Current.Server.MapPath("~/Pricer/");
                 foreach (var file in Directory.GetFiles(pricingResult))
@@ -41,7 +39,7 @@ namespace Pricer
             if (!Competitions.TryGetValue(competitionName, out competition))
             {
                 competition = new StrengthCompetition(competitionName);
-                if (HttpContext.Current != null)
+                if (CacheFile && HttpContext.Current != null)
                 {
                     var pricingResult = HttpContext.Current.Server.MapPath("~/Pricer/");
                     if (File.Exists(pricingResult + competitionName + ".xml"))
@@ -150,6 +148,11 @@ namespace Pricer
         public static Dictionary<Team, double> Price(this BasicCompetition competition)
         {
             var result = competition.Price(true);
+            if (!CacheFile)
+            {
+                return result;
+            }
+
             string pricingResult;
             if (HttpContext.Current != null)
             {

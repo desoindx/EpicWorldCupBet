@@ -9,7 +9,7 @@ namespace Pricer
     {
         protected bool Equals(SimulationResult other)
         {
-            return Key == other.Key;
+            return Key.SequenceEqual(other.Key);
         }
 
         public override bool Equals(object obj)
@@ -28,7 +28,7 @@ namespace Pricer
             return (Key != null ? Key.GetHashCode() : 0);
         }
 
-        public string Key { get; set; }
+        public List<short> Key { get; set; }
 
         [XmlIgnore]
         private SerializableResult[] _serializableResults;
@@ -69,11 +69,12 @@ namespace Pricer
         {
             _result = result;
 
-            Key = string.Empty;
+            Key = new List<short>();
             var orderedResult = result.OrderBy(x => x.Value).ThenBy(x => x.Key.Id);
             foreach (var res in orderedResult)
             {
-                Key += res.Key.Id + "-" + res.Value + "/";
+                Key.Add((short) res.Key.Id);
+                Key.Add((short)res.Value);
             }
         }
 
