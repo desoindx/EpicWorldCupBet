@@ -23,9 +23,9 @@
     <div id="cashInfos">
         <table>
             <tr>
-                <td id="cashAvailable">Cash Available : <%: Master.GetMoney() %> $</td>
-                <td id="maxExposition">Max Exposition : <%: Master.GetVar() %> $</td>
-                <td id="cashToInvest">Cash To Invest : <%: Master.GetCashToInvest() %> $</td>
+                <td id="cashAvailable"></td>
+                <td id="maxExposition"></td>
+                <td id="cashToInvest">Please wait while your position is being updated ...</td>
             </tr>
         </table>
     </div>

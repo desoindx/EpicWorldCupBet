@@ -11,15 +11,15 @@
     <script src="Scripts/SlickGrid/Plugins/slick.cellrangeselector.js"></script>
     <script src="Scripts/SlickGrid/Plugins/slick.cellnewcopymanager.js"></script>
     <script src="Scripts/SlickGrid/Plugins/slick.cellselectionmodel.js"></script>
-    <script src="JavaScript/Positions.js"></script>
+    <script src="JavaScript/History.js"></script>
     <div style=" margin-top: 50px;" id='<%: "Div-" + Master.GetCompetitionId() %>'>
-        <div style="position: absolute; left: 50%; margin-left: -250px;">
-        <div style="float: right;overflow: auto; width: 500px; height: 825px;" id='<%: "TradesDiv-" + Master.GetCompetitionId() %>'>
+        <div style="position: absolute; left: 50%; margin-left: -400px;">
+        <div style="float: right;overflow: auto; width: 805px; height: 825px;" id='<%: "TradesDiv-" + Master.GetCompetitionId() %>'>
         </div>
         </div>
     </div>
     <script type='text/javascript'>
-        drawTrades(<%: Master.GetCompetitionId()%>,<%: GetTrades(Master.GetCompetitionId())%>);
+        drawHistoryGrid(<%: Master.GetCompetitionId()%>,<%: GetTrades(Master.GetCompetitionId())%>);
     </script>
     <% } %>
 </asp:Content>

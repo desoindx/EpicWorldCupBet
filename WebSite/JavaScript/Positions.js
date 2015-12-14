@@ -1,12 +1,4 @@
-﻿function drawTrades(competitionId, trades) {
-    var html = "";
-    for (var i = 0; i < trades.length; i++) {
-        html = html + "<p>" + trades[i] + "</p>";
-    }
-    $("#TradesDiv-" + competitionId).html(html);
-}
-
-function drawPositionGrid(competitionId, positions) {
+﻿function drawPositionGrid(competitionId, positions) {
     var grid,
         columns = [],
         options = {
@@ -46,7 +38,3 @@ function drawPositionGrid(competitionId, positions) {
     });
 }
 
-$('#CompetitionTabMenu a').click(function (e) {
-    $("#CompetitionDropDownButton")[0].innerHTML = this.innerText + " <span class='caret'></span>";
-    showTeamSelectPicker();
-});

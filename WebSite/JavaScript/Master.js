@@ -25,6 +25,9 @@
 
     $.connection.hub.start()
         .done(function (state) {
+            competitionId = $("#currentCompetitionId").text();
+            universeId = $("#currentUniverseId").text();
+            competitionUniverseId = $("#currentCompetitionUniverseId").text();
             betHub.server.getTradeHistory($("#currentCompetitionId").text(), $("#currentCompetitionUniverseId").text());
 
             $('#ListTradeButton').click(function (e) {

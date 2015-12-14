@@ -67,7 +67,7 @@ namespace SignalR.SQL
                     return null;
 
                 return
-                    context.Trades.Where(x => x.Buyer == user || x.Seller == user)
+                    context.Trades.Where(x => x.IdUniverseCompetition == id && (x.Buyer == user || x.Seller == user))
                         .OrderByDescending(x => x.Date)
                         .ToList();
             }

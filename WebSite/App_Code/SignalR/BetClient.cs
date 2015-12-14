@@ -415,18 +415,33 @@ namespace SignalR
                 }
             }
 
+            GetCashInfos(context, user, universeId, competitionId, universeCompetitionId, connectionId);
+
+
+            return quantity;
+        }
+
+        public void GetCashInfos(string user, int universeId, int competitionId, int universeCompetitionId,
+            string connectionId)
+        {
+            using (var context = new Entities())
+            {
+                GetCashInfos(context, user, universeId, competitionId, universeCompetitionId, connectionId);
+            }
+        }
+
+        private void GetCashInfos(Entities context, string user, int universeId, int competitionId, int universeCompetitionId, string connectionId)
+        {
             var positions = Sql.GetPosition(user, universeId, competitionId);
-            var simulationResults = PricerHelper.GetVars(context.Competitions.First(x => x.Id == competitionId).Name, positions, new List<double> { 0, 0.1, 0.5, 0.9, 1 });
+            var simulationResults = PricerHelper.GetVars(context.Competitions.First(x => x.Id == competitionId).Name, positions,
+                new List<double> {0, 0.1, 0.5, 0.9, 1});
             var worst10 = simulationResults.Last().Worst10;
             var money =
                 context.Moneys.First(x => x.IdUniverseCompetition == universeCompetitionId && x.User == user).Money1;
             Clients.Client(connectionId)
-                .updateCashInfos(string.Format("Cash Available :{0} $", money.ToString("#,##0", NumberFormatInfo)),
-                    string.Format("Max Exposition :{0} $", worst10.ToString("#,##0", NumberFormatInfo)),
-                    string.Format("Cash To Invest :{0} $", (money + worst10).ToString("#,##0", NumberFormatInfo)));
-
-
-            return quantity;
+                .updateCashInfos(string.Format("Cash Available : {0} $", money.ToString("#,##0", NumberFormatInfo)),
+                    string.Format("Max Exposition : {0} $", worst10.ToString("#,##0", NumberFormatInfo)),
+                    string.Format("Cash To Invest : {0} $", (money + worst10).ToString("#,##0", NumberFormatInfo)));
         }
 
         private void InsertNewTrade(Entities context, string buyer, string seller, int team, int quantity, int price, int universeCompetitionId)

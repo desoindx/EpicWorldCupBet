@@ -1,0 +1,143 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Site.master.cs" Inherits="SiteMaster" %>
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Berliner Bierdeckel</title>
+    
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="dist/css/sb-admin-2.css" rel="stylesheet">
+    <link href="dist/css/blueimp-gallery.min.css" rel="stylesheet">
+    <link href="dist/css/bootstrap-image-gallery.css" rel="stylesheet">
+    <link href="bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="bower_components/morrisjs/morris.css" rel="stylesheet">
+    <link href="bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="Default.aspx">Berliner Bierdeckel</a>
+        </div>
+       <!-- <ul class="nav navbar-top-links navbar-right">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="flag-icon flag-icon-fr"></i>Francais <b class="caret"></b></a>
+                <ul class="dropdown-menu dropdown-user">
+                    <li>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="flag-icon flag-icon-de"></i>German</a>
+                    </li>
+                    <li>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="flag-icon flag-icon-gb"></i>English</a>
+                    </li>
+                </ul>
+            </li>
+        </ul> -->
+        <div class="navbar-default sidebar" role="navigation">
+            <div class="sidebar-nav navbar-collapse">
+                <ul class="nav" id="side-menu">
+                    <li class="sidebar-search">
+                        <div class="input-group custom-search-form">
+                            <input id="search" type="text" class="form-control" placeholder="Search..." onkeypress="return runScript(event)">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" style="height: 34px" type="button" onclick="onSearch()">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </li>
+                    <li>
+                        <a href="Default.aspx"><i class="fa fa-fw fa-user"></i>Home</a>
+                    </li>
+                    <li>
+                        <a href="Photos.aspx"><i class="fa fa-fw fa-bell"></i>News</a>
+                    </li>
+                    <li>
+                        <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-list"></i>Nach Brauerei <i class="fa fa-fw fa-caret-down"></i></a>
+                        <ul id="demo" class="collapse">
+                            <script>
+                                count = 0;
+                                function displayFolder(base, folders) {
+                                    var length = folders.length;
+                                    for (var i = 0; i < length; i++) {
+                                        var folder = folders[i];
+                                        var subFolder = folder.Directories;
+                                        var li = $('<li/>');
+                                        if (!subFolder) {
+                                            li.append($('<a/>', {
+                                                href: "Photos.aspx?B=" + folder.Link,
+                                                text: folder.Name
+                                            }));
+                                        } else {
+                                            var a = $('<a/>', {
+                                                href: "javascript:;",
+                                                text: folder.Name
+                                            });
+                                            a.attr("data-toggle", "collapse");
+                                            a.attr("data-target", "#demo" + count);
+                                            li.append(a);
+                                            base.append(li);
+                                            var u = $('<ul/>', {id:"#demo"+count});
+                                            u.addClass("collapse");
+                                            displayFolder(u, subFolder);
+                                            li.append(u);
+                                        }
+                                        base.append(li);
+                                    }
+                                }
+
+                                displayFolder($("#demo"), <%:GetFolders()%>);
+
+                                onSearch = function() {
+                                    location.href='Photos.aspx?S='+$('#search')[0].value;
+                                }
+                                
+                                function runScript(e) {
+                                    if (e.keyCode == 13) {
+                                        onSearch();
+                                        return false;
+                                    }
+                                }
+                            </script>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <form runat="server">
+        <div id="page-wrapper">
+            <div class="container body-content">
+                <asp:ContentPlaceHolder ID="MainContent" runat="server">
+                </asp:ContentPlaceHolder>
+            </div>
+        </div>
+    </form>
+</body>
+
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="bower_components/metisMenu/dist/metisMenu.min.js"></script>
+    <script src="bower_components/raphael/raphael-min.js"></script>
+    <script src="dist/js/sb-admin-2.js"></script>
+    <script src="dist/js/jquery.blueimp-gallery.min.js"></script>
+    <script src="dist/js/bootstrap-image-gallery.min.js"></script>
+</html>

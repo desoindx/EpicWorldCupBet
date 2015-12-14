@@ -84,6 +84,7 @@ $(function () {
             competitionId = $("#currentCompetitionId").text();
             universeId = $("#currentUniverseId").text();
             competitionUniverseId = $("#currentCompetitionUniverseId").text();
+            betHub.server.getCashInfos(universeId, competitionId, competitionUniverseId);
 
             $("#SendOrder").click(function () {
                 var side = "SELL";

@@ -135,6 +135,11 @@ namespace SignalR
             _betClient.GetOrderBook(User, teamsInfo[0].Trim(), teamsInfo[1].Split(')')[0].Trim(), universeCompetitionId, competitionId, Context.ConnectionId);
         }
 
+        public void GetCashInfos(int universeId, int competitionId, int universeCompetitionId)
+        {
+            _betClient.GetCashInfos(User, universeId, competitionId, universeCompetitionId, Context.ConnectionId);
+        }
+
         public void ClearCache(string cache)
         {
             if (Context.User.IsInRole("Admin"))
