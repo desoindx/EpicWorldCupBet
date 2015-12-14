@@ -186,7 +186,7 @@
 
             posmarker = [];
             posmarker.push(L.marker([pos.coords.latitude, pos.coords.longitude], {
-                icon: new L.DivIcon({ html: '<div><img src="Icons/ico_curr_pos.png"></img></div>', iconSize: new L.Point(30, 30) })
+                icon: new L.DivIcon({ html: '<div><img src="Icons/ico_curr_pos.png"></img></div>', iconSize: new L.Point(60, 60) })
             }).on('click', refreshPosition));
 
             L.layerGroup(posmarker).addTo(map);
