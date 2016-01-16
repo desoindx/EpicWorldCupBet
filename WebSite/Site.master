@@ -4,6 +4,9 @@
 <html lang="en">
 <head runat="server">
     <meta charset="utf-8" />
+    <meta name="description" content="Financial Stock Exchange for sport competition">
+    <meta name="keywords" content="Sport, bet, finance,fun">
+    <meta name="author" content="Xavier Desoindre">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%: Page.Title %> - ESE</title>
     <asp:PlaceHolder runat="server">
@@ -69,11 +72,9 @@
                         </li>
                         <li><a runat="server" href="~/Logout"><i class="fa fa-sign-out fa-fw"></i>Logout</a></li>
                     </ul>
-                    <!-- /.dropdown-user -->
                 </li>
                 <% if (Context.User.Identity.IsAuthenticated)
                    {%>
-                <!-- /.dropdown -->
                 <% if (HasMultipleCompetition())
                    {%><li class="dropdown">
                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -96,7 +97,6 @@
                     <ul id="ListTrade" class="dropdown-menu scrollable-menu">
                     </ul>
                 </li>
-                <!-- /.dropdown -->
                 <% } %>
             </ul>
             <!-- /.navbar-top-links -->
@@ -137,12 +137,9 @@
                         </li>
                     </ul>
                 </div>
-                <!-- /.sidebar-collapse -->
             </div>
-            <!-- /.navbar-static-side -->
         </nav>
 
-        <!-- Page Content -->
         <div id="page-wrapper">
             <div class="container-fluid">
                 <div class="row">
@@ -156,18 +153,18 @@
                                <% }
                                   else
                                   {%><div style="text-align: center">
-                           <p>
-                               <label class="h2">You don't have any universe configurated !</label>
-                           </p>
-                           <p>
-                               <a runat="server" href="~/Create">
-                                   <input style="margin-left: 10px; margin-top: 30px" type="button" id="CreateUniverse" class="btn btn-info" value="I want to create my own" />
-                               </a>
-                               <a runat="server" href="~/Join">
-                                   <input style="margin-left: 80px; margin-top: 30px;" type="button" class="btn btn-info" id="JoinUniverse" value="I want to join an existing universe" />
-                               </a>
-                           </p>
-                       </div>
+                                      <p>
+                                          <label class="h2">You don't have any universe configurated !</label>
+                                      </p>
+                                      <p>
+                                          <a runat="server" href="~/Create">
+                                              <input style="margin-left: 10px; margin-top: 30px" type="button" id="CreateUniverse" class="btn btn-info" value="I want to create my own" />
+                                          </a>
+                                          <a runat="server" href="~/Join">
+                                              <input style="margin-left: 80px; margin-top: 30px;" type="button" class="btn btn-info" id="JoinUniverse" value="I want to join an existing universe" />
+                                          </a>
+                                      </p>
+                                  </div>
                                <% } %>
                            </div>
                        </div>
@@ -203,7 +200,6 @@
                                             <a runat="server" href="~/ForgotPassword" style="margin-right: 45px; float: left;">Reset my password !</a>
                                             <a runat="server" href="~/Register" style="margin-left: 45px; float: right;">Create an account !</a>
                                         </div>
-                                        <!-- Change this to a button or input when using this as a form -->
                                         <asp:Button runat="server" OnClick="LogIn" Text="Log in" CssClass="btn btn-lg btn-success btn-block" />
                                     </fieldset>
                                 </form>
@@ -212,11 +208,18 @@
                     </div>
                     <% }%>
                 </div>
-                <!-- /.row -->
             </div>
-            <!-- /.container-fluid -->
         </div>
-        <!-- /#page-wrapper -->
     </div>
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+        ga('create', 'UA-70813977-1', 'auto');
+        ga('send', 'pageview');
+    </script>
 </body>
 </html>

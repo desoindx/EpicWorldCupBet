@@ -18,7 +18,7 @@
                                 </p>
                             </asp:PlaceHolder>
                             <asp:PlaceHolder runat="server" ID="SuccessMessage" Visible="false">
-                                <p class="text-danger">
+                                <p class="text-success">
                                     <asp:Literal runat="server" ID="SuccessText" />
                                 </p>
                             </asp:PlaceHolder>
@@ -52,7 +52,7 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="col-md-offset-2 col-md-10">
-                                            <asp:Button ID="Button2" runat="server" OnClick="ChangePassword" Text="Change Password" CssClass="btn btn-default" />
+                                            <asp:Button ID="Button2" runat="server" OnClick="ChangePassword" Text="Change Password" CssClass="btn btn-primary" />
                                         </div>
                                     </div>
                                 </div>

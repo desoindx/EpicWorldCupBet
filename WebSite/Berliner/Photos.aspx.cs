@@ -43,18 +43,18 @@ public partial class Photos : Page
 
         var photos = new List<Photo>();
         var images = "/Berliner/img/BD/" + _query + "/";
-        var thumbnails = "/Berliner/img/Thumbnails/";
+        var thumbnails = "/Berliner/img/Thumbnails/" + _query + "/";
         var path = HttpContext.Current.Server.MapPath("~" + images);
         foreach (var photo in Directory.GetFiles(path, "*.jpg", SearchOption.AllDirectories))
         {
             string comment = string.Empty;
-            var commentFile = photo.Replace("R.JPG", ".txt").Replace("V.JPG", ".txt");
+            var commentFile = photo.Replace(".JPG", ".txt");
             if (File.Exists(commentFile))
             {
                 comment = File.ReadLines(commentFile).First();
             }
             var photoName = photo.Remove(0, photo.LastIndexOf("\\") + 1);
-            photos.Add(new Photo { Path = (images + photo.Remove(0, path.Length)).Replace(" ", "%20"), Thumbnail = thumbnails + "tn_" + photoName, Title = photoName.Remove(photoName.Length - 4), Comment = comment });
+            photos.Add(new Photo { Path = (images + photo.Remove(0, path.Length)).Replace(" ", "%20"), Thumbnail = (thumbnails + photo.Remove(0, path.Length)).Replace(" ", "%20"), Title = photoName.Remove(photoName.Length - 4), Comment = comment });
         }
 
         return photos;
@@ -69,13 +69,13 @@ public partial class Photos : Page
         foreach (var photo in Directory.GetFiles(path, "*.jpg", SearchOption.AllDirectories).OrderByDescending(File.GetCreationTime).Take(60))
         {
             string comment = string.Empty;
-            var commentFile = photo.Replace("R.JPG", ".txt").Replace("V.JPG", ".txt");
+            var commentFile = photo.Replace(".JPG", ".txt");
             if (File.Exists(commentFile))
             {
                 comment = File.ReadLines(commentFile).First();
             }
             var photoName = photo.Remove(0, photo.LastIndexOf("\\") + 1);
-            photos.Add(new Photo { Path = (images + photo.Remove(0, path.Length)).Replace(" ", "%20"), Thumbnail = thumbnails + "tn_" + photoName, Title = photoName.Remove(photoName.Length - 4), Comment = comment });
+            photos.Add(new Photo { Path = (images + photo.Remove(0, path.Length)).Replace(" ", "%20"), Thumbnail = (thumbnails + photo.Remove(0, path.Length)).Replace(" ", "%20"), Title = photoName.Remove(photoName.Length - 4), Comment = comment });
         }
 
         return photos;
@@ -104,7 +104,7 @@ public partial class Photos : Page
                 paths.Add(photo);
 
                 string comment = string.Empty;
-                var commentFile = photo.Replace("R.JPG", ".txt").Replace("V.JPG", ".txt");
+                var commentFile = photo.Replace(".JPG", ".txt");
                 if (File.Exists(commentFile))
                 {
                     comment = File.ReadLines(commentFile).First();
@@ -113,7 +113,7 @@ public partial class Photos : Page
                 photos.Add(new Photo
                 {
                     Path = (images + photo.Remove(0, path.Length)).Replace(" ", "%20"),
-                    Thumbnail = thumbnails + "tn_" + photoName,
+                    Thumbnail = (thumbnails + photo.Remove(0, path.Length)).Replace(" ", "%20"),
                     Title = photoName.Remove(photoName.Length - 4),
                     Comment = comment
                 });
@@ -133,12 +133,12 @@ public partial class Photos : Page
             }
 
             string comment = string.Empty;
-            var commentFile = photo.Replace("R.JPG", ".txt").Replace("V.JPG", ".txt").Replace(".JPG", ".txt");
+            var commentFile = photo.Replace(".JPG", ".txt");
             if (File.Exists(commentFile))
             {
                 comment = File.ReadLines(commentFile).First();
             }
-            photos.Add(new Photo { Path = images + photo.Remove(0, path.Length), Thumbnail = thumbnails + "tn_" + photo.Remove(0, photo.LastIndexOf("\\") + 1), Title = _query, Comment = comment });
+            photos.Add(new Photo { Path = images + photo.Remove(0, path.Length), Thumbnail = thumbnails + photo.Remove(0, path.Length), Title = _query, Comment = comment });
         }
 
         return photos;

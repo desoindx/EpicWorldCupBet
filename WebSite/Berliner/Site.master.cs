@@ -91,7 +91,7 @@ public partial class SiteMaster : MasterPage
             serializer.Serialize(jsonWriter, GetFolders(null));
 
             //            CopyToTemp();
-//            CopyFromTemp();
+            //            CopyFromTemp();
 
             return new HtmlString(stringWriter.ToString());
         }
@@ -125,15 +125,15 @@ public partial class SiteMaster : MasterPage
 
     private static void CopyFromTemp()
     {
-        var images = "/Berliner/img/BD/";
+        var images = "/Berliner/img/AllThumbnails/";
         var path = HttpContext.Current.Server.MapPath("~" + images);
         var allFiles = Directory.GetFiles(path, "*.jpg", SearchOption.AllDirectories).ToList();
-        var smallImages = "/Berliner/img/SmallImg/";
+        var smallImages = "/Berliner/img/Thumbnails/";
         var smallImagePath = HttpContext.Current.Server.MapPath("~" + smallImages);
         foreach (var photo in allFiles)
         {
             var fileName = photo.Remove(0, photo.LastIndexOf("\\") + 1);
-            var destFileName = smallImagePath + fileName;
+            var destFileName = smallImagePath + "tn_" + fileName;
             if (File.Exists(destFileName))
             {
                 File.Delete(photo);
