@@ -10,7 +10,8 @@ namespace SignalR.SQL
         TeamsValue,
         UserUniversesRights,
         UserCompetitions,
-        UniverseCompetitions
+        UniverseCompetitions,
+        UserDefaultUniverse,
     }
     public static partial class Sql
     {
@@ -32,6 +33,7 @@ namespace SignalR.SQL
                     UserUniversesRights.Clear();
                     CompetitionTeams.Clear();
                     Pricer.PricerHelper.Clear();
+                    UserUniversesRights.Clear();
                     return;
                 case Caches.TeamsName:
                     TeamsName.Clear();
@@ -47,6 +49,9 @@ namespace SignalR.SQL
                     return;
                 case Caches.UserUniversesRights:
                     UserUniversesRights.Clear();
+                    return;
+                case Caches.UserDefaultUniverse:
+                    UserDefaultUniverse.Clear();
                     return;
             }
         }
