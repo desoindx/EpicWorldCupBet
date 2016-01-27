@@ -66,6 +66,7 @@
     <Compile Include="Rounds\Round.cs" />
     <Compile Include="QuoteCompetition.cs" />
     <Compile Include="Rounds\RoundFactory.cs" />
+    <Compile Include="Rounds\RoundResult.cs" />
     <Compile Include="SimulationResult.cs" />
     <Compile Include="StrengthCompetition.cs" />
     <Compile Include="TeamResult.cs" />

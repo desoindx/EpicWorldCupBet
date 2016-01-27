@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity.Core.Metadata.Edm;
 using System.Linq;
 using Datas.Entities;
+using Pricer.Rounds;
 
 namespace Pricer
 {
@@ -84,6 +85,7 @@ namespace Pricer
         private SimulationResult SimulateCompetition()
         {
             _rounds.Clear();
+            _bestThirds = null;
             foreach (var game in _games)
             {
                 if (_rounds.ContainsKey(game.Key))
@@ -103,14 +105,12 @@ namespace Pricer
                 Team team;
                 if (!prize.RoundKey.StartsWith("*"))
                 {
-                    team = Teams.Values.First(x => x.Name == prize.RoundKey.Trim());
+                    var teamName = prize.RoundKey.Trim();
+                    team = Teams.Values.First(x => x.Name == teamName);
                 }
                 else
                 {
-                    var prizeInfo = prize.RoundKey.Remove(0, 1).Split('-');
-                    var key = prizeInfo[0];
-                    var round = _rounds[key];
-                    team = round.GetTeam(int.Parse(prizeInfo[1]));
+                    team = GetTeam(null, prize.RoundKey);
                 }
 
                 results[team] = prize.Value;
@@ -161,6 +161,13 @@ namespace Pricer
                 return null;
             }
 
+            if (teamName.StartsWith("*BestThird"))
+            {
+                var index = Convert.ToInt32(teamName.Remove(teamName.Length - 1).Remove(0, 11)) -1;
+                GenerateBestThirdRound(currentRound);
+                return _bestThirds[index];
+            }
+
             var teamInfos = teamName.Remove(0, 1).Split('-');
             Round targetRound;
             var key = teamInfos[0];
@@ -174,6 +181,184 @@ namespace Pricer
 
             var newTeam = targetRound.GetTeam(int.Parse(teamInfos[1]));
             return newTeam.RealTeam.Value ? newTeam : GetTeam(targetRound, newTeam);
+        }
+
+        private List<Team> _bestThirds;
+        private void GenerateBestThirdRound(Round round)
+        {
+            if (_bestThirds != null)
+            {
+                return;
+            }
+
+            var thirds = new List<Tuple<int, RoundResult>>();
+            var thirdsTeams = new List<Team>();
+            for (int i = 1; i < 7; i++)
+            {
+                var team = GetTeam(round, string.Format("*{0}-3", i));
+                thirdsTeams.Add(team);
+                thirds.Add(new Tuple<int, RoundResult>(i, _rounds[i.ToString()].GetTeamResult(team)));
+            }
+
+            var allThirds = thirds.OrderByDescending(x => x.Item2.Point)
+                .ThenByDescending(x => x.Item2.ScoreFor - x.Item2.ScoreAgainst)
+                .ThenByDescending(x => x.Item2.ScoreFor)
+                .Select(x => x.Item1).ToList();
+            var bestThirds = allThirds.Take(4).ToList();
+
+            _bestThirds = new List<Team>();
+            if (bestThirds.Contains(1))
+            {
+                if (bestThirds.Contains(2))
+                {
+                    if (bestThirds.Contains(3))
+                    {
+                        if (bestThirds.Contains(4))
+                        {
+                            // A B C D
+                            _bestThirds.Add(thirdsTeams[2]);
+                            _bestThirds.Add(thirdsTeams[3]);
+                            _bestThirds.Add(thirdsTeams[0]);
+                            _bestThirds.Add(thirdsTeams[1]);
+                        }
+                        else if (bestThirds.Contains(5))
+                        {
+                            // A B C E
+                            _bestThirds.Add(thirdsTeams[2]);
+                            _bestThirds.Add(thirdsTeams[0]);
+                            _bestThirds.Add(thirdsTeams[1]);
+                            _bestThirds.Add(thirdsTeams[4]);
+                        }
+                        else
+                        {
+                            // A B C F
+                            _bestThirds.Add(thirdsTeams[2]);
+                            _bestThirds.Add(thirdsTeams[0]);
+                            _bestThirds.Add(thirdsTeams[1]);
+                            _bestThirds.Add(thirdsTeams[5]);
+                        }
+                    }
+                    else
+                    {
+                        if (bestThirds.Contains(4))
+                        {
+                            if (bestThirds.Contains(5))
+                            {
+                                // A B D E
+                                _bestThirds.Add(thirdsTeams[3]);
+                                _bestThirds.Add(thirdsTeams[0]);
+                                _bestThirds.Add(thirdsTeams[1]);
+                                _bestThirds.Add(thirdsTeams[4]);
+                            }
+                            else
+                            {
+                                // A B D F
+                                _bestThirds.Add(thirdsTeams[3]);
+                                _bestThirds.Add(thirdsTeams[0]);
+                                _bestThirds.Add(thirdsTeams[1]);
+                                _bestThirds.Add(thirdsTeams[5]);
+                            }
+                        }
+                        else
+                        {
+                            // A B E F
+                            _bestThirds.Add(thirdsTeams[4]);
+                            _bestThirds.Add(thirdsTeams[0]);
+                            _bestThirds.Add(thirdsTeams[1]);
+                            _bestThirds.Add(thirdsTeams[5]);
+                        }
+                    }
+                }
+                else if (bestThirds.Contains(3))
+                {
+                    if (bestThirds.Contains(4))
+                    {
+                        if (bestThirds.Contains(5))
+                        {
+                            // A C D E
+                            _bestThirds.Add(thirdsTeams[2]);
+                            _bestThirds.Add(thirdsTeams[3]);
+                            _bestThirds.Add(thirdsTeams[0]);
+                            _bestThirds.Add(thirdsTeams[4]);
+                        }
+                        else
+                        {
+                            // A C D F
+                            _bestThirds.Add(thirdsTeams[2]);
+                            _bestThirds.Add(thirdsTeams[3]);
+                            _bestThirds.Add(thirdsTeams[0]);
+                            _bestThirds.Add(thirdsTeams[5]);
+                        }
+                    }
+                    else
+                    {
+                        // A C E F
+                        _bestThirds.Add(thirdsTeams[2]);
+                        _bestThirds.Add(thirdsTeams[0]);
+                        _bestThirds.Add(thirdsTeams[5]);
+                        _bestThirds.Add(thirdsTeams[4]);
+                    }
+                }
+                else
+                {
+                    // A D E F
+                    _bestThirds.Add(thirdsTeams[3]);
+                    _bestThirds.Add(thirdsTeams[0]);
+                    _bestThirds.Add(thirdsTeams[5]);
+                    _bestThirds.Add(thirdsTeams[4]);
+                }
+            }
+            else if (bestThirds.Contains(2))
+            {
+                if (bestThirds.Contains(3))
+                {
+                    if (bestThirds.Contains(4))
+                    {
+                        if (bestThirds.Contains(5))
+                        {
+                            // B C D E
+                            _bestThirds.Add(thirdsTeams[2]);
+                            _bestThirds.Add(thirdsTeams[3]);
+                            _bestThirds.Add(thirdsTeams[1]);
+                            _bestThirds.Add(thirdsTeams[4]);
+                        }
+                        else
+                        {
+                            // B C D F
+                            _bestThirds.Add(thirdsTeams[2]);
+                            _bestThirds.Add(thirdsTeams[3]);
+                            _bestThirds.Add(thirdsTeams[1]);
+                            _bestThirds.Add(thirdsTeams[5]);
+                        }
+                    }
+                    else
+                    {
+                        // B C E F
+                        _bestThirds.Add(thirdsTeams[4]);
+                        _bestThirds.Add(thirdsTeams[2]);
+                        _bestThirds.Add(thirdsTeams[1]);
+                        _bestThirds.Add(thirdsTeams[5]);
+                    }
+                }
+                else
+                {
+                    // B D E F
+                    _bestThirds.Add(thirdsTeams[4]);
+                    _bestThirds.Add(thirdsTeams[3]);
+                    _bestThirds.Add(thirdsTeams[1]);
+                    _bestThirds.Add(thirdsTeams[5]);
+                }
+            }
+            else
+            {
+                // C D E F
+                _bestThirds.Add(thirdsTeams[2]);
+                _bestThirds.Add(thirdsTeams[3]);
+                _bestThirds.Add(thirdsTeams[5]);
+                _bestThirds.Add(thirdsTeams[4]);
+            }
+            _bestThirds.Add(thirdsTeams[allThirds[4] - 1]);
+            _bestThirds.Add(thirdsTeams[allThirds[5] - 1]);
         }
 
         private void GenerateRandomRound(Round round, string parameters)

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Linq;
 using Datas.Entities;
+using Pricer.Rounds;
 
 namespace Pricer
 {
@@ -9,20 +10,6 @@ namespace Pricer
 
     public class Round
     {
-        private class RoundResult
-        {
-            public int Point;
-            public int ScoreFor;
-            public int ScoreAgainst;
-
-            public void Add(int point, int scoreFor, int scoreAgainst)
-            {
-                Point += point;
-                ScoreFor += scoreFor;
-                ScoreAgainst += scoreAgainst;
-            }
-        }
-
         private List<Team> _orderedSimulation;
         private readonly Dictionary<Team, RoundResult> _simulation;
         private readonly List<Team> _teams;
@@ -174,6 +161,11 @@ namespace Pricer
                 .ThenByDescending(x => x.Value.ScoreFor - x.Value.ScoreAgainst)
                 .ThenByDescending(x => x.Value.ScoreFor)
                 .ThenBy(x => Helper.NextDouble()).Select(x => x.Key).ToList();
+        }
+
+        public RoundResult GetTeamResult(Team team)
+        {
+            return _simulation[team];
         }
     }
 }
