@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
 using Datas.Entities;
@@ -73,7 +74,7 @@ namespace Pricer
             var orderedResult = result.OrderBy(x => x.Value).ThenBy(x => x.Key.Id);
             foreach (var res in orderedResult)
             {
-                Key.Add((short) res.Key.Id);
+                Key.Add((short)res.Key.Id);
                 Key.Add((short)res.Value);
             }
         }
@@ -91,7 +92,15 @@ namespace Pricer
 
         public double GetResult(Dictionary<Team, int> positions)
         {
-            return Result.Sum(res => res.Value * positions[res.Key]);
+            return positions.Sum(position =>
+            {
+                double result;
+                if (Result.TryGetValue(position.Key, out result) && result != 0)
+                {
+                    return result * position.Value;
+                }
+                return 0;
+            });
         }
 
         public class SerializableResult

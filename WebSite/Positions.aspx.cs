@@ -15,7 +15,7 @@ public partial class Positions : Page
 
     protected object GetPositions(int competitionId)
     {
-        var positions = Sql.GetPosition(Context.User.Identity.Name, Master.SelectedUniverseId, competitionId);
+        var positions = Sql.GetPosition(Context.User.Identity.Name, Master.SelectedUniverseId, competitionId).Where(x => x.Value != 0).ToDictionary(x => x.Key, x => x.Value);
         var simulationResults = PricerHelper.GetVars(Master.GetCompetitionName(), positions, new List<double> {0, 0.1, 0.5, 0.9, 1});
         return
             JavaScriptSerializer.SerializeObject(simulationResults);

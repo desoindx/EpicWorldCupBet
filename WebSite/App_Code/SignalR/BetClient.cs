@@ -375,6 +375,7 @@ namespace SignalR
             var positions = Sql.GetPosition(user, universeId, competitionId);
             var signedQuantity = (side == "SELL" ? -1 : 1) * quantity;
             positions[team] += signedQuantity;
+            positions = positions.Where(x => x.Value != 0).ToDictionary(x => x.Key, x => x.Value);
             var worstScenario = PricerHelper.GetWorstScenario(context.Competitions.First(x => x.Id == competitionId).Name, positions, 0.1);
             var userMoney = context.Moneys.First(x => x.User == user && x.IdUniverseCompetition == universeCompetitionId);
 
@@ -432,7 +433,7 @@ namespace SignalR
 
         private void GetCashInfos(Entities context, string user, int universeId, int competitionId, int universeCompetitionId, string connectionId)
         {
-            var positions = Sql.GetPosition(user, universeId, competitionId);
+            var positions = Sql.GetPosition(user, universeId, competitionId).Where(x => x.Value != 0).ToDictionary(x => x.Key, x => x.Value);
             var simulationResults = PricerHelper.GetVars(context.Competitions.First(x => x.Id == competitionId).Name, positions,
                 new List<double> {0, 0.1, 0.5, 0.9, 1});
             var worst10 = simulationResults.Last().Worst10;

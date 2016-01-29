@@ -239,7 +239,7 @@ public partial class SiteMaster : MasterPage
 
     public string GetVar()
     {
-        var positions = Sql.GetPosition(Context.User.Identity.Name, SelectedUniverseId, GetCompetitionId());
+        var positions = Sql.GetPosition(Context.User.Identity.Name, SelectedUniverseId, GetCompetitionId()).Where(x => x.Value != 0).ToDictionary(x => x.Key, x => x.Value);
         var simulationResults = PricerHelper.GetVars(GetCompetitionName(), positions, new List<double> { 0, 0.1, 0.5, 0.9, 1 });
         var worst10 = simulationResults.Last().Worst10;
         _cashToInvest = Money + worst10;
