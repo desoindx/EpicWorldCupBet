@@ -46,10 +46,23 @@ namespace Pricer
                     {
                         try
                         {
-                            XmlSerializer xs = new XmlSerializer(typeof(SerializableItem[]));
+                            XmlSerializer xs = new XmlSerializer(typeof(PricerResult));
                             using (StreamReader rd = new StreamReader(pricingResult + competitionName + ".xml"))
                             {
-                                competition.Simulation = ((SerializableItem[])xs.Deserialize(rd)).ToDictionary(i => i.Id, i => i.Value);
+                                var pricerResult = (PricerResult)(xs.Deserialize(rd));
+                                var prizes = pricerResult.Prizes.Split('-').Select(Convert.ToDouble).ToList();
+                                competition.Simulation = pricerResult.Scenarios.ToDictionary(x =>
+                                {
+                                    var results = new Dictionary<Team, double>();
+                                    var teamsId = x.Teams.Split('-');
+                                    for (int i = 0; i < teamsId.Length; i++)
+                                    {
+                                        var teamId = teamsId[i];
+                                        results[new Team { Id = Convert.ToInt32(teamId) }] = prizes[i];
+                                    }
+                                    var simulationResult = new SimulationResult(results);
+                                    return simulationResult;
+                                }, x => x.Value);
                             }
                         }
                         catch (Exception)
@@ -164,12 +177,28 @@ namespace Pricer
             }
             try
             {
-                XmlSerializer xs = new XmlSerializer(typeof(SerializableItem[]));
+                XmlSerializer xs = new XmlSerializer(typeof(PricerResult));
                 using (StreamWriter wr = new StreamWriter(pricingResult + competition.Name + ".xml"))
                 {
-                    xs.Serialize(wr,
-                        competition.Simulation.Select(kv => new SerializableItem { Id = kv.Key, Value = kv.Value })
-                            .ToArray());
+                    var prizes = competition.Prizes;
+                    var pricerResult = new PricerResult
+                    {
+                        Prizes = prizes.Skip(1).Aggregate(prizes.First().ToString(), (current, prize) => current + ("-" + prize)),
+                        Scenarios = competition.Simulation.Select(
+                            x =>
+                            {
+                                var allTeams = x.Key.Result.OrderByDescending(t => t.Value);
+                                return new Scenario
+                                {
+                                    Teams =
+                                        allTeams.Skip(1)
+                                            .Aggregate(allTeams.First().Key.Id.ToString(),
+                                                (current, t) => current + ("-" + t.Key.Id)),
+                                    Value = x.Value
+                                };
+                            }).ToArray()
+                    };
+                    xs.Serialize(wr, pricerResult);
                 }
             }
             catch (Exception)
@@ -179,9 +208,15 @@ namespace Pricer
             return result;
         }
 
-        public class SerializableItem
+        public class PricerResult
         {
-            public SimulationResult Id;
+            public string Prizes;
+            public Scenario[] Scenarios;
+        }
+
+        public class Scenario
+        {
+            public string Teams;
             public int Value;
         }
     }

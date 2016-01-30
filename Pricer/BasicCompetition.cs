@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity.Core.Metadata.Edm;
 using System.Linq;
 using Datas.Entities;
 using Pricer.Rounds;
@@ -10,9 +9,7 @@ namespace Pricer
     public abstract class BasicCompetition
     {
         private const int SimulationNumber = 50000;
-
-        private readonly Random _teamSelector = new Random();
-        private string _name;
+        private readonly string _name;
 
         protected readonly Dictionary<int, Team> Teams;
 
@@ -23,6 +20,9 @@ namespace Pricer
         private readonly List<CompetitionPrize> _prizes;
 
         public Dictionary<SimulationResult, int> Simulation { get; set; }
+
+        public List<double> Prizes { get { return _prizes.Select(x => x.Value).OrderByDescending(x => x).ToList(); } } 
+
         public string Name { get { return _name; } }
 
         public BasicCompetition(string name)

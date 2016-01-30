@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Serialization;
 using Datas.Entities;
 
 namespace Pricer
@@ -31,39 +29,14 @@ namespace Pricer
 
         public List<short> Key { get; set; }
 
-        [XmlIgnore]
-        private SerializableResult[] _serializableResults;
+        private readonly Dictionary<Team, double> _result;
 
-        public SerializableResult[] SerializableResults
-        {
-            get
-            {
-                _serializableResults = _result.Select(kv => new SerializableResult { Id = kv.Key, Value = kv.Value })
-                    .ToArray();
-                return _serializableResults;
-            }
-            set { _serializableResults = value; }
-        }
-
-
-        [XmlIgnore]
-        private Dictionary<Team, double> _result;
-
-        [XmlIgnore]
         public Dictionary<Team, double> Result
         {
             get
             {
-                if (_result == null)
-                {
-                    _result = _serializableResults.ToDictionary(i => i.Id, i => i.Value);
-                }
                 return _result;
             }
-        }
-
-        public SimulationResult()
-        {
         }
 
         public SimulationResult(Dictionary<Team, double> result)
@@ -101,12 +74,6 @@ namespace Pricer
                 }
                 return 0;
             });
-        }
-
-        public class SerializableResult
-        {
-            public Team Id;
-            public double Value;
         }
     }
 }

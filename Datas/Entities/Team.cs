@@ -17,15 +17,10 @@ namespace Datas.Entities
     public partial class Team
     {
         public int Id { get; set; }
-        [XmlIgnore]
         public string Name { get; set; }
-        [XmlIgnore]
         public int IdCompetition { get; set; }
-        [XmlIgnore]
         public Nullable<int> Result { get; set; }
-        [XmlIgnore]
         public Nullable<bool> RealTeam { get; set; }
-        [XmlIgnore]
         public Nullable<double> Strength { get; set; }
     }
 }
