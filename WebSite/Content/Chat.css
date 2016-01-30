@@ -1,0 +1,141 @@
+﻿.submitButton {
+    background-color: #d7e5e4;
+    border: #2196f3 solid 1px;
+    padding: 4px;
+    cursor: pointer;
+}
+
+    .submitButton:hover {
+        background-color: #e1e1e1;
+    }
+
+.chatRoom {
+    width: 650px;
+    margin-left: auto;
+    margin-right: auto;
+    border: solid 1px gray;
+}
+
+    .chatRoom .title {
+        font-size: 16px;
+        font-weight: bold;
+        padding: 8px;
+        background-color: #2196f3;
+        border-bottom: solid 1px #2196f3;
+        color: white;
+    }
+
+    .chatRoom .content {
+        height: 300px;
+        clear: both;
+    }
+
+        .chatRoom .content .chatWindow {
+            float: left;
+            width: 409px;
+            height: 300px;
+            border-right: solid 1px #2196f3;
+            overflow-y: scroll;
+        }
+
+            .chatRoom .content .chatWindow .message {
+                padding: 4px;
+            }
+
+                .chatRoom .content .chatWindow .message .userName {
+                    font-weight: bold;
+                }
+
+        .chatRoom .content .users {
+            margin-left: 410px;
+            width: 240px;
+            height: 300px;
+        }
+
+            .chatRoom .content .users .user {
+                display: block;
+                cursor: pointer;
+                padding: 4px;
+                background-color: #f9f9f9;
+                border-bottom: solid 1px #2196f3;
+            }
+
+            .chatRoom .content .users .loginUser {
+                display: block;
+                padding: 4px;
+                color: gray;
+                border-bottom: solid 1px #2196f3;
+            }
+
+            .chatRoom .content .users .user:hover {
+                background-color: #e1e1e1;
+            }
+
+    .chatRoom .messageBar {
+        border-top: solid 1px gray;
+        padding: 4px;
+    }
+
+        .chatRoom .messageBar .textbox {
+            width: 550px;
+        }
+
+.disconnect {
+    position: absolute;
+    margin: 10px;
+    background-color: #ffcbcb;
+    padding: 4px;
+    border: solid 1px red;
+}
+
+
+.draggable {
+    background-color: white;
+    position: absolute;
+    border: #2196f3 solid 1px !important;
+    width: 250px;
+}
+
+    .draggable .header {
+        cursor: move;
+        background-color: #2196f3;
+        border-bottom: #2196f3 solid 1px;
+    }
+
+    .draggable .selText {
+        color: white;
+        padding: 4px;
+    }
+
+    .draggable .messageArea {
+        width: 250px;
+        overflow-y: scroll;
+        height: 200px;
+        border-bottom: #2196f3 solid 1px;
+    }
+
+        .draggable .messageArea .message {
+            padding: 4px;
+        }
+
+    .draggable .buttonBar {
+        width: 250px;
+        padding: 4px;
+    }
+
+        .draggable .buttonBar .msgText {
+            width: 172px;
+        }
+
+        .draggable .buttonBar .button {
+            margin-left: 4px;
+            width: 55px;
+        }
+
+#divContainer {
+    z-index: 10;
+    background-color: white;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+}

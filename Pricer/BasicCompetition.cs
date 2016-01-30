@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Datas.Entities;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Pricer.Rounds;
 
 namespace Pricer
@@ -19,9 +20,9 @@ namespace Pricer
         private readonly Dictionary<string, List<CompetitionResult>> _results;
         private readonly List<CompetitionPrize> _prizes;
 
-        public Dictionary<SimulationResult, int> Simulation { get; set; }
+        public HashSet<SimulationResult> Simulation { get; set; }
 
-        public List<double> Prizes { get { return _prizes.Select(x => x.Value).OrderByDescending(x => x).ToList(); } } 
+        public List<int> Prizes { get { return _prizes.Select(x => x.Value).OrderByDescending(x => x).ToList(); } }
 
         public string Name { get { return _name; } }
 
@@ -38,29 +39,36 @@ namespace Pricer
             }
         }
 
-        public Dictionary<Team, double> Price(bool updateSimulation)
+        public Dictionary<int, double> Price(bool updateSimulation)
         {
             _rounds = new Dictionary<string, Round>();
-            var results = new Dictionary<Team, double>();
+            var results = new Dictionary<int, double>();
             foreach (var team in Teams)
             {
-                results[team.Value] = 0;
+                results[team.Value.Id] = 0;
             }
 
-            var simulation = new Dictionary<SimulationResult, int>();
+            var simulations = new HashSet<SimulationResult>();
+            var existingSimulations = new Dictionary<SimulationResult, ushort>();
             for (int i = 0; i < SimulationNumber; i++)
             {
                 var result = SimulateCompetition();
                 if (updateSimulation)
                 {
-                    if (simulation.ContainsKey(result))
+                    if (simulations.Contains(result))
                     {
-                        simulation[result] += 1;
+                        simulations.Remove(result);
+                        ushort existingSimulation;
+                        if (!existingSimulations.TryGetValue(result, out existingSimulation))
+                        {
+                            existingSimulation = 1;
+                        }
+                        var simulation = (ushort) (existingSimulation + 1);
+                        existingSimulations[result] = simulation;
+                        result.Value = simulation;
                     }
-                    else
-                    {
-                        simulation[result] = 1;
-                    }
+
+                    simulations.Add(result);
                 }
                 foreach (var r in result.Result)
                 {
@@ -68,6 +76,7 @@ namespace Pricer
                 }
             }
 
+            simulations.TrimExcess();
             for (int index = 0; index < results.Count; index++)
             {
                 var item = results.ElementAt(index);
@@ -76,7 +85,7 @@ namespace Pricer
 
             if (updateSimulation)
             {
-                Simulation = simulation;
+                Simulation = simulations;
             }
 
             return results;
@@ -98,7 +107,7 @@ namespace Pricer
                 SimulateRound(round);
             }
 
-            var results = new Dictionary<Team, double>();
+            var results = new Dictionary<int, int>(_prizes.Count);
 
             foreach (var prize in _prizes)
             {
@@ -113,7 +122,7 @@ namespace Pricer
                     team = GetTeam(null, prize.RoundKey);
                 }
 
-                results[team] = prize.Value;
+                results[team.Id] = prize.Value;
             }
 
             return new SimulationResult(results);
@@ -163,7 +172,7 @@ namespace Pricer
 
             if (teamName.StartsWith("*BestThird"))
             {
-                var index = Convert.ToInt32(teamName.Remove(teamName.Length - 1).Remove(0, 11)) -1;
+                var index = Convert.ToInt32(teamName.Remove(teamName.Length - 1).Remove(0, 11)) - 1;
                 GenerateBestThirdRound(currentRound);
                 return _bestThirds[index];
             }

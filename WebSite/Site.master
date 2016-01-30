@@ -12,6 +12,7 @@
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/bundles/modernizr") %>
     </asp:PlaceHolder>
+    <link href="Content/Chat.css" rel="stylesheet">
     <link href="Content/Site.css" rel="stylesheet">
     <link href="Content/slick.columnpicker.css" rel="stylesheet">
     <link href="Content/slick.grid.css" rel="stylesheet">
@@ -24,6 +25,11 @@
     <link href="Content/font-awesome.css" rel="stylesheet" type="text/css">
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <script src="Scripts/jquery-1.10.2.js"></script>
+    <script src="/Scripts/ui/jquery.ui.core.js"></script>
+    <script src="/Scripts/ui/jquery.ui.widget.js"></script>
+    <script src="/Scripts/ui/jquery.ui.mouse.js"></script>
+    <script src="/Scripts/ui/jquery.ui.draggable.js"></script>
+    <script src="/Scripts/ui/jquery.ui.resizable.js"></script>
     <script src="Scripts/jquery.event.drag.min.js"></script>
     <script src="Scripts/SlickGrid/slick.core.js"></script>
     <script src="Scripts/SlickGrid/slick.grid.js"></script>
@@ -35,6 +41,7 @@
     <script type="text/javascript" src="Scripts/jquery.signalR-2.0.3.min.js"></script>
     <script type="text/javascript" src="../signalr/hubs"></script>
     <script src="JavaScript/Master.js"></script>
+    <script src="JavaScript/Chat.js"></script>
     <asp:ContentPlaceHolder ID="HeadContent" runat="server">
     </asp:ContentPlaceHolder>
 </head>
@@ -150,7 +157,31 @@
                                   { %>
                                <asp:ContentPlaceHolder ID="MainContent" runat="server">
                                </asp:ContentPlaceHolder>
+                               <% if (UserHasUniverse)
+                                  { %>
+                               <div id="divContainer">
+                                   <div id="divChat" class="chatRoom">
+                                       <div id="ChatTitle" class="title">
+                                           Chat Room - New Messages
+                                       </div>
+                                       <div id="ChatRoom">
+                                           <div class="content">
+                                               <div id="divChatWindow" class="chatWindow">
+                                               </div>
+                                               <div id="divusers" class="users">
+                                               </div>
+                                           </div>
+                                           <div class="messageBar">
+                                               <input class="textbox" type="text" id="txtMessage" />
+                                               <input id="btnSendMsg" type="button" value="Send" class="btn btn-primary" />
+                                           </div>
+                                       </div>
+                                   </div>
+
+                                   <input id="hdUserName" type="hidden" value="<%:Context.User.Identity.Name%>" />
+                               </div>
                                <% }
+                                  }
                                   else
                                   {%><div style="text-align: center">
                                       <p>

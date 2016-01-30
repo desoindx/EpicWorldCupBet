@@ -1,16 +1,13 @@
 ﻿$(function () {
     var betHub = $.connection.Bet;
-
     $.extend(betHub.client, {
         newTrades: function (trades, nbTrades, hasNew, id) {
             if (id != competitionUniverseId) {
                 return;
             }
-
             if (hasNew) {
                 $("#NumberOfNewTrades").addClass("showBadge");
             }
-
             if (nbTrades == 1) {
                 $("#ListTrade")[0].innerHTML = "<li><a>" + trades + "</a></li>";
             } else {

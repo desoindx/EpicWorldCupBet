@@ -147,7 +147,7 @@ namespace Manager
 
                     var rounds = cells.Skip(2).Select(x => GetCellValue(sharedString, x)).Where(x => !string.IsNullOrEmpty(x));
                     var prizeName = GetCellValue(sharedString, firstCell);
-                    var value = Double.Parse(GetCellValue(sharedString, cells.ElementAt(1)));
+                    var value = Int32.Parse(GetCellValue(sharedString, cells.ElementAt(1)));
                     foreach (var round in rounds)
                     {
                         var newPrize = context.CompetitionPrizes.Create();

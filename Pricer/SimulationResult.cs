@@ -27,11 +27,11 @@ namespace Pricer
             return (Key != null ? Key.GetHashCode() : 0);
         }
 
-        public List<short> Key { get; set; }
+        public short[] Key { get; set; }
 
-        private readonly Dictionary<Team, double> _result;
+        private readonly Dictionary<int, int> _result;
 
-        public Dictionary<Team, double> Result
+        public Dictionary<int, int> Result
         {
             get
             {
@@ -39,23 +39,23 @@ namespace Pricer
             }
         }
 
-        public SimulationResult(Dictionary<Team, double> result)
+        public SimulationResult(Dictionary<int, int> result, ushort value = 1)
         {
+            Value = value;
             _result = result;
-
-            Key = new List<short>();
-            var orderedResult = result.OrderBy(x => x.Value).ThenBy(x => x.Key.Id);
+            var orderedResult = result.OrderBy(x => x.Value).ThenBy(x => x.Key).ToList();
+            Key = new short[orderedResult.Count];
+            int i = 0;
             foreach (var res in orderedResult)
             {
-                Key.Add((short)res.Key.Id);
-                Key.Add((short)res.Value);
+                Key[i++] = (short)res.Key;
             }
         }
 
-        public double GetResult(Team team)
+        public int GetResult(Team team)
         {
-            double result;
-            if (!Result.TryGetValue(team, out result))
+            int result;
+            if (!Result.TryGetValue(team.Id, out result))
             {
                 return 0;
             }
@@ -63,12 +63,14 @@ namespace Pricer
             return result;
         }
 
-        public double GetResult(Dictionary<Team, int> positions)
+        public ushort Value { get; set; }
+
+        public int GetResult(Dictionary<Team, int> positions)
         {
             return positions.Sum(position =>
             {
-                double result;
-                if (Result.TryGetValue(position.Key, out result) && result != 0)
+                int result;
+                if (Result.TryGetValue(position.Key.Id, out result) && result != 0)
                 {
                     return result * position.Value;
                 }

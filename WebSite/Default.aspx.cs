@@ -37,11 +37,6 @@ public partial class _Default : Page
                         x.Price)).ToList();
     }
 
-    protected List<string[]> GetMessages()
-    {
-        return Chats.GetChat(Master.SelectedUniverseId);
-    }
-
     protected void LogInAsGuest(object sender, EventArgs e)
     {
         var random = new Random();

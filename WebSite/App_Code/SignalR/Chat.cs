@@ -1,60 +1,159 @@
-﻿using System;
-using System.Collections.Generic;
-using SignalR.SQL;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
+using System.Xml.Serialization;
+using Microsoft.AspNet.SignalR;
+using Pricer;
 
-namespace SignalR
+namespace SignalRChat
 {
-    public static class Chats
+    public class MessageDetail
     {
-        private static readonly object Locker = new object();
-        private static readonly Dictionary<int, Chat> _chats = new Dictionary<int, Chat>(); 
-
-        public static string[] NewMessage(int universeId, string user, string message)
-        {
-            if (!Sql.IsUserAuthorizedOn(user, universeId))
-                return null;
-
-            lock (Locker)
-            {
-                Chat chat;
-                if (!_chats.TryGetValue(universeId, out chat))
-                {
-                    chat = new Chat();
-                    _chats[universeId] = chat;
-                }
-
-                return chat.NewMessage(user, message.Trim());
-            }
-        }
-        public static List<string[]> GetChat(int universeId)
-        {
-            lock (Locker)
-            {
-                Chat chat;
-                if (!_chats.TryGetValue(universeId, out chat))
-                {
-                    chat = new Chat();
-                    _chats[universeId] = chat;
-                }
-
-                return chat.Messages;
-            }
-        }
-
-        private class Chat
-        {
-            public List<string[]> Messages { get { return new List<string[]>(_messages); } }
-            private readonly List<string[]> _messages = new List<string[]>();
-
-            public string[] NewMessage(string user, string message)
-            {
-                if (string.IsNullOrEmpty(message))
-                    return null;
-
-                var lastMessage = new[] { string.Format("{0} ({1}) -", user, DateTime.Now.ToShortTimeString()), message };
-                _messages.Add(lastMessage);
-                return lastMessage;
-            }
-        }
+        public string UserName { get; set; }
+        public string Message { get; set; }
     }
+
+    public class UserDetail
+    {
+        public string ConnectionId { get; set; }
+        public string UserName { get; set; }
+    }
+
+    public class ChatHub : Hub
+    {
+        #region Data Members
+
+        static readonly Dictionary<string, HashSet<string>> ConnectedUsers = new Dictionary<string, HashSet<string>>();
+        static List<MessageDetail> CurrentMessage;
+        private readonly object _messageLock = new object();
+
+        public ChatHub()
+        {
+            if (CurrentMessage != null)
+            {
+                return;
+            }
+            lock (_messageLock)
+            {
+                var chat = HttpContext.Current.Server.MapPath("~/Chat/chat.xml");
+                if (File.Exists(chat))
+                {
+                    XmlSerializer xs = new XmlSerializer(typeof(MessageDetail[]));
+                    using (StreamReader rd = new StreamReader(chat))
+                    {
+                        CurrentMessage = ((MessageDetail[])(xs.Deserialize(rd))).ToList();
+                    }
+                }
+                else
+                {
+                    CurrentMessage = new List<MessageDetail>(100);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Methods
+
+        public void Connect(string userName)
+        {
+            if (userName == null)
+            {
+                return;
+            }
+
+            lock (this)
+            {
+                var id = Context.ConnectionId;
+                HashSet<string> connectionIds;
+                if (!ConnectedUsers.TryGetValue(userName, out connectionIds) || !connectionIds.Any())
+                {
+                    connectionIds = new HashSet<string>();
+                    ConnectedUsers[userName] = connectionIds;
+                    Clients.AllExcept(id).onNewUserConnected(userName);
+                }
+                connectionIds.Add(id);
+                Clients.Caller.onConnected(userName, ConnectedUsers.Keys, CurrentMessage);
+            }
+        }
+
+        public void SendMessageToAll(string userName, string message)
+        {
+            Clients.All.messageReceived(userName, message);
+            AddMessageinCache(userName, message);
+        }
+
+        public void SendPrivateMessage(string toUserName, string message)
+        {
+            lock (this)
+            {
+                string fromUserId = Context.ConnectionId;
+                HashSet<string> toUserIds;
+                if (ConnectedUsers.TryGetValue(toUserName, out toUserIds) && toUserIds.Any())
+                {
+                    var fromUser = ConnectedUsers.Where(x => x.Value.Contains(fromUserId)).Select(x => x.Key).FirstOrDefault();
+                    if (fromUser != null)
+                    {
+                        foreach (var toUserId in toUserIds)
+                        {
+                            Clients.Client(toUserId).sendPrivateMessage(fromUser, toUserName, message, false);
+                        }
+                        Clients.Caller.sendPrivateMessage(fromUser, toUserName, message, true);
+                    }
+                }
+            }
+        }
+
+        public override Task OnDisconnected()
+        {
+            lock (this)
+            {
+                var connectionId = Context.ConnectionId;
+                var item = ConnectedUsers.Where(x => x.Value.Contains(connectionId)).Select(x => x.Key).FirstOrDefault();
+                if (item != null)
+                {
+                    var connectedUser = ConnectedUsers[item];
+                    connectedUser.Remove(connectionId);
+                    if (!connectedUser.Any())
+                    {
+                        Clients.All.onUserDisconnected(item);
+                    }
+                }
+            }
+            return base.OnDisconnected();
+        }
+
+
+        #endregion
+
+        #region private Messages
+
+        private void AddMessageinCache(string userName, string message)
+        {
+            lock (_messageLock)
+            {
+                CurrentMessage.Add(new MessageDetail { UserName = userName, Message = message });
+                if (CurrentMessage.Count > 100)
+                {
+                    CurrentMessage.RemoveAt(0);
+                }
+                var chat = HttpContext.Current.Server.MapPath("~/Chat/chat.xml");
+                if (File.Exists(chat))
+                {
+                    File.Delete(chat);
+                }
+
+                XmlSerializer xs = new XmlSerializer(typeof(MessageDetail[]));
+                using (StreamWriter wr = new StreamWriter(chat))
+                {
+                    xs.Serialize(wr, CurrentMessage.ToArray());
+                }
+            }
+        }
+
+        #endregion
+    }
+
 }

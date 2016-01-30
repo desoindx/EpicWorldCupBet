@@ -44,7 +44,7 @@ namespace Manager
                     double.Parse(row.Cells[_columnStrength].Value.ToString());
             }
 
-            Dictionary<Team, double> results = null;
+            Dictionary<int, double> results = null;
             if (StrenghtRadioButton.Checked)
             {
                 results = Pricer.PricerHelper.Price(CompetitionListBox.SelectedItem.ToString(), strengths);
@@ -56,7 +56,7 @@ namespace Manager
 
             foreach (DataGridViewRow row in teamGridView.Rows)
             {
-                row.Cells[_columnValue].Value = results[(Team)row.Cells[_columnId].Value];
+                row.Cells[_columnValue].Value = results[((Team)row.Cells[_columnId].Value).Id];
             }
         }
 

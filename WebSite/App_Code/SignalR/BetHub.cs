@@ -122,13 +122,6 @@ namespace SignalR
             _userLastSeenTrades[new Tuple<string, int>(User, competitionUniverseId)] = userLastSeenTrade;
         }
 
-        public void SendMessage(int universeId, string message)
-        {
-            var lastMessage = Chats.NewMessage(universeId, User, message);
-            if (lastMessage != null)
-                Clients.Group(universeId.ToString(CultureInfo.InvariantCulture)).chat(lastMessage);
-        }
-
         public void GetOrderBook(string team, int universeCompetitionId, int competitionId)
         {
             var teamsInfo = team.Split('(');

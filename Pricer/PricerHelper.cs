@@ -26,7 +26,7 @@ namespace Pricer
             }
         }
 
-        public static Dictionary<Team, double> Price(string competitionName, Dictionary<Team, double> strengths)
+        public static Dictionary<int, double> Price(string competitionName, Dictionary<Team, double> strengths)
         {
             var competition = GetCompetion(competitionName);
             ((StrengthCompetition)competition).Strengths = strengths;
@@ -50,19 +50,21 @@ namespace Pricer
                             using (StreamReader rd = new StreamReader(pricingResult + competitionName + ".xml"))
                             {
                                 var pricerResult = (PricerResult)(xs.Deserialize(rd));
-                                var prizes = pricerResult.Prizes.Split('-').Select(Convert.ToDouble).ToList();
-                                competition.Simulation = pricerResult.Scenarios.ToDictionary(x =>
+                                var prizes = pricerResult.Prizes.Split('-').Select(x => Convert.ToInt32(x)).ToList();
+                                competition.Simulation = new HashSet<SimulationResult>(pricerResult.Scenarios.Select(x =>
                                 {
-                                    var results = new Dictionary<Team, double>();
                                     var teamsId = x.Teams.Split('-');
-                                    for (int i = 0; i < teamsId.Length; i++)
+                                    var length = teamsId.Length;
+                                    var results = new Dictionary<int, int>(length);
+                                    for (int i = 0; i < length; i++)
                                     {
                                         var teamId = teamsId[i];
-                                        results[new Team { Id = Convert.ToInt32(teamId) }] = prizes[i];
+                                        results[Convert.ToInt32(teamId)] = prizes[i];
                                     }
-                                    var simulationResult = new SimulationResult(results);
+                                    var simulationResult = new SimulationResult(results, x.Value);
                                     return simulationResult;
-                                }, x => x.Value);
+                                }));
+                                competition.Simulation.TrimExcess();
                             }
                         }
                         catch (Exception)
@@ -84,13 +86,13 @@ namespace Pricer
                 competition.Price();
             }
 
-            var results = new List<Tuple<double, SimulationResult>>();
+            var results = new List<Tuple<int, SimulationResult>>();
             foreach (var simulation in competition.Simulation)
             {
-                double result = simulation.Key.GetResult(positions);
+                int result = simulation.GetResult(positions);
                 for (int i = 0; i < simulation.Value; i++)
                 {
-                    results.Add(new Tuple<double, SimulationResult>(result, simulation.Key));
+                    results.Add(new Tuple<int, SimulationResult>(result, simulation));
                 }
             }
 
@@ -108,13 +110,13 @@ namespace Pricer
                 competition.Price();
             }
 
-            var results = new List<Tuple<double, SimulationResult>>();
+            var results = new List<Tuple<int, SimulationResult>>();
             foreach (var simulation in competition.Simulation)
             {
-                double result = simulation.Key.GetResult(positions);
+                int result = simulation.GetResult(positions);
                 for (int i = 0; i < simulation.Value; i++)
                 {
-                    results.Add(new Tuple<double, SimulationResult>(result, simulation.Key));
+                    results.Add(new Tuple<int, SimulationResult>(result, simulation));
                 }
             }
 
@@ -158,7 +160,7 @@ namespace Pricer
             return teamResults;
         }
 
-        public static Dictionary<Team, double> Price(this BasicCompetition competition)
+        public static Dictionary<int, double> Price(this BasicCompetition competition)
         {
             var result = competition.Price(true);
             if (!CacheFile)
@@ -187,13 +189,13 @@ namespace Pricer
                         Scenarios = competition.Simulation.Select(
                             x =>
                             {
-                                var allTeams = x.Key.Result.OrderByDescending(t => t.Value);
+                                var allTeams = x.Result.OrderByDescending(t => t.Value);
                                 return new Scenario
                                 {
                                     Teams =
                                         allTeams.Skip(1)
-                                            .Aggregate(allTeams.First().Key.Id.ToString(),
-                                                (current, t) => current + ("-" + t.Key.Id)),
+                                            .Aggregate(allTeams.First().Key.ToString(),
+                                                (current, t) => current + ("-" + t.Key)),
                                     Value = x.Value
                                 };
                             }).ToArray()
@@ -217,7 +219,7 @@ namespace Pricer
         public class Scenario
         {
             public string Teams;
-            public int Value;
+            public ushort Value;
         }
     }
 }
