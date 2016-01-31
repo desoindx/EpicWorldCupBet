@@ -2,7 +2,7 @@
     var betHub = $.connection.Bet;
     $.extend(betHub.client, {
         newTrades: function (trades, nbTrades, hasNew, id) {
-            if (id != competitionUniverseId) {
+            if (id == -1 || id != competitionUniverseId) {
                 return;
             }
             if (hasNew) {

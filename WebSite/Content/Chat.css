@@ -1,6 +1,6 @@
 ﻿.submitButton {
     background-color: #d7e5e4;
-    border: #2196f3 solid 1px;
+    border: #204d74 solid 1px;
     padding: 4px;
     cursor: pointer;
 }
@@ -20,8 +20,8 @@
         font-size: 16px;
         font-weight: bold;
         padding: 8px;
-        background-color: #2196f3;
-        border-bottom: solid 1px #2196f3;
+        background-color: #286090;
+        border-bottom: solid 1px #204d74;
         color: white;
     }
 
@@ -34,7 +34,7 @@
             float: left;
             width: 409px;
             height: 300px;
-            border-right: solid 1px #2196f3;
+            border-right: solid 1px #204d74;
             overflow-y: scroll;
         }
 
@@ -57,14 +57,14 @@
                 cursor: pointer;
                 padding: 4px;
                 background-color: #f9f9f9;
-                border-bottom: solid 1px #2196f3;
+                border-bottom: solid 1px #204d74;
             }
 
             .chatRoom .content .users .loginUser {
                 display: block;
                 padding: 4px;
                 color: gray;
-                border-bottom: solid 1px #2196f3;
+                border-bottom: solid 1px #204d74;
             }
 
             .chatRoom .content .users .user:hover {
@@ -92,14 +92,14 @@
 .draggable {
     background-color: white;
     position: absolute;
-    border: #2196f3 solid 1px !important;
+    border: #204d74 solid 1px !important;
     width: 250px;
 }
 
     .draggable .header {
         cursor: move;
-        background-color: #2196f3;
-        border-bottom: #2196f3 solid 1px;
+        background-color: #286090;
+        border-bottom: #204d74 solid 1px;
     }
 
     .draggable .selText {
@@ -111,7 +111,7 @@
         width: 250px;
         overflow-y: scroll;
         height: 200px;
-        border-bottom: #2196f3 solid 1px;
+        border-bottom: #204d74 solid 1px;
     }
 
         .draggable .messageArea .message {

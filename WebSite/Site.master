@@ -9,9 +9,6 @@
     <meta name="author" content="Xavier Desoindre">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%: Page.Title %> - ESE</title>
-    <asp:PlaceHolder runat="server">
-        <%: Scripts.Render("~/bundles/modernizr") %>
-    </asp:PlaceHolder>
     <link href="Content/Chat.css" rel="stylesheet">
     <link href="Content/Site.css" rel="stylesheet">
     <link href="Content/slick.columnpicker.css" rel="stylesheet">
@@ -19,12 +16,12 @@
     <link href="Content/slick.headerbuttons.css" rel="stylesheet">
     <link href="Content/slick.headermenu.css" rel="stylesheet">
     <link href="Content/slick.pager.css" rel="stylesheet">
-    <link href="Content/bootstrap.css" rel="stylesheet">
+    <link href="Content/bootstrap.min.css" rel="stylesheet">
     <link href="Content/metisMenu.css" rel="stylesheet">
     <link href="Content/sb-admin-2.css" rel="stylesheet">
     <link href="Content/font-awesome.css" rel="stylesheet" type="text/css">
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-    <script src="Scripts/jquery-1.10.2.js"></script>
+    <script src="Scripts/jquery-2.2.0.min.js"></script>
     <script src="/Scripts/ui/jquery.ui.core.js"></script>
     <script src="/Scripts/ui/jquery.ui.widget.js"></script>
     <script src="/Scripts/ui/jquery.ui.mouse.js"></script>
@@ -60,7 +57,7 @@
             </div>
             <!-- /.navbar-header -->
             <div class="navbar-header-center" style="margin-left: 50px">
-                <span style="color: #2196f3; font-size: 25px;"><%: GetUniverseCompetition() %></span>
+                <span style="color: #2860A6; font-size: 25px;"><%: GetUniverseCompetition() %></span>
                 <span style="display: none" id="currentUniverseId"><%: GetUniverseId() %></span>
                 <span style="display: none" id="currentCompetitionId"><%: GetCompetitionId() %></span>
                 <span style="display: none" id="currentCompetitionUniverseId"><%: GetCompetitionUniverseId() %></span>

@@ -6,8 +6,6 @@ using System.Web.UI;
 using Datas.Entities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
-using Pricer;
-using SignalR;
 using SignalR.SQL;
 using WorldCupBetting;
 

@@ -107,3 +107,7 @@
 .hiddenAlert {
     display: none;
 }
+
+#side-menu {
+    margin-top: -3px;
+}
