@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Xml.Serialization;
 using Microsoft.AspNet.SignalR;
-using Pricer;
 
 namespace SignalRChat
 {
@@ -37,7 +36,7 @@ namespace SignalRChat
             }
             lock (_messageLock)
             {
-                var chat = HttpContext.Current.Server.MapPath("~/Chat/chat.xml");
+                var chat = HttpRuntime.AppDomainAppPath + ("Chat/chat.xml");
                 if (File.Exists(chat))
                 {
                     XmlSerializer xs = new XmlSerializer(typeof(MessageDetail[]));
@@ -139,7 +138,7 @@ namespace SignalRChat
                 {
                     CurrentMessage.RemoveAt(0);
                 }
-                var chat = HttpContext.Current.Server.MapPath("~/Chat/chat.xml");
+                var chat = HttpRuntime.AppDomainAppPath + ("Chat/chat.xml");
                 if (File.Exists(chat))
                 {
                     File.Delete(chat);

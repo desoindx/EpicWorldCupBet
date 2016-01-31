@@ -21,7 +21,7 @@
     <link href="Content/sb-admin-2.css" rel="stylesheet">
     <link href="Content/font-awesome.css" rel="stylesheet" type="text/css">
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-    <script src="Scripts/jquery-2.2.0.min.js"></script>
+    <script src="Scripts/jquery-1.10.2.min.js"></script>
     <script src="/Scripts/ui/jquery.ui.core.js"></script>
     <script src="/Scripts/ui/jquery.ui.widget.js"></script>
     <script src="/Scripts/ui/jquery.ui.mouse.js"></script>
