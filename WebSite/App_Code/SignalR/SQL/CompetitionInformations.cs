@@ -89,7 +89,7 @@ namespace SignalR.SQL
                     return null;
 
                 var teams = GetTeamsForCompetition(competitionId, context);
-                foreach (var team in teams)
+                foreach (var team in teams.Where(x => !x.Result.HasValue))
                 {
                     if (team.Result.HasValue)
                         continue;

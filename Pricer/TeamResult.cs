@@ -1,6 +1,4 @@
-﻿using Datas.Entities;
-
-namespace Pricer
+﻿namespace Pricer
 {
     public class TeamResult
     {
@@ -11,5 +9,6 @@ namespace Pricer
         public double Average;
         public double Best10;
         public double Best;
+        public bool Out;
     }
 }

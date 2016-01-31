@@ -129,7 +129,7 @@ namespace Pricer
             var best = orderedResults[(int)(vars[4] * count)].Item2;
 
             var teamResults = new List<TeamResult>();
-            var total = new TeamResult { Team = "Total", Position = 0 };
+            var total = new TeamResult { Team = "Total", Position = 0, Out = false};
             foreach (var position in positions)
             {
                 var team = position.Key;
@@ -147,7 +147,8 @@ namespace Pricer
                     Worst10 = worst10Value,
                     Average = averageValue,
                     Best10 = best10Value,
-                    Best = bestValue
+                    Best = bestValue,
+                    Out = team.Result.HasValue
                 });
                 total.Worst += worstValue;
                 total.Worst10 += worst10Value;

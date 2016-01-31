@@ -14,7 +14,7 @@
     <script src="JavaScript/Positions.js"></script>
     <div style="margin-top: 50px;" id='<%: "Div-" + Master.GetCompetitionId() %>'>
         <div style="position: absolute; left: 50%; margin-left: -320px;">
-            <div style="float: left; width: 650px; height: 900px;" id='<%: "PositionsDiv-" + Master.GetCompetitionId() %>'>
+            <div style="float: left; width: 690px; height: 900px;" id='<%: "PositionsDiv-" + Master.GetCompetitionId() %>'>
             </div>
         </div>
     </div>
