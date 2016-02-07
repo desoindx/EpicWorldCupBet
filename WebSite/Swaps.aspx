@@ -24,9 +24,9 @@
     <div id="cashInfos">
         <table>
             <tr>
-                <td id="cashAvailable">Cash Available : <%: Master.GetMoney() %> $</td>
-                <td id="maxExposition">Max Exposition : <%: Master.GetVar() %> $</td>
-                <td id="cashToInvest">Cash To Invest : <%: Master.GetCashToInvest() %> $</td>
+                <td id="cashAvailable"></td>
+                <td id="maxExposition"></td>
+                <td id="cashToInvest">Please wait while your position is being updated ...</td>
             </tr>
         </table>
     </div>
@@ -99,7 +99,7 @@
                 <tr>
                     <td>
                         <input style="margin-left: -50px; margin-top: 30px" type="button" id="SendOrder" class="btn btn-primary" value="Send New Swap" />
-                        <input style="position: absolute; right: 20px; margin-top: 30px; display: none;" type="button" class="btn btn-danger" id="CancelOrder" value="Cancel Existing Swap" />
+                        <input style="position: absolute; right: 20px; display: none;" type="button" class="btn btn-danger" id="CancelOrder" value="Cancel Existing Swap" />
                     </td>
                 </tr>
             </tbody>

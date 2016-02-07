@@ -150,6 +150,71 @@ namespace SignalR
             }
         }
 
+        public void CancelSwap(string user, int swapId, string connectionId)
+        {
+            lock (this)
+            {
+                using (var context = new Entities())
+                {
+                    var existingSwap = context.SwapOrders.FirstOrDefault(x => x.Id == swapId && x.User == user);
+                    if (existingSwap == null)
+                    {
+                        Clients.Client(connectionId).newMessage("Swap not found, please try again.", ErrorClass);
+                        return;
+                    }
+
+                    existingSwap.Status = 2;
+                    context.SaveChanges();
+                    Clients.Client(connectionId).newMessageAndRefresh("Successfuly canceled swap", SuccessClass);
+                }
+            }
+        }
+
+        public void MatchSwap(string user, int swapId, string connectionId, int universeId, int competitionId, int universeCompetitionId)
+        {
+            lock (this)
+            {
+                using (var context = new Entities())
+                {
+                    var existingSwap = context.SwapOrders.FirstOrDefault(x => x.Id == swapId && x.Status == 0);
+                    if (existingSwap == null)
+                    {
+                        Clients.Client(connectionId).newMessage("Swap not found, please try again.", ErrorClass);
+                        return;
+                    }
+
+                    if (existingSwap.User == user)
+                    {
+                        Clients.Client(connectionId).newMessage("You cannot match your own swap.", ErrorClass);
+                        return;
+                    }
+                    Team teamToBuy = Sql.GetTeam(existingSwap.BuyTeam);
+                    Team teamToSell = Sql.GetTeam(existingSwap.SellTeam);
+
+                    if (
+                        !UserHasEnoughForSwap(context, user, teamToSell, existingSwap.SellQuantity, teamToBuy, existingSwap.BuyQuantity, -existingSwap.Price,
+                            universeId, competitionId, universeCompetitionId))
+                    {
+                        Clients.Client(connectionId).newMessage("You already have too much exposure", ErrorClass);
+                        return;
+                    }
+
+                    existingSwap.Status = 1;
+                    InsertNewTrade(context, user, existingSwap.User, existingSwap.SellTeam, existingSwap.SellQuantity, 0, existingSwap.IdUniverseCompetition);
+                    InsertNewTrade(context, existingSwap.User, user, existingSwap.BuyTeam, existingSwap.BuyQuantity, 0, existingSwap.IdUniverseCompetition);
+                    var matchingMoney = context.Moneys.First(
+                        x => x.IdUniverseCompetition == existingSwap.IdUniverseCompetition && x.User == user);
+                    matchingMoney.Money1 -= existingSwap.Price;
+                    var existingMoney = context.Moneys.First(
+                        x => x.IdUniverseCompetition == existingSwap.IdUniverseCompetition && x.User == existingSwap.User);
+                    existingMoney.Money1 += existingSwap.Price;
+
+                    context.SaveChanges();
+                    Clients.Client(connectionId).newMessageAndRefresh("Successfuly match swap", SuccessClass);
+                }
+            }
+        }
+
         public void CancelOrder(string user, string side, string team, string connectionId, int universeId, int competitionId, int competitionUniverseId)
         {
             if (string.IsNullOrEmpty(user))
@@ -213,12 +278,6 @@ namespace SignalR
                 return false;
             }
 
-            //            if (price < 1 || price > 999)
-            //            {
-            //                Clients.Client(connectionId).newMessage("Fail To add order because the price specified must be between 1 and 999", ErrorClass);
-            //                return false;
-            //            }
-
             return true;
         }
 
@@ -262,7 +321,6 @@ namespace SignalR
             if (!CheckSwap(user, buyTeam, buyQuantity, sellTeam, sellQuantity, price, connectionId, universeId, competitionId, universeCompetitionId))
                 return;
 
-            var usersToNotify = new HashSet<string> { user };
             lock (this)
             {
                 using (var context = new Entities())
@@ -287,6 +345,14 @@ namespace SignalR
                         return;
                     }
 
+                    if (
+                        !UserHasEnoughForSwap(context, user, teamToBuy, buyQuantity, teamToSell, sellQuantity, price,
+                            universeId, competitionId, universeCompetitionId))
+                    {
+                        Clients.Client(connectionId).newMessage("You already have too much exposure", ErrorClass);
+                        return;
+                    }
+
                     var otherSwap =
                         context.SwapOrders.FirstOrDefault(
                             x =>
@@ -297,20 +363,21 @@ namespace SignalR
                         otherSwap.Status = 2;
                     }
 
-//                    if (UserHasEnough(context, user, teamToBuy, buyQuantity, teamToSell, sellQuantity, price, universeId, competitionId, universeCompetitionId))
-//                    {
-//                        var remainingQuantity = InsertTrade(context, user, choosedTeam.Id, choosedTeam.Name, quantity, price, side, universeId, competitionId, universeCompetitionId, connectionId, usersToNotify);
-//                        if (remainingQuantity > 0)
-//                            InsertNewOrder(context, user, choosedTeam.Id, remainingQuantity, price, side, universeCompetitionId, connectionId);
-//
-//                        context.SaveChanges();
-//                        OnNewOrder(context, team, usersToNotify, universeId, competitionId, universeCompetitionId);
-//                        GetTradeHistory(competitionId, universeCompetitionId);
-//                    }
-//                    else
-//                    {
-//                        Clients.Client(connectionId).newMessage("You already have too much exposure", ErrorClass);
-//                    }
+                    var newSwap = new SwapOrder
+                    {
+                        BuyQuantity = buyQuantity,
+                        BuyTeam = teamToBuy.Id,
+                        Date = DateTime.Now,
+                        IdUniverseCompetition = universeCompetitionId,
+                        Price = price,
+                        SellQuantity = sellQuantity,
+                        SellTeam = teamToSell.Id,
+                        Status = 0,
+                        User = user
+                    };
+                    context.SwapOrders.Add(newSwap);
+                    context.SaveChanges();
+                    Clients.Client(connectionId).newMessageAndRefresh("Successfuly add new swap", SuccessClass);
                 }
             }
         }
@@ -368,6 +435,19 @@ namespace SignalR
                     }
                 }
             }
+        }
+
+        private bool UserHasEnoughForSwap(Entities context, string user, Team buyTeam, int buyQuantity, Team sellTeam,
+            int sellQuantity, int price, int universeId, int competitionId, int universeCompetitionId)
+        {
+            var positions = Sql.GetPosition(user, universeId, competitionId);
+            positions[buyTeam] += buyQuantity;
+            positions[sellTeam] -= sellQuantity;
+            positions = positions.Where(x => x.Value != 0).ToDictionary(x => x.Key, x => x.Value);
+            var worstScenario = PricerHelper.GetWorstScenario(context.Competitions.First(x => x.Id == competitionId).Name, positions, 0.1);
+            var userMoney = context.Moneys.First(x => x.User == user && x.IdUniverseCompetition == universeCompetitionId);
+
+            return userMoney.Money1 + price + worstScenario >= 0;
         }
 
         private bool UserHasEnough(Entities context, string user, Team team, int quantity, int price, string side, int universeId, int competitionId, int universeCompetitionId)
@@ -435,7 +515,7 @@ namespace SignalR
         {
             var positions = Sql.GetPosition(user, universeId, competitionId).Where(x => x.Value != 0).ToDictionary(x => x.Key, x => x.Value);
             var simulationResults = PricerHelper.GetVars(context.Competitions.First(x => x.Id == competitionId).Name, positions,
-                new List<double> {0, 0.1, 0.5, 0.9, 1});
+                new List<double> { 0, 0.1, 0.5, 0.9, 1 });
             var worst10 = simulationResults.Last().Worst10;
             var money =
                 context.Moneys.First(x => x.IdUniverseCompetition == universeCompetitionId && x.User == user).Money1;
@@ -668,7 +748,7 @@ namespace SignalR
                 var teamNames = context.Teams.Where(x => x.IdCompetition == competitionId)
                     .ToDictionary(x => x.Id, x => x.Name);
                 var trades =
-                    context.Trades.Where(x => x.IdUniverseCompetition == competitionUniverseId && x.Date > limitDate).OrderByDescending(x => x.Date);
+                    context.Trades.Where(x => x.IdUniverseCompetition == competitionUniverseId && x.Date > limitDate && x.Price != 0).OrderByDescending(x => x.Date);
                 foreach (var trade in trades)
                 {
                     if (trade.Date > lastSeen)

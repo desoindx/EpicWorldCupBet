@@ -37,12 +37,13 @@ function drawSwapsGrid(orders, competitionId) {
         $.grids = [];
 
     var columns = [
-      { id: "IsMine", name: "Mine", field: "IsMine", width: 40, sortable: true, formatter: checkBoxFormatter, resizable: false },
-      { id: "BuyQuantity", name: "Quantity", field: "BuyQuantity", width: 130, sortable: true, resizable: false },
-      { id: "BuyTeam", name: "Bought Team", field: "BuyTeam", width: 280, sortable: true, resizable: false },
-      { id: "SellQuantity", name: "Quantity", field: "SellQuantity", width: 130, sortable: true, resizable: false },
-      { id: "SellTeam", name: "Sold Team", field: "SellTeam", width: 280, sortable: true, resizable: false },
-      { id: "Price", name: "Price", field: "Price", width: 130, sortable: true, resizable: false }
+    { id: "IsMine", name: "Mine", field: "IsMine", width: 40, sortable: true, formatter: checkBoxFormatter, resizable: false },
+    { id: "BuyQuantity", name: "Quantity", field: "BuyQuantity", width: 130, sortable: true, resizable: false },
+    { id: "BuyTeam", name: "Buying", field: "BuyTeam", width: 280, sortable: true, resizable: false },
+    { id: "SellQuantity", name: "Quantity", field: "SellQuantity", width: 130, sortable: true, resizable: false },
+    { id: "SellTeam", name: "Selling", field: "SellTeam", width: 280, sortable: true, resizable: false },
+    { id: "Price", name: "Price", field: "Price", width: 130, sortable: true, resizable: false },
+    { id: "Id", name: "Id", field: "Id", visible: false }
     ],
     options = {
         enableCellNavigation: true,
@@ -78,20 +79,46 @@ function drawSwapsGrid(orders, competitionId) {
         }
         var item = args.grid.getData()[args.row];
         showTeamSelectPicker();
-        $("#TeamBuy").selectpicker('val', item.SellTeam);
-        $("#TeamSell").selectpicker('val', item.BuyTeam);
 
         if (item.IsMine) {
             $("#CancelOrder").show();
+            $("#SendOrder").hide();
+            $("#TeamBuy").selectpicker('val', item.BuyTeam);
+            $("#TeamSell").selectpicker('val', item.SellTeam);
+            $("#QuantityBuyOrder").val(item.BuyQuantity);
+            $("#QuantitySellOrder").val(item.SellQuantity);
+            $("#PriceOrder").val(item.Price);
         }
         else {
             $("#CancelOrder").hide();
+            $("#SendOrder").show();
+            $("#TeamBuy").selectpicker('val', item.SellTeam);
+            $("#TeamSell").selectpicker('val', item.BuyTeam);
+            $("#QuantityBuyOrder").val(item.SellQuantity);
+            $("#QuantitySellOrder").val(item.BuyQuantity);
+            $("#PriceOrder").val(-item.Price);
         }
 
-        $("#QuantityBuyOrder").val(item.SellQuantity);
-        $("#QuantitySellOrder").val(item.BuyQuantity);
-        $("#PriceOrder").val(item.Price);
+        selectedItem = item.Id;
+
         openOrderPopup();
+
+        isNewMenu = false;
+
+        if (item.IsMine) {
+            $("#CancelOrder").show();
+            $("#SendOrder").hide();
+        }
+        else {
+            $("#CancelOrder").hide();
+            $("#SendOrder").prop('value', 'Match Swap');
+        }
+
+        $('#QuantityBuyOrder').prop('readonly', true);
+        $('#QuantitySellOrder').prop('readonly', true);
+        $('#PriceOrder').prop('readonly', true);
+        $('#TeamBuyDiv').css('pointer-events', 'none');
+        $('#TeamSellDiv').css('pointer-events', 'none');
     });
 
     $.grids[competitionId] = currentGrid;

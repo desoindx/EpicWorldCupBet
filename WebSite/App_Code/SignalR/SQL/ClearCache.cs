@@ -26,7 +26,7 @@ namespace SignalR.SQL
             {
                 case Caches.All:
                     CompetitionTeams.Clear();
-                    TeamsName.Clear();
+                    Teams.Clear();
                     TeamsValue.Clear();
                     UniverseCompetitions.Clear();
                     UserCompetitions.Clear();
@@ -36,7 +36,7 @@ namespace SignalR.SQL
                     UserUniversesRights.Clear();
                     return;
                 case Caches.TeamsName:
-                    TeamsName.Clear();
+                    Teams.Clear();
                     return;
                 case Caches.TeamsValue:
                     TeamsValue.Clear();

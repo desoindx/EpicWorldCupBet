@@ -21,7 +21,7 @@ public partial class Positions : Page
                         {
                             Date = x.Date.ToShortDateString() + " " + x.Date.ToShortTimeString(),
                             Quantity = x.Quantity,
-                            Team = Sql.GetTeamName(x.Team),
+                            Team = Sql.GetTeam(x.Team).Name,
                             Price = x.Price,
                             Buyer = x.Buyer,
                             Seller = x.Seller

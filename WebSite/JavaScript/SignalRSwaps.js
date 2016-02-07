@@ -7,7 +7,15 @@
         transition: 'slideIn',
         transitionClose: 'slideBack'
     });
+
+    $("#SendOrder").show();
+    $('#QuantityBuyOrder').prop('readonly', false);
+    $('#QuantitySellOrder').prop('readonly', false);
+    $('#PriceOrder').prop('readonly', false);
+    $('#TeamBuyDiv').css('pointer-events', '');
+    $('#TeamSellDiv').css('pointer-events', '');
     $("#PriceOrder").focus();
+    isNewMenu = true;
 }
 
 $(function () {
@@ -19,12 +27,28 @@ $(function () {
             $("#myAlert").removeClass("hiddenAlert");
             $("#myAlert").addClass(newClass);
             $("#myAlert").addClass("visibleAlert");
+            $("#cashInfos").addClass("hiddenAlert");
             $("#alertMessage").html(message);
             setTimeout(function () {
                 $("#myAlert").removeClass(newClass);
                 $("#myAlert").removeClass("visibleAlert");
                 $("#myAlert").addClass("hiddenAlert");
+                $("#cashInfos").removeClass("hiddenAlert");
             }, 5000);
+        },
+        newMessageAndRefresh: function (message, newClass) {
+            $("#myAlert").removeClass("hiddenAlert");
+            $("#myAlert").addClass(newClass);
+            $("#myAlert").addClass("visibleAlert");
+            $("#cashInfos").addClass("hiddenAlert");
+            $("#alertMessage").html(message);
+            setTimeout(function () {
+                $("#myAlert").removeClass(newClass);
+                $("#myAlert").removeClass("visibleAlert");
+                $("#myAlert").addClass("hiddenAlert");
+                $("#cashInfos").removeClass("hiddenAlert");
+                window.location.reload(false);
+            }, 500);
         },
         updateCashInfos: function (cashAvailable, maxExposition, cashToInvest) {
             $("#UserMoney").text(cashAvailable);
@@ -39,18 +63,19 @@ $(function () {
             competitionId = $("#currentCompetitionId").text();
             universeId = $("#currentUniverseId").text();
             competitionUniverseId = $("#currentCompetitionUniverseId").text();
+            betHub.server.getCashInfos(universeId, competitionId, competitionUniverseId);
 
             $("#SendOrder").click(function () {
-                betHub.server.sendSwap($("#TeamBuy").val(), $("#QuantityBuyOrder").val(), $("#TeamSell").val(), $("#QuantitySellOrder").val(), $("#PriceOrder").val(), universeId, competitionId, competitionUniverseId);
+                if (isNewMenu) {
+                    betHub.server.sendSwap($("#TeamBuy").val(), $("#QuantityBuyOrder").val(), $("#TeamSell").val(), $("#QuantitySellOrder").val(), $("#PriceOrder").val(), universeId, competitionId, competitionUniverseId);
+                } else {
+                    betHub.server.matchSwap(selectedItem, universeId, competitionId, competitionUniverseId);
+                }
                 $("#newOrderDiv").bPopup().close();
             });
 
             $("#CancelOrder").click(function () {
-                var side = "SELL";
-                if ($("#BuySide").prop("checked"))
-                    side = "BUY";
-
-                betHub.server.cancelSwap(side, $("#TeamOrder").val(), universeId, competitionId, competitionUniverseId);
+                betHub.server.cancelSwap(selectedItem);
                 $("#newOrderDiv").bPopup().close();
             });
 

@@ -118,14 +118,21 @@ namespace SignalR.SQL
                 var swaps = context.SwapOrders.Where(x => x.IdUniverseCompetition == id && x.Status == 0);
                 foreach (var swap in swaps)
                 {
+                    var buyTeam = GetTeam(swap.BuyTeam);
+                    var sellTeam = GetTeam(swap.SellTeam);
+                    if (buyTeam.Result.HasValue || sellTeam.Result.HasValue)
+                    {
+                        continue;
+                    }
                     orders.Add(new SwapR
                     {
                         BuyQuantity = swap.BuyQuantity,
-                        BuyTeam = GetTeamName(swap.BuyTeam),
+                        BuyTeam = buyTeam.Name,
                         IsMine = swap.User == user,
                         Price = swap.Price,
                         SellQuantity = swap.SellQuantity,
-                        SellTeam = GetTeamName(swap.SellTeam)
+                        SellTeam = sellTeam.Name,
+                        Id = swap.Id
                     });
                 }
             }
@@ -219,21 +226,21 @@ namespace SignalR.SQL
             return teams;
         }
 
-        public static string GetTeamName(int teamId)
+        public static Team GetTeam(int teamId)
         {
-            string teamName;
-            if (!TeamsName.TryGetValue(teamId, out teamName))
+            Team team;
+            if (!Teams.TryGetValue(teamId, out team))
             {
                 using (var context = new Entities())
                 {
-                    var team = context.Teams.FirstOrDefault(x => x.Id == teamId);
+                    team = context.Teams.FirstOrDefault(x => x.Id == teamId);
                     if (team == null)
                         return null;
-                    teamName = team.Name;
-                    TeamsName[teamId] = team.Name;
+
+                    Teams[teamId] = team;
                 }
             }
-            return teamName;
+            return team;
         }
 
         public static bool TryGetTeamIdForCompetition(int competitionId, string teamName, out Team team)

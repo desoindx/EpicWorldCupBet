@@ -8,5 +8,6 @@
         public string SellTeam { get; set; }
         public int SellQuantity { get; set; }
         public int Price { get; set; }
+        public int Id { get; set; }
     }
 }
