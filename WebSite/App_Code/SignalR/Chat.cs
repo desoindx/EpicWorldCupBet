@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ namespace SignalRChat
     public class MessageDetail
     {
         public string UserName { get; set; }
+        public string Time { get; set; }
         public string Message { get; set; }
     }
 
@@ -80,8 +82,9 @@ namespace SignalRChat
 
         public void SendMessageToAll(string userName, string message)
         {
-            Clients.All.messageReceived(userName, message);
-            AddMessageinCache(userName, message);
+            var time = string.Format("{0:dd/MM - HH:mm}", DateTime.UtcNow.AddHours(1));
+            Clients.All.messageReceived(userName, message, time);
+            AddMessageinCache(userName, message, time);
         }
 
         public void SendPrivateMessage(string toUserName, string message)
@@ -129,11 +132,11 @@ namespace SignalRChat
 
         #region private Messages
 
-        private void AddMessageinCache(string userName, string message)
+        private void AddMessageinCache(string userName, string message, string time)
         {
             lock (_messageLock)
             {
-                CurrentMessage.Add(new MessageDetail { UserName = userName, Message = message });
+                CurrentMessage.Add(new MessageDetail { UserName = userName, Message = message, Time = time});
                 if (CurrentMessage.Count > 100)
                 {
                     CurrentMessage.RemoveAt(0);

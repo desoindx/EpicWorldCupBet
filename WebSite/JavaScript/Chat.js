@@ -54,7 +54,8 @@ function registerClientMethods(chatHub) {
             AddUser(chatHub, allUsers[i]);
         }
         for (i = 0; i < messages.length; i++) {
-            AddMessage(messages[i].UserName, messages[i].Message);
+            var message = messages[i];
+            AddMessage(message.UserName, message.Message, message.Time);
         }
         $("#ChatTitle").html("Chat Room");
         setScreen(true);
@@ -67,8 +68,8 @@ function registerClientMethods(chatHub) {
         var ctrId = 'private_' + userName;
         $('#' + ctrId).remove();
     }
-    chatHub.client.messageReceived = function (userName, message) {
-        AddMessage(userName, message);
+    chatHub.client.messageReceived = function (userName, message, time) {
+        AddMessage(userName, message, time);
     }
     chatHub.client.sendPrivateMessage = function (fromUserName, toUserName, message, isMine) {
         var ctrId;
@@ -104,11 +105,11 @@ function AddUser(chatHub, name) {
     }
     $("#divusers").append(code);
 }
-function AddMessage(userName, message) {
+function AddMessage(userName, message, time) {
     if ($("#ChatRoom").css('display') == 'none') {
         $("#ChatTitle").html("Chat Room - You have unread messages !");
     }
-    $('#divChatWindow').append('<div class="message"><span class="userName">' + userName + '</span>: ' + message + '</div>');
+    $('#divChatWindow').append('<div class="message"><span class="userName">' + userName + ' (' + time + ')</span>: ' + message + '</div>');
     var height = $('#divChatWindow')[0].scrollHeight;
     $('#divChatWindow').scrollTop(height);
 }

@@ -215,7 +215,7 @@ public partial class SiteMaster : MasterPage
 
     public List<string> GetTeamFor(int competitionId)
     {
-        return Sql.GetTeamsForCompetition(competitionId).Select(x => x.Name).ToList();
+        return Sql.GetTeamsForCompetition(competitionId).Where(x => !x.Result.HasValue).Select(x => x.Name).ToList();
     }
 
     public double Money;

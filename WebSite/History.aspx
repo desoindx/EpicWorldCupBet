@@ -14,7 +14,7 @@
     <script src="JavaScript/History.js"></script>
     <div style=" margin-top: 50px;" id='<%: "Div-" + Master.GetCompetitionId() %>'>
         <div style="position: absolute; left: 50%; margin-left: -400px;">
-        <div style="float: right;overflow: auto; width: 805px; height: 825px;" id='<%: "TradesDiv-" + Master.GetCompetitionId() %>'>
+        <div style="float: right;overflow: auto; width: 807px; height: 725px;" id='<%: "TradesDiv-" + Master.GetCompetitionId() %>'>
         </div>
         </div>
     </div>
