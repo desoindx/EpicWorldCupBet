@@ -15,6 +15,7 @@
     $('#TeamBuyDiv').css('pointer-events', '');
     $('#TeamSellDiv').css('pointer-events', '');
     $("#PriceOrder").focus();
+    $("#SendOrder").prop('value', 'Send New Swap');
     isNewMenu = true;
 }
 

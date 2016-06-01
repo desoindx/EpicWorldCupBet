@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Datas.Entities;
-using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.SignalR;
@@ -148,6 +147,21 @@ namespace SignalR
             if (Context.User.IsInRole("Admin"))
             {
                 Sql.ClearCache(cache);
+            }
+        }
+
+        public void EnterResults(string teamName, int results, int competition)
+        {
+            if (Context.User.IsInRole("Admin"))
+            {
+                using (var context = new Entities())
+                {
+                    var team = context.Teams.FirstOrDefault(x => x.IdCompetition == competition && x.Name.ToUpper() == teamName.ToUpper());
+                    team.Result = results;
+                    context.SaveChanges();
+                }
+
+                Sql.ClearCache(Caches.All);
             }
         }
     }

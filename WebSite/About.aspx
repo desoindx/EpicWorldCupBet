@@ -1,6 +1,9 @@
 ﻿<%@ Page Title="About" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeFile="About.aspx.cs" Inherits="About" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
+    <div style="position: absolute; left: 50%; margin-left: -138px; z-index: 100;top:45px">
+        <input style="margin-top: 20px; margin-bottom: 20px; width: 250px;" type="button" id="download" value="Download Complete Rules" class="btn btn-primary btn-lg" />
+    </div>
     <h3>Rules :</h3>
     <p>Every participant start the contest with 100 000 euros</p>
     <p>During all the competition you can buy or sell teams to the other participant</p>

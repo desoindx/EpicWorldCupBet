@@ -8,6 +8,7 @@
 
     columns[0] = { id: "User", name: "User", field: "User", width: 200, sortable: true };
     columns[1] = { id: "Money", name: "Money", field: "Money", width: 200, sortable: true };
+    columns[2] = { id: "Profit", name: "Profit", field: "Profit", width: 200, sortable: true };
 
     grid = new Slick.Grid("#RankingDiv", ranks, columns, options);
 

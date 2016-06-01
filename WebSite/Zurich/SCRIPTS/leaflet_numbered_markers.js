@@ -4,7 +4,7 @@ function createIcon(cluster, id) {
 }
 
 function createSingleIcon(val) {
-    return new L.DivIcon({ html: '<div><img src="Icons/' + val + '.png"></img></div>', iconSize: new L.Point(30, 30) });
+    return new L.DivIcon({ html: "<div><img style='width:100%;height:100%' src='Icons/" + val + ".png'></img></div>", iconSize: new L.Point(70, 70) });
 }
 
 function animatePieChart(cluster, id) {
@@ -17,15 +17,19 @@ function animatePieChart(cluster, id) {
         },
         {
             value: values[1],
-            color: "#FF0000"
+            color: "#ED1C24"
         },
         {
             value: values[2],
-            color: "#00FF33"
+            color: "#39B54A"
         },
         {
             value: values[3],
-            color: "#F2FF00"
+            color: "#FCEE21"
+        },
+        {
+            value: values[4],
+            color: "#3FA9F5"
         }
     ];
     new Chart(ctx).Doughnut(data, {

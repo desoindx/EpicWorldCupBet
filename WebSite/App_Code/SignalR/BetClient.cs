@@ -384,6 +384,10 @@ namespace SignalR
 
         public void NewOrder(string user, string team, int quantity, int price, string side, string connectionId, int universeId, int competitionId, int universeCompetitionId)
         {
+            if (DateTime.Now < new DateTime(2016, 05, 27))
+            {
+                Clients.Client(connectionId).newMessage("Warning : everything will be deleted on May 27th !!!", SuccessClass);
+            }
             if (!CheckOrder(user, team, quantity, price, side, connectionId, universeId, competitionId, universeCompetitionId))
                 return;
 
@@ -459,7 +463,13 @@ namespace SignalR
             var worstScenario = PricerHelper.GetWorstScenario(context.Competitions.First(x => x.Id == competitionId).Name, positions, 0.1);
             var userMoney = context.Moneys.First(x => x.User == user && x.IdUniverseCompetition == universeCompetitionId);
 
-            return userMoney.Money1 - signedQuantity * price + worstScenario >= 0;
+            var expo = signedQuantity*price + worstScenario;
+            if (userMoney.Money1 + expo >= 0)
+                return true;
+
+            positions = Sql.GetPosition(user, universeId, competitionId).Where(x => x.Value != 0).ToDictionary(x => x.Key, x => x.Value);
+            var currentScenario = PricerHelper.GetWorstScenario(context.Competitions.First(x => x.Id == competitionId).Name, positions, 0.1);
+            return expo > currentScenario;
         }
 
         private int InsertTrade(Entities context, string user, int team, string teamName, int quantity, int price, string side, int universeId, int competitionId, int universeCompetitionId, string connectionId, HashSet<string> usersToNotify)

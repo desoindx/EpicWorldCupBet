@@ -8,15 +8,37 @@ using SignalR;
 
 public partial class Fountain : Page
 {
-    private readonly Dictionary<string, Tuple<int, int>> _fountains = new Dictionary<string, Tuple<int, int>>();
+    private readonly Dictionary<string, Tuple<int, int, int>> _fountains = new Dictionary<string, Tuple<int, int, int>>();
     private int _fountainsCount = 0;
+    private int _worldWideFountainsCount = 0;
+    public int N { get; set; }
+    private DateTime _referenceDate = DateTime.MinValue;
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        N = -1;
+        foreach (string query in Request.QueryString)
+        {
+            switch (query)
+            {
+                case "n":
+                    int n;
+                    if (int.TryParse(Request.QueryString[query], out n))
+                    {
+                        N = n;
+                        _referenceDate = DateTime.Now.AddDays(-N);
+                    }
+                    break;
+            }
+        }
+    }
 
-    public Dictionary<string, Tuple<int, int>> Fountains { get { return _fountains; } }
+    public Dictionary<string, Tuple<int, int, int>> Fountains { get { return _fountains; } }
     public int FountainsCount { get { return _fountainsCount; } }
+    public int WorldWideFountainsCount { get { return _worldWideFountainsCount; } }
 
     protected void Save(object sender, EventArgs e)
     {
-        if (Upload.PostedFile != null && !string.IsNullOrEmpty(Upload.PostedFile.FileName) && (Antoine.Checked || Camille.Checked || Loic.Checked || Xavier.Checked))
+        if (Upload.PostedFile != null && !string.IsNullOrEmpty(Upload.PostedFile.FileName) && (Antoine.Checked || Camille.Checked || Loic.Checked || Rafaela.Checked || Xavier.Checked))
         {
             var longitude = FormatDouble(Longitude.Text);
             var lattitude = FormatDouble(Lattitude.Text);
@@ -30,6 +52,8 @@ public partial class Fountain : Page
                 value += 4;
             if (Xavier.Checked)
                 value += 8;
+            if (Rafaela.Checked)
+                value += 16;
 
             //To create a PostedFile
             HttpPostedFile file = Upload.PostedFile;
@@ -41,7 +65,7 @@ public partial class Fountain : Page
             }
 
             file.SaveAs(targetPath);
-            FountainHub.InsertFountain(Antoine.Checked, Camille.Checked, Loic.Checked, Xavier.Checked, longitude, lattitude);
+            FountainHub.InsertFountain(Antoine.Checked, Camille.Checked, Loic.Checked, Rafaela.Checked, Xavier.Checked, NotZurich.Checked, longitude, lattitude);
         }
     }
 
@@ -68,17 +92,20 @@ public partial class Fountain : Page
 
     protected void LoadStats()
     {
-        _fountains.Add("Antoine", new Tuple<int, int>(0,0));
-        _fountains.Add("Camille", new Tuple<int, int>(0,0));
-        _fountains.Add("Loïc", new Tuple<int, int>(0, 0));
-        _fountains.Add("Xavier", new Tuple<int, int>(0, 0));
+        _fountains.Add("Antoine", new Tuple<int, int, int>(0,0,0));
+        _fountains.Add("Camille", new Tuple<int, int, int>(0, 0, 0));
+        _fountains.Add("Loïc", new Tuple<int, int, int>(0, 0, 0));
+        _fountains.Add("Rafaela", new Tuple<int, int, int>(0, 0, 0));
+        _fountains.Add("Xavier", new Tuple<int, int, int>(0, 0, 0));
 
         using (var context = new Entities())
         {
             foreach (var fountain in context.Fountains)
             {
-                _fountainsCount++;
-                fountain.Update(_fountains);
+                _worldWideFountainsCount++;
+                if (fountain.InZurich)
+                    _fountainsCount++;
+                fountain.Update(_fountains, _referenceDate);
             }
         }
     }

@@ -56,6 +56,8 @@
           <Property Name="Camille" Type="datetime" />
           <Property Name="Loic" Type="datetime" />
           <Property Name="Xavier" Type="datetime" />
+          <Property Name="Rafaela" Type="datetime" />
+          <Property Name="InZurich" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Moneys">
           <Key>
@@ -406,6 +408,8 @@
           <Property Name="Camille" Type="DateTime" Precision="3" />
           <Property Name="Loic" Type="DateTime" Precision="3" />
           <Property Name="Xavier" Type="DateTime" Precision="3" />
+          <Property Name="Rafaela" Type="DateTime" Precision="3" />
+          <Property Name="InZurich" Type="Boolean" Nullable="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -597,6 +601,8 @@
           <EntitySetMapping Name="Fountains">
             <EntityTypeMapping TypeName="BetModel.Fountain">
               <MappingFragment StoreEntitySet="Fountains">
+                <ScalarProperty Name="InZurich" ColumnName="InZurich" />
+                <ScalarProperty Name="Rafaela" ColumnName="Rafaela" />
                 <ScalarProperty Name="Xavier" ColumnName="Xavier" />
                 <ScalarProperty Name="Loic" ColumnName="Loic" />
                 <ScalarProperty Name="Camille" ColumnName="Camille" />

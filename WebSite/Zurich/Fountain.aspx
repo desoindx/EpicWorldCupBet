@@ -48,6 +48,14 @@
     <script src="../Scripts/bPopUp.js"></script>
 </head>
 <body>
+    <p id="n" style="display: none"><%:N %></p>
+    <div class="leaflet-top leaflet-right">
+        <div class='leaflet-control-zoom leaflet-bar leaflet-control'>
+            <a class='leaflet-control-zoom-in' href='Fountain.aspx?n=7' title='Zoom in'>W</a>
+            <a class='leaflet-control-zoom-out' href='Fountain.aspx?n=31' title='Zoom out'>M</a>
+            <a class='leaflet-control-zoom-out' href='Fountain.aspx?n=365' title='Zoom out'>Y</a>
+        </div>
+    </div>
     <div id="newFountainDiv">
         <span class="button b-close"><span>X</span></span><form runat="server">
             <fieldset>
@@ -61,22 +69,41 @@
                     <asp:TextBox runat="server" ID="Lattitude" Text="" Style="display: none" />
                 </div>
                 <div class="form-group">
-                    <asp:CheckBox runat="server" ID="Antoine" Text="Antoine" />
-                    <asp:CheckBox runat="server" ID="Camille" Text="Camille" />
-                    <asp:CheckBox runat="server" ID="Loic" Text="Loïc" />
-                    <asp:CheckBox runat="server" ID="Xavier" Text="Xavier" />
+                    <table>
+                        <tr>
+                            <td>
+                                <asp:CheckBox runat="server" ID="Antoine" Text="Antoine" />
+                            </td>
+                            <td>
+                                <asp:CheckBox runat="server" ID="Camille" Text="Camille" />
+                            </td>
+                            <td>
+                                <asp:CheckBox runat="server" ID="Loic" Text="Loïc" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:CheckBox runat="server" ID="Rafaela" Text="Rafaela" />
+                            </td>
+                            <td>
+                                <asp:CheckBox runat="server" ID="Xavier" Text="Xavier" />
+                            </td>
+                            <td>
+                                <asp:CheckBox runat="server" ID="NotZurich" Text="Not in Zurich" />
+                            </td>
+                        </tr>
+                    </table>
                 </div>
                 <div class="form-group">
                     <asp:FileUpload type="file" runat="server" capture="camera" accept="image/*" ID="Upload" name="cameraInput" />
                 </div>
-                <!-- Change this to a button or input when using this as a form -->
                 <asp:Button runat="server" OnClick="Save" Text="Save Fountain" CssClass="btn btn-primary" />
             </fieldset>
         </form>
     </div>
     <div id="map"></div>
     <div id="IphoneMenu">
-        <img src="Icons/threelines.png" alt="" style="width: 36px;height: 36px;" onclick="openIphoneMenu();">
+        <img src="Icons/threelines.png" alt="" style="width: 36px; height: 36px;" onclick="openIphoneMenu();">
     </div>
     <div id="Menu">
         <ul>
@@ -88,6 +115,7 @@
                     <td><b>Colloc</b></td>
                     <td><b>First Found</b></td>
                     <td><b>Found</b></td>
+                    <td><b>World Wide</b></td>
                 </tr>
                 <% LoadStats();
                    foreach (var user in Fountains)
@@ -97,12 +125,14 @@
                     <td><%:user.Key %></td>
                     <td><%:user.Value.Item1 %></td>
                     <td><%:user.Value.Item2 %></td>
+                    <td><%:user.Value.Item3 %></td>
                 </tr>
                 <%  } %>
                 <tr>
                     <td>Total</td>
                     <td>-</td>
                     <td><%:FountainsCount %></td>
+                    <td><%:WorldWideFountainsCount %></td>
                 </tr>
             </table>
         </div>
@@ -208,7 +238,7 @@
 
         function createMap() {
             L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-                attribution: 'Gotta find \'em all ! By Antoine, Camille, Loïc and Xavier',
+                attribution: 'Gotta find \'em all ! By CLARX',
                 maxZoom: 22,
                 id: 'djidane.ciebm5cmz001ttdmakbfuuv2x',
                 accessToken: 'pk.eyJ1IjoiZGppZGFuZSIsImEiOiJiNTU1NWU3YmYxNGRmMzhjNGQ5MjFjMWNkODQwMTM4OCJ9.m_HYDHlcIL6WRIwRwWApTA'

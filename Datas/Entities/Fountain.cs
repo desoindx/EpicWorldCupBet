@@ -21,5 +21,7 @@ namespace Datas.Entities
         public Nullable<System.DateTime> Camille { get; set; }
         public Nullable<System.DateTime> Loic { get; set; }
         public Nullable<System.DateTime> Xavier { get; set; }
+        public Nullable<System.DateTime> Rafaela { get; set; }
+        public bool InZurich { get; set; }
     }
 }

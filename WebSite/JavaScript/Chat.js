@@ -41,6 +41,8 @@ function registerEvents(chatHub) {
     $("#ChatTitle").click(function () {
         $("#ChatTitle").html("Chat Room");
         $("#ChatRoom").slideToggle();
+        var objDiv = document.getElementById("divChatWindow");
+        objDiv.scrollTop = objDiv.scrollHeight;
     });
 }
 function registerClientMethods(chatHub) {

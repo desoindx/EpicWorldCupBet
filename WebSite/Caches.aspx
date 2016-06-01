@@ -16,8 +16,19 @@
                         <input style="margin-left: 10px" type="button" value="<%: cache %>" onclick="{$.connection.Bet.server.clearCache('<%: cache %>        ');}" />
                     </td>
                 </tr>
-                <% }
-                    }%>
+                <% }%>
+                <tr>
+                    <td>
+                        <input class="textbox" type="text" id="teamName" />
+                    </td>
+                    <td>
+                        <input class="textbox" type="text" id="teamResults" />
+                    </td>
+                    <td>
+                        <input style="margin-left: 10px" type="button" value="Enter Results" onclick='{alert($("#teamName").val());alert($("#teamResults").val());alert($("#currentCompetitionId").text());$.connection.Bet.server.enterResults($("#teamName").val(), $("#teamResults").val(), $("#currentCompetitionId").text());}' />
+                    </td>
+                </tr>
+                <%}%>
             </tbody>
         </table>
     </div>

@@ -14,9 +14,9 @@ namespace SignalR
     [HubName("Fountain")]
     public class FountainHub : Hub
     {
-        public static void InsertFountain(bool antoine, bool camille, bool loic, bool xavier, double longitude, double lattitude)
+        public static void InsertFountain(bool antoine, bool camille, bool loic, bool rafaela, bool xavier, bool notInZurich, double longitude, double lattitude)
         {
-            if (!antoine && !camille && !loic && !xavier)
+            if (!antoine && !camille && !loic && !rafaela && !xavier)
                 return;
 
             longitude = Math.Round(longitude, 8);
@@ -28,7 +28,7 @@ namespace SignalR
                 var fountain = context.Fountains.ToList().FirstOrDefault(x => x.Long == longitude && x.Lat == lattitude);
                 if (fountain == null)
                 {
-                    fountain = new Fountain { Long = longitude, Lat = lattitude };
+                    fountain = new Fountain { Long = longitude, Lat = lattitude, InZurich = !notInZurich};
                     if (antoine)
                     {
                         fountain.Antoine = now;
@@ -40,6 +40,10 @@ namespace SignalR
                     if (loic)
                     {
                         fountain.Loic = now;
+                    }
+                    if (rafaela)
+                    {
+                        fountain.Rafaela = now;
                     }
                     if (xavier)
                     {
@@ -61,6 +65,10 @@ namespace SignalR
                     {
                         fountain.Loic = now;
                     }
+                    if (rafaela && fountain.Rafaela == null)
+                    {
+                        fountain.Rafaela = now;
+                    }
                     if (xavier && fountain.Xavier == null)
                     {
                         fountain.Xavier = now;
@@ -71,15 +79,17 @@ namespace SignalR
             }
         }
 
-        public void getFountains()
+        public void getFountains(int n)
         {
+            DateTime referenceDate = n < 0 ? DateTime.MinValue : DateTime.Now.AddDays(-n);
             using (var context = new Entities())
             {
                 var fountains = new List<FountainR>();
-                foreach (var fountain in context.Fountains)
+                 foreach (var fountain in context.Fountains)
                 {
-                    var fountainR = new FountainR(fountain);
-                    fountains.Add(fountainR);
+                    var fountainR = new FountainR(fountain, referenceDate);
+                    if (fountainR.Found > 0)
+                        fountains.Add(fountainR);
                 }
                 Clients.Client(Context.ConnectionId).displayFountains(fountains);
 
@@ -102,7 +112,7 @@ namespace SignalR
                     var founds = fountain.Founds;
                     if (founds.Item2 > lastMailSend)
                     {
-                        var fountainR = new FountainR(fountain);
+                        var fountainR = new FountainR(fountain, DateTime.MinValue);
                         foreach (var image in fountainR.Images)
                         {
                             var imagePath = mapPath + image;
@@ -124,13 +134,13 @@ namespace SignalR
                 if (newImages.Count + oldImages.Count > 5)
                 {
                     File.WriteAllText(Path.Combine(path, "LastMail.txt"), DateTime.Now.ToString());
-                    var mail = new MailMessage("Fountain@epicsportexchange.com", "camille.chaperon@gmail.com,lolocic@hotmail.fr,theradis@gmail.com,xavier.desoindre@hotmail.fr")
-//                    var mail = new MailMessage("Fountain@epicsportexchange.com", "elfuego95380@aol.com,xavier.desoindre@hotmail.fr")
-{
-    Subject = "New fountains have been found !",
-    Body = "<html><body><p>Check this amazing fountain</p>",
-    IsBodyHtml = true
-};
+                    var mail = new MailMessage("Fountain@epicsportexchange.com",
+                        "camille.chaperon@gmail.com,lolocic@hotmail.fr,theradis@gmail.com, rafaela.huonder@gmail.com,xavier.desoindre@hotmail.fr")
+                    {
+                        Subject = "New fountains have been found !",
+                        Body = "<html><body><p>Check those amazing fountains</p>",
+                        IsBodyHtml = true
+                    };
                     if (newImages.Any())
                     {
                         mail.Body += "<p>Those fountains have just been found :</p>";
@@ -143,7 +153,7 @@ namespace SignalR
 
                     if (oldImages.Any())
                     {
-                        mail.Body += "<p>Those fountains have been found again:</p>";
+                        mail.Body += "<p>Those fountains have been found again :</p>";
                         foreach (var oldImage in oldImages)
                         {
                             var fileName = oldImage.Split('/').Last();

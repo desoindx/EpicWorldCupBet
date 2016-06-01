@@ -26,6 +26,20 @@
     display: inline-block;
 }
 
+.BidAskDiv {
+    position: absolute;
+    top: 45px;
+}
+
+@media (min-width: 1275px) {
+    .BidAskDiv {
+        position: absolute;
+        left: 50%;
+        margin-left: -25%;
+        top: 45px;
+    }
+}
+
 #blanket {
     background-color: transparent;
     opacity: 0.65;
@@ -79,12 +93,12 @@
     left: 50%;
     margin-left: -320px;
     z-index: 100;
-    top:10px
+    top: 10px;
 }
 
-#cashInfos  td{
-    padding-left: 40px;
-}
+    #cashInfos td {
+        padding-left: 40px;
+    }
 
 #newOrderDiv tr {
     height: 50px;

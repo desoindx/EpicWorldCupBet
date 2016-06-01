@@ -92,6 +92,11 @@ function cluster(depth, bounds, leftChild, rightChild, marker, coordinatesPoint,
             } else {
                 values.push(0);
             }
+            if (this.marker.rafaela) {
+                values.push(1);
+            } else {
+                values.push(0);
+            }
 
             return values;
         }
@@ -105,7 +110,7 @@ function cluster(depth, bounds, leftChild, rightChild, marker, coordinatesPoint,
         var l = this.leftChild.getValues();
         var r = this.rightChild.getValues();
 
-        for (var i = 0; i < 4; i++)
+        for (var i = 0; i < 5; i++)
         {
             l[i] += r[i];
         }
@@ -161,11 +166,20 @@ function rootCluster() {
 }
 
 function initCluster(coordinatesList, bounds, depth, parent) {
-    var currentCluster = new cluster(depth, bounds, null, null, null, null, parent);
-    if (coordinatesList.length == 0) {
-        return currentCluster;
+    newList = [];
+    for (var i = 0; i < coordinatesList.length; i++) {
+        var c = coordinatesList[i];
+        if (c.y < bounds.south || c.y > bounds.north || c.x > bounds.east || c.x < bounds.west)
+            continue;
+
+        newList.push(c);
     }
-    else if (coordinatesList.length == 1) {
+    coordinatesList = newList;
+    if (coordinatesList.length == 0) {
+        return null;
+    }
+    var currentCluster = new cluster(depth, bounds, null, null, null, null, parent);
+    if (coordinatesList.length == 1) {
         var fount = coordinatesList[0];
         currentCluster.coordinatesPoint = { x: fount.x, y: fount.y };
         currentCluster.marker = fount;
@@ -312,11 +326,12 @@ function findMarkers(currentCluster) {
     var east = mapBounds.getEast();
     var west = mapBounds.getWest();
 
-    var maxPoint = getNumberOfPointToDisplay(map.getZoom());
     var bounds = new rectangle(north, south, east, west);
+    var maxPoint = getNumberOfPointToDisplay(map.getZoom());
     for (var i = 0; i < markers.length; i++) {
         map.removeLayer(markers[i]);
     }
+
     // Start from the root (self)
     // Adopt a breadth-first search strategy
     // If MapRect intersects the bounds, then keep this element for next iteration
@@ -339,7 +354,7 @@ function findMarkers(currentCluster) {
                     var m = myCluster.leftChild.marker;
                     var images = '<table style="width:100%"><tr>';
                     for (var j = 0; j < m.images.length; j++) {
-                        images += '<td><img style="height:' + winHeight / 4 + 'px;width: auto;" src="' + m.images[j] + '" runat="server"/></td>';
+                        images += '<td><img onclick="clickOnImage(event)" style="height:' + winHeight / 4 + 'px;width: auto;" src="' + m.images[j] + '" runat="server"/></td>';
                     }
                     markers.push(L.marker([m.y, m.x], {
                         icon: createSingleIcon(m.found)
@@ -357,7 +372,7 @@ function findMarkers(currentCluster) {
                     var m = myCluster.rightChild.marker;
                     var images = '<table style="width:100%"><tr>';
                     for (var j = 0; j < m.images.length; j++) {
-                        images += '<td><img style="height:' + winHeight / 4 + 'px;width:auto;" src="' + m.images[j] + '" runat="server"/></td>';
+                        images += '<td><img onclick="clickOnImage(event)" style="height:' + winHeight / 4 + 'px;width:auto;" src="' + m.images[j] + '" runat="server"/></td>';
                     }
                     markers.push(L.marker([m.y, m.x], {
                         icon: createSingleIcon(m.found)
@@ -375,7 +390,7 @@ function findMarkers(currentCluster) {
                 var m = myCluster.marker;
                 var images = '<table style="width:100%"><tr>';
                 for (var j = 0; j < m.images.length; j++) {
-                    images += '<td><img style="height:' + winHeight / 4 + 'px;width:auto" src="' + m.images[j] + '" runat="server"/></td>';
+                    images += '<td><img onclick="clickOnImage(event)" style="height:' + winHeight / 4 + 'px;width:auto" src="' + m.images[j] + '" runat="server"/></td>';
                 }
                 markers.push(L.marker([m.y, m.x], {
                     icon: createSingleIcon(m.found)
@@ -410,6 +425,15 @@ function findMarkers(currentCluster) {
 
 function onMarkerClick(e) {
     map.setView(e.latlng, map.getZoom());
+}
+
+function clickOnImage(e) {
+    if (!e)
+        e = window.event;
+    var sender = e.srcElement || e.target;
+
+    var win = window.open(sender.src, '_blank');
+    win.focus();
 }
 
 function checkExistingFountain(lng, lat) {

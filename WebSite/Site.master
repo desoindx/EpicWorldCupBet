@@ -134,7 +134,7 @@
                         </li>
                         <% } %>
                         <li>
-                            <a runat="server" href="~/About"><i class="fa fa-question-circle fa-fw"></i>Rules</a>
+                            <a runat="server" href="~/Content/Rules.pdf"><i class="fa fa-question-circle fa-fw"></i>Rules</a>
                         </li>
                         <li>
                             <a runat="server" href="~/Contact"><i class="fa fa-envelope fa-fw"></i>Contact</a>
@@ -182,7 +182,7 @@
                                   else
                                   {%><div style="text-align: center">
                                       <p>
-                                          <label class="h2">You don't have any universe configurated !</label>
+                                          <label class="h2">You don't have any universe configured !</label>
                                       </p>
                                       <p>
                                           <a runat="server" href="~/Create">

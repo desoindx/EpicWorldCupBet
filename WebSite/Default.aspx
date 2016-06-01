@@ -32,8 +32,8 @@
     <div style="position: absolute; left: 50%; margin-left: -138px; z-index: 100;top:45px">
         <input style="margin-top: 20px; margin-bottom: 20px; width: 250px;" type="button" id="OpenPopUp" value="Place New Order" class="btn btn-primary btn-lg" />
     </div>
-    <div style="position: absolute; left: 50%; margin-left: -455px;top:45px">
-        <div style="margin-top: 80px; width: 920px; height: 900px;" id='<%: "BidAskDiv-" + Master.GetCompetitionId() %>'>
+    <div class="BidAskDiv">
+        <div  style="margin-top: 80px; width: 920px; height: 900px;" id='<%: "BidAskDiv-" + Master.GetCompetitionId() %>'>
         </div>
     </div>
     <script type='text/javascript'>
@@ -111,7 +111,7 @@
        { %>
     <div style="text-align: center">
         <p>
-            <label class="h2">You don't have any universe configurated !</label>
+            <label class="h2">You don't have any universe configured !</label>
         </p>
         <p>
             <a runat="server" href="~/Create">

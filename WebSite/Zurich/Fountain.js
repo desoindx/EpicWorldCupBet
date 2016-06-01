@@ -14,26 +14,53 @@
                     antoine: fountain.Antoine,
                     camille: fountain.Camille,
                     loic: fountain.Loic,
-                    xavier:fountain.Xavier
+                    xavier:fountain.Xavier,
+                    rafaela:fountain.Rafaela
             });
             }
 
             map.on('zoomend', function (eventLayer) {
-                findMarkers(root);
+                mapBounds = map.getBounds();
+                north = mapBounds.getNorth();
+                south = mapBounds.getSouth();
+                east = mapBounds.getEast();
+                west = mapBounds.getWest();
+
+                bounds = new rectangle(north, south, east, west);
+                root = initCluster(fountains, bounds, 0, null);
+                if (root)
+                    findMarkers(root);
             });
 
             map.on('dragend', function (eventLayer) {
-                findMarkers(root);
+                mapBounds = map.getBounds();
+                north = mapBounds.getNorth();
+                south = mapBounds.getSouth();
+                east = mapBounds.getEast();
+                west = mapBounds.getWest();
+
+                bounds = new rectangle(north, south, east, west);
+                root = initCluster(fountains, bounds, 0, null);
+                if (root)
+                    findMarkers(root);
             });
 
-            root = initCluster(fountains, null, 0, null);
-            findMarkers(root);
+            mapBounds = map.getBounds();
+            north = mapBounds.getNorth();
+            south = mapBounds.getSouth();
+            east = mapBounds.getEast();
+            west = mapBounds.getWest();
+
+            bounds = new rectangle(north, south, east, west);
+            root = initCluster(fountains, bounds, 0, null);
+            if (root)
+                findMarkers(root);
         }
     });
 
     $.connection.hub.start()
         .done(function (state) {
-            fountainHub.server.getFountains();
+            fountainHub.server.getFountains($("#n").text());
             winWidth = $(window).width();
             winHeight = $(window).height();
         });
