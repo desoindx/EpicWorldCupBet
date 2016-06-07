@@ -59,6 +59,36 @@ $(function () {
         }
     });
 
+    $("#TeamBuy").change(function () {
+        $("#SwapBuyTeam").html($("#TeamBuy").val());
+    });
+
+    $("#TeamSell").change(function () {
+        $("#SwapSellTeam").html($("#TeamSell").val());
+    });
+
+    $("#QuantityBuyOrder").change(function () {
+        $("#SwapBuyQuantity").html($("#QuantityBuyOrder").val());
+    });
+
+    $("#QuantitySellOrder").change(function () {
+        $("#SwapSellQuantity").html($("#QuantitySellOrder").val());
+    });
+
+    $("#PriceOrder").change(function () {
+        if (parseInt($("#PriceOrder").val()) > 0) {
+            $("#SwapPrice").html($("#PriceOrder").val());
+            $("#SwapWay").html("receive");
+        } else {
+            $("#SwapPrice").html(-parseInt($("#PriceOrder").val()));
+            $("#SwapWay").html("pay");
+        }
+    });
+//    $("#TeamSell").selectpicker('val', item.SellTeam);
+//    $("#QuantityBuyOrder").val(item.BuyQuantity);
+//    $("#QuantitySellOrder").val(item.SellQuantity);
+//    $("#PriceOrder").val(item.Price);
+
     $.connection.hub.start()
         .done(function (state) {
             competitionId = $("#currentCompetitionId").text();

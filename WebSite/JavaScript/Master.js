@@ -7,6 +7,10 @@
             }
             if (hasNew) {
                 $("#NumberOfNewTrades").addClass("showBadge");
+                $("#NumberOfNewTrades").html('*');
+            } else {
+                $("#NumberOfNewTrades").removeClass("showBadge");
+                $("#NumberOfNewTrades").html('');
             }
             if (nbTrades == 1) {
                 $("#ListTrade")[0].innerHTML = "<li><a>" + trades + "</a></li>";

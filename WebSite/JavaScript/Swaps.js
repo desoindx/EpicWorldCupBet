@@ -55,6 +55,9 @@ function drawSwapsGrid(orders, competitionId) {
     var currentGrid = new Slick.Grid("#BidAskDiv-" + competitionId, orders, columns, options);
     currentGrid.Id = competitionId;
 
+    currentGrid.setSelectionModel(new Slick.CellSelectionModel());
+    currentGrid.registerPlugin(new Slick.CellExternalCopyManager());
+
     currentGrid.onSort.subscribe(function (e, args) {
         var cols = args.sortCol;
         var field = cols.field;
@@ -97,6 +100,18 @@ function drawSwapsGrid(orders, competitionId) {
             $("#QuantityBuyOrder").val(item.SellQuantity);
             $("#QuantitySellOrder").val(item.BuyQuantity);
             $("#PriceOrder").val(-item.Price);
+        }
+
+        $("#SwapBuyTeam").html($("#TeamBuy").val());
+        $("#SwapSellTeam").html($("#TeamSell").val());
+        $("#SwapBuyQuantity").html($("#QuantityBuyOrder").val());
+        $("#SwapSellQuantity").html($("#QuantitySellOrder").val());
+        if (parseInt($("#PriceOrder").val()) > 0) {
+            $("#SwapPrice").html($("#PriceOrder").val());
+            $("#SwapWay").html("receive");
+        } else {
+            $("#SwapPrice").html(-parseInt($("#PriceOrder").val()));
+            $("#SwapWay").html("pay");
         }
 
         selectedItem = item.Id;

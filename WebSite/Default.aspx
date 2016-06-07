@@ -6,6 +6,10 @@
     <link rel="stylesheet" href="Content/slick.grid.css" type="text/css">
     <link rel="stylesheet" href="Content/slick-default-theme.css" type="text/css">
     <link rel="stylesheet" href="Content/bootstrap-select.css" type="text/css">
+    <script src="Scripts/SlickGrid/Plugins/slick.cellrangedecorator.js"></script>
+    <script src="Scripts/SlickGrid/Plugins/slick.cellrangeselector.js"></script>
+    <script src="Scripts/SlickGrid/Plugins/slick.cellnewcopymanager.js"></script>
+    <script src="Scripts/SlickGrid/Plugins/slick.cellselectionmodel.js"></script>
 </asp:Content>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">

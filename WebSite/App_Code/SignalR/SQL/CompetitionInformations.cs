@@ -195,7 +195,7 @@ namespace SignalR.SQL
             }
 
             var lastPrices =
-                context.Trades.Where(x => x.IdUniverseCompetition == id && x.Team == team.Id)
+                context.Trades.Where(x => x.IdUniverseCompetition == id && x.Team == team.Id && x.Price != 0)
                     .OrderByDescending(x => x.Date)
                     .ToList();
             if (lastPrices.Count > 0)

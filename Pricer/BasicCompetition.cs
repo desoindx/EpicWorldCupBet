@@ -9,7 +9,7 @@ namespace Pricer
 {
     public abstract class BasicCompetition
     {
-        private const int SimulationNumber = 1000000;
+        private const int SimulationNumber = 50000;
         private readonly string _name;
 
         protected readonly Dictionary<int, Team> Teams;

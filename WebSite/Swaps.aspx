@@ -6,6 +6,10 @@
     <link rel="stylesheet" href="Content/slick.grid.css" type="text/css">
     <link rel="stylesheet" href="Content/slick-default-theme.css" type="text/css">
     <link rel="stylesheet" href="Content/bootstrap-select.css" type="text/css">
+    <script src="Scripts/SlickGrid/Plugins/slick.cellrangedecorator.js"></script>
+    <script src="Scripts/SlickGrid/Plugins/slick.cellrangeselector.js"></script>
+    <script src="Scripts/SlickGrid/Plugins/slick.cellnewcopymanager.js"></script>
+    <script src="Scripts/SlickGrid/Plugins/slick.cellselectionmodel.js"></script>
 </asp:Content>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
@@ -30,7 +34,7 @@
             </tr>
         </table>
     </div>
-    <div style="position: absolute; left: 50%; margin-left: -138px; z-index: 100;top:45px">
+    <div style="position: absolute; left: 50%; margin-left: -138px; z-index: 100; top: 45px">
         <input style="margin-top: 20px; margin-bottom: 20px; width: 250px;" type="button" id="OpenPopUp" value="Place New Swap" class="btn btn-primary btn-lg" />
     </div>
     <div class="BidAskDiv">
@@ -87,13 +91,18 @@
                 </tr>
                 <tr>
                     <td>
-                        <label>For a premium of :</label>
+                        <label>For a premium of (For the swap, not by contract !!):</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <input class="orderInfo" type='number' value="0" id='PriceOrder' />
                         <span style="position: relative; right: 30px;">$</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>You will buy <span id="SwapBuyQuantity">10</span> <span id="SwapBuyTeam">Albania</span> and sell <span id="SwapSellQuantity">10</span> <span id="SwapSellTeam">Albania</span> and <span id="SwapWay">receive</span> <span id="SwapPrice">0</span> $ (in total)</label>
                     </td>
                 </tr>
                 <tr>

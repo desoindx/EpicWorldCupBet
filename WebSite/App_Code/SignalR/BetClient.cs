@@ -431,7 +431,6 @@ namespace SignalR
 
                         context.SaveChanges();
                         OnNewOrder(context, team, usersToNotify, universeId, competitionId, universeCompetitionId);
-                        GetTradeHistory(competitionId, universeCompetitionId);
                     }
                     else
                     {
@@ -499,6 +498,7 @@ namespace SignalR
 
                 matchingOrder.Status = 1;
                 quantity -= matchingOrder.Quantity;
+                GetTradeHistory(competitionId, universeCompetitionId);
 
                 if (quantity == 0)
                 {
@@ -729,7 +729,7 @@ namespace SignalR
             }
             else
             {
-                Clients.Group(competitionUniverseId.ToString(CultureInfo.InvariantCulture)).newTrades(tradesList, tradesList.Count, newTrade, competitionUniverseId);
+                Clients.Group(competitionUniverseId.ToString(CultureInfo.InvariantCulture)).newTrades(tradesList, tradesList.Count, false, competitionUniverseId);
             }
         }
 

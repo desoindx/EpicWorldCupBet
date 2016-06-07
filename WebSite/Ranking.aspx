@@ -11,7 +11,7 @@
     <script src="Scripts/SlickGrid/Plugins/slick.cellselectionmodel.js"></script>
     <script src="JavaScript/Ranking.js"></script>
     <h3>Please note that the Profit is only an estimation and is subject to a reevaluation as the competition goes on !!!</h3>
-    <div style="width: 600px; height: 1000px; margin-top: 50px" id="RankingDiv">
+    <div style="width: 525px; height: 1000px; margin-top: 50px" id="RankingDiv">
     </div>
     <script type='text/javascript'>
         drawRankingGrid(<%: GetRanks()%>);

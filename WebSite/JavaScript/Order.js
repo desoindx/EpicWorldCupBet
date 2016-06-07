@@ -193,6 +193,9 @@ function drawOrdersGrid(orders, competitionId) {
     var currentGrid = new Slick.Grid("#BidAskDiv-" + competitionId, currentDatas, columns, options);
     currentGrid.Id = competitionId;
 
+    currentGrid.setSelectionModel(new Slick.CellSelectionModel());
+    currentGrid.registerPlugin(new Slick.CellExternalCopyManager());
+
     currentGrid.onSort.subscribe(function (e, args) {
         var cols = args.sortCol;
         var field = cols.field;
