@@ -12,12 +12,13 @@ namespace Datas.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class CompetitionResult
+    public partial class Message
     {
-        public string RoundKey { get; set; }
-        public string Result { get; set; }
-        public int CompetitionId { get; set; }
         public int Id { get; set; }
-        public bool IsFake { get; set; }
+        public string From { get; set; }
+        public string To { get; set; }
+        public string Message1 { get; set; }
+        public System.DateTime Received { get; set; }
+        public Nullable<System.DateTime> Read { get; set; }
     }
 }

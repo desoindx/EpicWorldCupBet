@@ -18,5 +18,6 @@ namespace Datas.Entities
         public int TeamId { get; set; }
         public int CompetitionId { get; set; }
         public int Id { get; set; }
+        public bool IsFake { get; set; }
     }
 }

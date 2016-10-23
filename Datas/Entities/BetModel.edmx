@@ -13,6 +13,7 @@
           <Property Name="TeamId" Type="int" Nullable="false" />
           <Property Name="CompetitionId" Type="int" Nullable="false" />
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IsFake" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="CompetitionPrizes">
           <Key>
@@ -32,6 +33,7 @@
           <Property Name="Result" Type="varchar(max)" Nullable="false" />
           <Property Name="CompetitionId" Type="int" Nullable="false" />
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IsFake" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Competitions">
           <Key>
@@ -58,6 +60,17 @@
           <Property Name="Xavier" Type="datetime" />
           <Property Name="Rafaela" Type="datetime" />
           <Property Name="InZurich" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Messages">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="From" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="To" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="Message" Type="varchar" MaxLength="8000" Nullable="false" />
+          <Property Name="Received" Type="datetime" Nullable="false" />
+          <Property Name="Read" Type="datetime" />
         </EntityType>
         <EntityType Name="Moneys">
           <Key>
@@ -193,6 +206,7 @@
           <EntitySet Name="CompetitionResults" EntityType="Self.CompetitionResults" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Competitions" EntityType="Self.Competitions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Fountains" EntityType="Self.Fountains" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Messages" EntityType="Self.Messages" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Moneys" EntityType="Self.Moneys" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="NewTradeChecked" EntityType="Self.NewTradeChecked" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
@@ -264,6 +278,7 @@
           <EntitySet Name="SwapTrades" EntityType="BetModel.SwapTrade" />
           <EntitySet Name="NewTradeCheckeds" EntityType="BetModel.NewTradeChecked" />
           <EntitySet Name="Fountains" EntityType="BetModel.Fountain" />
+          <EntitySet Name="Messages" EntityType="BetModel.Message" />
           </EntityContainer>
         <EntityType Name="Competition">
           <Key>
@@ -338,6 +353,7 @@
           <Property Name="TeamId" Type="Int32" Nullable="false" />
           <Property Name="CompetitionId" Type="Int32" Nullable="false" />
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IsFake" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="CompetitionPrize">
           <Key>
@@ -357,6 +373,7 @@
           <Property Name="Result" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="CompetitionId" Type="Int32" Nullable="false" />
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IsFake" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="SwapOrder">
           <Key>
@@ -410,6 +427,17 @@
           <Property Name="Xavier" Type="DateTime" Precision="3" />
           <Property Name="Rafaela" Type="DateTime" Precision="3" />
           <Property Name="InZurich" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Message">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="From" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="To" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Message1" Type="String" Nullable="false" MaxLength="8000" FixedLength="false" Unicode="false" />
+          <Property Name="Received" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Read" Type="DateTime" Precision="3" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -529,7 +557,8 @@
     <EntitySetMapping Name="CompetitionGames">
       <EntityTypeMapping TypeName="IsTypeOf(BetModel.CompetitionGame)">
         <MappingFragment StoreEntitySet="CompetitionGames">
-          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="IsFake" ColumnName="IsFake" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="RoundKey" ColumnName="RoundKey" />
           <ScalarProperty Name="TeamId" ColumnName="TeamId" />
           <ScalarProperty Name="CompetitionId" ColumnName="CompetitionId" />
@@ -550,7 +579,8 @@
     <EntitySetMapping Name="CompetitionResults">
       <EntityTypeMapping TypeName="IsTypeOf(BetModel.CompetitionResult)">
         <MappingFragment StoreEntitySet="CompetitionResults">
-          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="IsFake" ColumnName="IsFake" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="RoundKey" ColumnName="RoundKey" />
           <ScalarProperty Name="Result" ColumnName="Result" />
           <ScalarProperty Name="CompetitionId" ColumnName="CompetitionId" />
@@ -609,6 +639,18 @@
                 <ScalarProperty Name="Antoine" ColumnName="Antoine" />
                 <ScalarProperty Name="Lat" ColumnName="Lat" />
                 <ScalarProperty Name="Long" ColumnName="Long" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Messages">
+            <EntityTypeMapping TypeName="BetModel.Message">
+              <MappingFragment StoreEntitySet="Messages">
+                <ScalarProperty Name="Read" ColumnName="Read" />
+                <ScalarProperty Name="Received" ColumnName="Received" />
+                <ScalarProperty Name="Message1" ColumnName="Message" />
+                <ScalarProperty Name="To" ColumnName="To" />
+                <ScalarProperty Name="From" ColumnName="From" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
