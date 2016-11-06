@@ -23,27 +23,53 @@ public class Messages : WebService
     }
 
     [WebMethod]
-    public List<string> GetMessages(string user)
+    public string GetMessages(string user)
     {
         ReadMail();
-        var results = new List<string>();
+        return user.ToLower() == "groceries" ? GetGroceries() : GetMessage(user);
+    }
+
+    private string GetGroceries()
+    {
+        var results = string.Empty;
         using (var context = new Entities())
         {
+            foreach (var item in context.Groceries)
+            {
+                results += item + "\n";
+            }
+        }
+
+        if (results == string.Empty)
+        {
+            results = "Nothing to buy !";
+        }
+
+        return results;
+    }
+
+    private static string GetMessage(string user)
+    {
+        var results = string.Empty;
+        using (var context = new Entities())
+        {
+            user = user.ToLower();
             var now = DateTime.Now;
             var limite = now.AddMinutes(-5);
-            foreach (var message in context.Messages.Where(x => x.To == user && (x.Read == null || x.Read >limite)))
+            foreach (var message in context.Messages.Where(x => (x.To == user || x.To == "all") && (x.Read == null || x.Read > limite)))
             {
-                results.Add(string.Format("From: {0} at {1}, {2}", message.From, message.Received.ToShortTimeString(), message.Message1));
-                message.Read = now;
+                results += string.Format("From: {0} at {1}, {2}\n", message.From, message.Received.ToShortTimeString(),
+                    message.Message1);
+                if (message.Read == null)
+                    message.Read = now;
             }
             context.SaveChanges();
         }
 
-        if (!results.Any())
+        if (results == string.Empty)
         {
-            results.Add(string.Format("{0} has no new messages..."));
+            results = string.Format("{0} has no new messages...", user);
         }
-
         return results;
     }
 
@@ -62,28 +88,60 @@ public class Messages : WebService
             foreach (var message in messages)
             {
                 client.Retrieve(message);
-                if (message.Subject != "Mirror")
+                switch (message.Subject)
                 {
-                    client.Delete(message);
-                    continue;
+                    case "Mirror":
+                        AddMessage(message, context);
+                        break;
+                    case "Groceries":
+                        AddGrocery(message, context);
+                        break;
                 }
-                var entry = new Message();
-                entry.Received = DateTime.Parse(message.Date);
-                entry.From = MapFrom(message.From);
-                var body = message.Body.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None).Where(x => !string.IsNullOrEmpty(x)).ToList();
-                if (body.Count() < 2)
-                {
-                    client.Delete(message);
-                    continue;
-                }
-                entry.To = body[0];
-                entry.Message1 = body[1];
-                context.Messages.Add(entry);
+
                 client.Delete(message);
             }
             context.SaveChanges();
         }
         client.Disconnect();
+    }
+
+    private void AddGrocery(Pop3Message message, Entities context)
+    {
+        var body =
+            message.Body.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None)
+                .FirstOrDefault(x => !string.IsNullOrEmpty(x));
+        if (body == null)
+            return;
+
+        if (body.StartsWith("clear", StringComparison.CurrentCultureIgnoreCase) || body.StartsWith("done", StringComparison.CurrentCultureIgnoreCase))
+        {
+            var items = context.Groceries.ToList();
+            context.Groceries.RemoveRange(items);
+            return;
+        }
+
+        foreach (var item in body.Split('.'))
+        {
+            context.Groceries.Add(new Grocery { Item = item });
+        }
+    }
+
+    private void AddMessage(Pop3Message message, Entities context)
+    {
+        var entry = new Message();
+        entry.Received = DateTime.Parse(message.Date).AddHours(7);
+        entry.From = MapFrom(message.From);
+        var body =
+            message.Body.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None)
+                .Where(x => !string.IsNullOrEmpty(x))
+                .ToList();
+        if (body.Count() < 2)
+        {
+            return;
+        }
+        entry.To = body[0].ToLower();
+        entry.Message1 = body[1];
+        context.Messages.Add(entry);
     }
 
     private string MapFrom(string from)

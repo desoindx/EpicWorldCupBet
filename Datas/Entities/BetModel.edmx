@@ -61,6 +61,13 @@
           <Property Name="Rafaela" Type="datetime" />
           <Property Name="InZurich" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="Groceries">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Item" Type="varchar" MaxLength="8000" Nullable="false" />
+        </EntityType>
         <EntityType Name="Messages">
           <Key>
             <PropertyRef Name="Id" />
@@ -206,6 +213,7 @@
           <EntitySet Name="CompetitionResults" EntityType="Self.CompetitionResults" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Competitions" EntityType="Self.Competitions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Fountains" EntityType="Self.Fountains" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Groceries" EntityType="Self.Groceries" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Messages" EntityType="Self.Messages" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Moneys" EntityType="Self.Moneys" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="NewTradeChecked" EntityType="Self.NewTradeChecked" Schema="dbo" store:Type="Tables" />
@@ -279,6 +287,7 @@
           <EntitySet Name="NewTradeCheckeds" EntityType="BetModel.NewTradeChecked" />
           <EntitySet Name="Fountains" EntityType="BetModel.Fountain" />
           <EntitySet Name="Messages" EntityType="BetModel.Message" />
+          <EntitySet Name="Groceries" EntityType="BetModel.Grocery" />
           </EntityContainer>
         <EntityType Name="Competition">
           <Key>
@@ -438,6 +447,13 @@
           <Property Name="Message1" Type="String" Nullable="false" MaxLength="8000" FixedLength="false" Unicode="false" />
           <Property Name="Received" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Read" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="Grocery">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Item" Type="String" Nullable="false" MaxLength="8000" FixedLength="false" Unicode="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -651,6 +667,14 @@
                 <ScalarProperty Name="Message1" ColumnName="Message" />
                 <ScalarProperty Name="To" ColumnName="To" />
                 <ScalarProperty Name="From" ColumnName="From" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Groceries">
+            <EntityTypeMapping TypeName="BetModel.Grocery">
+              <MappingFragment StoreEntitySet="Groceries">
+                <ScalarProperty Name="Item" ColumnName="Item" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

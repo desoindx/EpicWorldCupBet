@@ -43,5 +43,6 @@ namespace Datas.Entities
         public virtual DbSet<NewTradeChecked> NewTradeCheckeds { get; set; }
         public virtual DbSet<Fountain> Fountains { get; set; }
         public virtual DbSet<Message> Messages { get; set; }
+        public virtual DbSet<Grocery> Groceries { get; set; }
     }
 }

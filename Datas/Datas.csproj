@@ -73,6 +73,9 @@
     <Compile Include="Entities\Fountain.cs">
       <DependentUpon>EntitiesModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\Grocery.cs">
+      <DependentUpon>EntitiesModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\Message.cs">
       <DependentUpon>EntitiesModel.tt</DependentUpon>
     </Compile>

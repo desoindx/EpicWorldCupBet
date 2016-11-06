@@ -28,7 +28,7 @@ namespace SignalR
                 var fountain = context.Fountains.ToList().FirstOrDefault(x => x.Long == longitude && x.Lat == lattitude);
                 if (fountain == null)
                 {
-                    fountain = new Fountain { Long = longitude, Lat = lattitude, InZurich = !notInZurich};
+                    fountain = new Fountain { Long = longitude, Lat = lattitude, InZurich = !notInZurich };
                     if (antoine)
                     {
                         fountain.Antoine = now;
@@ -85,7 +85,7 @@ namespace SignalR
             using (var context = new Entities())
             {
                 var fountains = new List<FountainR>();
-                 foreach (var fountain in context.Fountains)
+                foreach (var fountain in context.Fountains)
                 {
                     var fountainR = new FountainR(fountain, referenceDate);
                     if (fountainR.Found > 0)
@@ -135,7 +135,7 @@ namespace SignalR
                 {
                     File.WriteAllText(Path.Combine(path, "LastMail.txt"), DateTime.Now.ToString());
                     var mail = new MailMessage("Fountain@epicsportexchange.com",
-                        "camille.chaperon@gmail.com,lolocic@hotmail.fr,theradis@gmail.com, rafaela.huonder@gmail.com,xavier.desoindre@hotmail.fr")
+                        "lolocic@hotmail.fr,theradis@gmail.com, rafaela.huonder@gmail.com,xavier.desoindre@hotmail.fr")
                     {
                         Subject = "New fountains have been found !",
                         Body = "<html><body><p>Check those amazing fountains</p>",
