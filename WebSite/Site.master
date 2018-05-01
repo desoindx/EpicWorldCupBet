@@ -147,7 +147,7 @@
         <div id="page-wrapper">
             <div class="container-fluid">
                 <div class="row">
-                    <% if (Context.User.Identity.IsAuthenticated || Page.Title == "Register" || Page.Title == "Forgot Password" || Page.Title == "Reset Password")
+                    <% if (Context.User.Identity.IsAuthenticated || Page.Title == "Confirm Email" || Page.Title == "Register" || Page.Title == "Forgot Password" || Page.Title == "Reset Password")
                        { %><div class="col-lg-12">
                            <div class="body-content container-fluid">
                                <% if (UserHasUniverse || Page.Title == "Register" || Page.Title == "Join Universe" || Page.Title == "Forgot Password" || Page.Title == "Reset Password")

@@ -37,7 +37,7 @@ public partial class Account_ForgotPassword : System.Web.UI.Page
                "Please reset your password by clicking <a href=\""
                                                + url + "\">here</a>");
 
-            SuccessText.Text = "A reset Email has been correctly send to " + email;
+            SuccessText.Text = "Mail send, check " + email + " (and look in your spams)";
             ErrorMessage.Visible = false;
             SuccessMessage.Visible = true;
         }
