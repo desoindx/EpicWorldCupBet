@@ -108,7 +108,7 @@ namespace SignalRChat
             }
         }
 
-        public override Task OnDisconnected()
+        public override Task OnDisconnected(bool stop)
         {
             lock (this)
             {
@@ -124,7 +124,7 @@ namespace SignalRChat
                     }
                 }
             }
-            return base.OnDisconnected();
+            return base.OnDisconnected(stop);
         }
 
 

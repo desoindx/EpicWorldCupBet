@@ -19,7 +19,7 @@ namespace SignalR
 
         public NumberFormatInfo NumberFormatInfo { get; set; }
 
-        public BetClient(IHubConnectionContext clients, Dictionary<string, string> userConnectionId)
+        public BetClient(IHubConnectionContext<dynamic> clients, Dictionary<string, string> userConnectionId)
         {
             _orderBooks = new Dictionary<string, OrderBook>();
             Clients = clients;
@@ -30,7 +30,7 @@ namespace SignalR
             nfi.NumberGroupSeparator = " ";
         }
 
-        private IHubConnectionContext Clients
+        private IHubConnectionContext<dynamic> Clients
         {
             get;
             set;

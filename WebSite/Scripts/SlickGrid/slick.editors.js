@@ -172,7 +172,7 @@
           calendarOpen = false
         }
       });
-      $input.width($input.width() - 18);
+      $input.outerWidth($input.outerWidth() - 18);
     };
 
     this.destroy = function () {
@@ -339,7 +339,7 @@
 
     this.init = function () {
       $input = $("<INPUT type=text class='editor-percentcomplete' />");
-      $input.width($(args.container).innerWidth() - 25);
+      $input.outerWidth($(args.container).outerWidth() - 25);
       $input.appendTo(args.container);
 
       $picker = $("<div class='editor-percentcomplete-picker' />").appendTo(args.container);

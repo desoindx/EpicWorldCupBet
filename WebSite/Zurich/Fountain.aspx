@@ -42,7 +42,7 @@
     <script src="SCRIPTS/Draw/Toolbar.js"></script>
     <script src="SCRIPTS/Draw/draw/DrawToolbar.js"></script>
     <script src="SCRIPTS/Draw/edit/EditToolbar.js"></script>
-    <script type="text/javascript" src="../Scripts/jquery.signalR-2.0.3.min.js"></script>
+    <script type="text/javascript" src="../Scripts/jquery.signalR-2.2.3.min.js"></script>
     <script type="text/javascript" src="../../signalr/hubs"></script>
     <script src="Fountain.js"></script>
     <script src="../Scripts/bPopUp.js"></script>

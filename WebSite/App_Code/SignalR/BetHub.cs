@@ -36,7 +36,7 @@ namespace SignalR
             return base.OnConnected();
         }
 
-        public override Task OnDisconnected()
+        public override Task OnDisconnected(bool stop)
         {
             var userAvailableCompetitions = Sql.GetUserAvailableCompetitions(User);
             foreach (var competition in userAvailableCompetitions)
@@ -44,7 +44,7 @@ namespace SignalR
                 Groups.Remove(Context.ConnectionId, competition.ToString(CultureInfo.InvariantCulture));
             }
 
-            return base.OnDisconnected();
+            return base.OnDisconnected(stop);
         }
 
         public BetHub()
