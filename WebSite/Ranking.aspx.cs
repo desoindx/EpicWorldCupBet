@@ -48,12 +48,6 @@ public partial class Ranking : Page
             money.Profit = Math.Round(10* count * f / sum, 1);
         }
 
-        double s = 0;
-        foreach (var m in moneys)
-        {
-            s += m.Profit;
-        }
-
         return JavaScriptSerializer.SerializeObject(moneys);
     }
 }
