@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Xml.Serialization;
 using Microsoft.AspNet.SignalR;
+using System.Threading;
 
 namespace SignalRChat
 {
@@ -157,5 +158,4 @@ namespace SignalRChat
 
         #endregion
     }
-
 }

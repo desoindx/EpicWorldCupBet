@@ -145,7 +145,10 @@ function onOrder(objBtn) {
 
 function drawOrderBook(team, bids, asks) {
     $("#orderBookTeamName").text(team);
-    var columns = [
+    var columnsBid = [
+      { id: "Quantity", name: "Quantity", field: "Quantity", width: 100, sortable: true },
+      { id: "Price", name: "Price", field: "Price", width: 100, sortable: true }
+    ], columnsAsk = [
       { id: "Price", name: "Price", field: "Price", width: 100, sortable: true },
       { id: "Quantity", name: "Quantity", field: "Quantity", width: 100, sortable: true }
     ],
@@ -154,8 +157,8 @@ function drawOrderBook(team, bids, asks) {
         enableColumnReorder: false
     };
 
-    new Slick.Grid("#bidGrid", bids, columns, options);
-    new Slick.Grid("#askGrid", asks, columns, options);
+    new Slick.Grid("#bidGrid", bids, columnsBid, options);
+    new Slick.Grid("#askGrid", asks, columnsAsk, options);
 }
 
 function drawOrdersGrid(orders, competitionId) {

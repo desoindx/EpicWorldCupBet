@@ -14,6 +14,14 @@ namespace SignalR.SQL
             dict[key] = operation(currentValue, value);
         }
 
+        public static int CountUser(int idUniverseCompetition)
+        {
+            using (var context = new Entities())
+            {
+                return context.UniverseAvailables.Count();
+            }
+        }
+
         public static Dictionary<string, int> GetRankingForAUniverse(int idUniverseCompetition)
         {
             var moneys = new Dictionary<string, int>();

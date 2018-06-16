@@ -1,0 +1,48 @@
+3595809;Russia;Saudi Arabia
+3595808;Egypt;Uruguay
+3595813;Russia;Egypt
+3595814;Uruguay;Saudi Arabia
+3595815;Uruguay;Russia
+3595817;Saudi Arabia;Egypt
+3595819;Morocco;Iran
+3595818;Portugal;Spain
+3595820;Portugal;Morocco
+3595821;Iran;Spain
+3595823;Iran;Portugal
+3595824;Spain;Morocco
+3595826;France;Australia
+3595825;Peru;Denmark
+3595831;Denmark;Australia
+3595830;France;Peru
+3595832;Australia;Peru
+3595834;Denmark;France
+3595835;Argentina;Island
+3595833;Croatia;Nigeria
+3595836;Argentina;Croatia
+3595837;Nigeria;Island
+3595838;Nigeria;Argentina
+3595839;Island;Croatia
+3595841;Costa Rica;Serbia
+3595840;Brazil;Switzerland
+3595843;Brazil;Costa Rica
+3595842;Serbia;Switzerland
+3595844;Serbia;Brazil
+3595845;Switzerland;Costa Rica
+3595846;Germany;Mexico
+3595848;Sweden;South Korea
+3595851;South Korea;Mexico
+3595847;Germany;Sweden
+3595850;Mexico;Sweden
+3595852;South Korea;Germany
+3595853;Belgium;Panama
+3595854;Tunisia;England
+3595858;Belgium;Tunisia
+3595856;England;Panama
+3595855;England;Belgium
+3595857;Panama;Tunisia
+3595860;Colombia;Japan
+3595859;Poland;Senegal
+3595865;Japan;Senegal
+3595863;Poland;Colombia
+3595862;Senegal;Colombia
+3595864;Japan;Poland

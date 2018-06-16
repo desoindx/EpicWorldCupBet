@@ -73,6 +73,7 @@ function registerClientMethods(chatHub) {
     chatHub.client.messageReceived = function (userName, message, time) {
         AddMessage(userName, message, time);
     }
+
     chatHub.client.sendPrivateMessage = function (fromUserName, toUserName, message, isMine) {
         var ctrId;
         if (isMine) {

@@ -91,6 +91,60 @@ namespace Pricer
             }
         }
 
+        public void AddResult(Tuple<Team, Team> game, double random, double win, double draw, double loss)
+        {
+            _orderedSimulation = null;
+            if (!_simulation.ContainsKey(game.Item1))
+            {
+                _simulation[game.Item1] = new RoundResult();
+            }
+
+            if (!_simulation.ContainsKey(game.Item2))
+            {
+                _simulation[game.Item2] = new RoundResult();
+            }
+
+            var sum = 1/win + 1/draw + 1/loss;
+            var r = random * sum;
+            var scoreAvg = _competition.Score;
+            if (r < 1/win)
+            {
+                var score1 = Helper.NextPoisson(scoreAvg);
+                var score2 = Helper.NextPoisson(scoreAvg);
+                if (score2 > score1)
+                {
+                    _simulation[game.Item2].Add(0, score1, score2);
+                    _simulation[game.Item1].Add(3, score2, score1);
+                }
+                else
+                {
+                    _simulation[game.Item2].Add(0, score2, score1);
+                    _simulation[game.Item1].Add(3, score1, score2);
+                }
+            }
+            else if (r < 1/win + 1/draw)
+            {
+                var score = Helper.NextPoisson(scoreAvg);
+                _simulation[game.Item1].Add(1, score, score);
+                _simulation[game.Item2].Add(1, score, score);
+            }
+            else
+            {
+                var score1 = Helper.NextPoisson(scoreAvg);
+                var score2 = Helper.NextPoisson(scoreAvg);
+                if (score2 > score1)
+                {
+                    _simulation[game.Item1].Add(0, score1, score2);
+                    _simulation[game.Item2].Add(3, score2, score1);
+                }
+                else
+                {
+                    _simulation[game.Item1].Add(0, score2, score1);
+                    _simulation[game.Item2].Add(3, score1, score2);
+                }
+            }
+        }
+
         public void AddResult(Tuple<Team, Team> game, double random, double strength1, double strength2)
         {
             _orderedSimulation = null;

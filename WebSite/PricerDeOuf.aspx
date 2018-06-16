@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Ranking" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeFile="Ranking.aspx.cs" Inherits="Ranking" %>
+﻿<%@ Page Title="PricerDeOuf" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeFile="PricerDeOuf.aspx.cs" Inherits="PricerDeOuf" %>
 
 <%@ MasterType VirtualPath="~/Site.Master" %>
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
@@ -9,10 +9,10 @@
     <script src="Scripts/SlickGrid/Plugins/slick.cellrangeselector.js"></script>
     <script src="Scripts/SlickGrid/Plugins/slick.cellnewcopymanager.js"></script>
     <script src="Scripts/SlickGrid/Plugins/slick.cellselectionmodel.js"></script>
-    <script src="JavaScript/Ranking.js"></script>
-    <div style="width: 525px; height: 1000px; margin-top: 50px" id="RankingDiv">
+    <script src="JavaScript/Pricer.js"></script>
+    <div style="width: 525px; height: 1000px; margin-top: 50px" id="PricingDiv">
     </div>
     <script type='text/javascript'>
-        drawRankingGrid(<%: GetRanks()%>);
+        drawPricingGrid(<%: GetPricing()%>);
     </script>
 </asp:Content>
