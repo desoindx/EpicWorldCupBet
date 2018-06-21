@@ -8,7 +8,7 @@
 
     columns[0] = { id: "Rank", name: "Rank", field: "Rank", width: 50, sortable: true };
     columns[1] = { id: "User", name: "User", field: "User", width: 200, sortable: true };
-    columns[2] = { id: "Money", name: "Money", field: "Money", width: 200, sortable: true };
+    columns[2] = { id: "Money", name: "Money", field: "MoneyString", width: 200, sortable: true };
     columns[3] = { id: "Profit", name: "Profit", field: "Profit", width: 75, sortable: true };
 
     grid = new Slick.Grid("#RankingDiv", ranks, columns, options);
@@ -32,5 +32,5 @@
         this.invalidateAllRows();
         this.render();
     });
-    grid.setSortColumn("Money", false);
+    grid.setSortColumn("Rank", false);
 }

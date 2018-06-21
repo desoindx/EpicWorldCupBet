@@ -35,7 +35,7 @@ public partial class Ranking : Page
         }
 
         var moneys = ranking
-            .Select(x => new RankingInfo { User = x.Key, Money = x.Value, Profit = 0 })
+            .Select(x => new RankingInfo(x.Value) { User = x.Key, Profit = 0 })
             .ToList();
 
         moneys.Sort();
@@ -55,9 +55,16 @@ public partial class Ranking : Page
 public class RankingInfo : IComparable
 {
     public string User;
-    public int Money;
+    private int Money { get; set; }
+    public string MoneyString;
     public int Rank;
     public double Profit;
+
+    public RankingInfo(int value)
+    {
+        Money = value;
+        MoneyString = (Money / 1000).ToString() + "K";
+    }
 
     public int CompareTo(object obj)
     {

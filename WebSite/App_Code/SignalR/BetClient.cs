@@ -456,7 +456,7 @@ namespace SignalR
         private bool UserHasEnough(Entities context, string user, Team team, int quantity, int price, string side, int universeId, int competitionId, int universeCompetitionId)
         {
             var positions = Sql.GetPosition(user, universeId, competitionId);
-            var signedQuantity = (side == "SELL" ? -1 : 1) * quantity;
+            var signedQuantity = (side == "BUY" ? -1 : 1) * quantity;
             positions[team] += signedQuantity;
             positions = positions.Where(x => x.Value != 0).ToDictionary(x => x.Key, x => x.Value);
             var worstScenario = PricerHelper.GetWorstScenario(context.Competitions.First(x => x.Id == competitionId).Name, positions, 0.1);
@@ -465,8 +465,8 @@ namespace SignalR
             var expo = signedQuantity*price + worstScenario;
             if (userMoney.Money1 + expo >= 0)
                 return true;
-
-            positions = Sql.GetPosition(user, universeId, competitionId).Where(x => x.Value != 0).ToDictionary(x => x.Key, x => x.Value);
+            
+            positions[team] -= signedQuantity;
             var currentScenario = PricerHelper.GetWorstScenario(context.Competitions.First(x => x.Id == competitionId).Name, positions, 0.1);
             return expo > currentScenario;
         }
