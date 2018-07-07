@@ -295,6 +295,12 @@ namespace SignalR
                 return false;
             }
 
+            if (quantity > 100)
+            {
+                Clients.Client(connectionId).newMessage("Fail To add order because the quantity specified is too high !", ErrorClass);
+                return false;
+            }
+
             if (quantity < 1)
             {
                 Clients.Client(connectionId).newMessage("Fail To add order because the quantity specified must be stricly positive", ErrorClass);
@@ -456,13 +462,13 @@ namespace SignalR
         private bool UserHasEnough(Entities context, string user, Team team, int quantity, int price, string side, int universeId, int competitionId, int universeCompetitionId)
         {
             var positions = Sql.GetPosition(user, universeId, competitionId);
-            var signedQuantity = (side == "BUY" ? -1 : 1) * quantity;
+            var signedQuantity = (side == "SELL" ? -1 : 1) * quantity;
             positions[team] += signedQuantity;
             positions = positions.Where(x => x.Value != 0).ToDictionary(x => x.Key, x => x.Value);
             var worstScenario = PricerHelper.GetWorstScenario(context.Competitions.First(x => x.Id == competitionId).Name, positions, 0.1);
             var userMoney = context.Moneys.First(x => x.User == user && x.IdUniverseCompetition == universeCompetitionId);
 
-            var expo = signedQuantity*price + worstScenario;
+            var expo = -signedQuantity*price + worstScenario;
             if (userMoney.Money1 + expo >= 0)
                 return true;
             
